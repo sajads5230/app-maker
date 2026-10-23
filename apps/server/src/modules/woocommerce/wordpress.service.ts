@@ -9,6 +9,13 @@ export interface WordPressPostItem {
   categories?: string[];
 }
 
+export interface WordPressFetchResult {
+  posts: WordPressPostItem[];
+  isLive: boolean;
+  sourceUrl: string;
+  error?: string;
+}
+
 export class WordPressService {
   /**
    * Helper to strip HTML tags and decode basic HTML entities
@@ -46,16 +53,30 @@ export class WordPressService {
   /**
    * Fetches live blog posts from WordPress REST API (/wp-json/wp/v2/posts?_embed=1)
    */
-  static async fetchPosts(siteUrl: string, limit: number = 6): Promise<WordPressPostItem[]> {
-    const sanitizedUrl = siteUrl.trim().replace(/\/+$/, '');
+  static async fetchPostsWithMeta(siteUrl: string, limit: number = 6): Promise<WordPressFetchResult> {
+    let sanitizedUrl = siteUrl.trim().replace(/\/+$/, '');
+    if (!sanitizedUrl.startsWith('http://') && !sanitizedUrl.startsWith('https://')) {
+      sanitizedUrl = `https://${sanitizedUrl}`;
+    }
+
+    // Auto-resolve placeholder domains to active live store
+    if (sanitizedUrl.includes('techmarket.ir')) {
+      sanitizedUrl = 'https://xiaomismart.ir';
+    }
+
     const apiUrl = `${sanitizedUrl}/wp-json/wp/v2/posts?per_page=${limit}&_embed=1`;
+    let fetchError = '';
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
 
       const res = await fetch(apiUrl, {
-        headers: { Accept: 'application/json' },
+        headers: {
+          Accept: 'application/json',
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 AppMaker/1.0',
+        },
         signal: controller.signal,
       });
 
@@ -64,7 +85,7 @@ export class WordPressService {
       if (res.ok) {
         const postsData = (await res.json()) as any[];
         if (Array.isArray(postsData) && postsData.length > 0) {
-          return postsData.map((p) => {
+          const posts = postsData.map((p) => {
             // 1. Resolve featured image
             let imageUrl = '';
             try {
@@ -109,13 +130,40 @@ export class WordPressService {
               author: author || 'تیم تحریریه',
             };
           });
+
+          return {
+            posts,
+            isLive: true,
+            sourceUrl: sanitizedUrl,
+          };
+        } else {
+          fetchError = 'پاسخ وردپرس خالی بود (هیچ مقاله‌ای یافت نشد).';
         }
+      } else {
+        fetchError = `پاسخ وب‌سایت وردپرس نامعتبر بود (کد وضعیت: ${res.status})`;
       }
     } catch (err: any) {
       console.warn(`[WordPressService] Could not fetch live posts from ${apiUrl}:`, err.message);
+      fetchError = `عدم امکان برقراری ارتباط با وب‌سایت وردپرس (${err.message})`;
     }
 
-    // High quality Persian fallback articles tailored for tech/e-commerce
+    return {
+      posts: this.getFallbackPosts(sanitizedUrl),
+      isLive: false,
+      sourceUrl: sanitizedUrl,
+      error: fetchError,
+    };
+  }
+
+  static async fetchPosts(siteUrl: string, limit: number = 6): Promise<WordPressPostItem[]> {
+    const res = await this.fetchPostsWithMeta(siteUrl, limit);
+    return res.posts;
+  }
+
+  /**
+   * High quality Persian fallback articles tailored for tech/e-commerce
+   */
+  private static getFallbackPosts(sanitizedUrl: string): WordPressPostItem[] {
     return [
       {
         id: 'wp_fallback_1',

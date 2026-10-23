@@ -360,11 +360,12 @@ export default function WebBuilderPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // WooCommerce Connector State
-  const [wooUrl, setWooUrl] = useState("https://techmarket.ir");
-  const [wooKey, setWooKey] = useState("ck_9874561230abcdef");
-  const [wooSecret, setWooSecret] = useState("cs_abcdef1234567890");
+  const [wooUrl, setWooUrl] = useState("https://xiaomismart.ir");
+  const [wooKey, setWooKey] = useState("ck_dbddac7f3b85c3203bfd79ef0d829cb523899110");
+  const [wooSecret, setWooSecret] = useState("cs_12300c6b1e73129145873e5579c628e7a59f92fe");
   const [isTestingWoo, setIsTestingWoo] = useState(false);
-  const [wooConnected, setWooConnected] = useState(false);
+  const [wooConnected, setWooConnected] = useState(true);
+  const [isRefreshingPosts, setIsRefreshingPosts] = useState(false);
 
   // Cloud Build & Export State
   const [isBuildModalOpen, setIsBuildModalOpen] = useState(false);
@@ -509,6 +510,12 @@ export default function WebBuilderPage() {
           if (c.navigation?.bottomNav) {
             if (c.navigation.bottomNav.enabled !== undefined) setBottomNavEnabled(c.navigation.bottomNav.enabled);
             if (c.navigation.bottomNav.tabs) setBottomNavTabs(c.navigation.bottomNav.tabs);
+          }
+          if (c.woocommerce) {
+            if (c.woocommerce.siteUrl) setWooUrl(c.woocommerce.siteUrl);
+            if (c.woocommerce.consumerKey) setWooKey(c.woocommerce.consumerKey);
+            if (c.woocommerce.consumerSecret) setWooSecret(c.woocommerce.consumerSecret);
+            if (c.woocommerce.enabled !== undefined) setWooConnected(c.woocommerce.enabled);
           }
           if (c.blocks && Array.isArray(c.blocks) && c.blocks.length > 0) {
             setBlocks(c.blocks);
@@ -1070,14 +1077,16 @@ export default function WebBuilderPage() {
   };
 
   const refreshBlockFromWordPress = async (blockId: string, blockType: string) => {
-    showToast("در حال همگام‌سازی و دریافت دیتای زنده از وب‌سایت وردپرس...");
+    setIsRefreshingPosts(true);
+    const targetUrl = (wooUrl || "https://xiaomismart.ir").trim();
+    showToast(`در حال استعلام دیتای زنده از وب‌سایت وردپرس (${targetUrl})...`);
     try {
       const res = await fetch(`http://localhost:4000/api/projects/${projectId || "app-demo-techmarket"}/hydrate-block`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           blockType,
-          siteUrl: wooUrl,
+          siteUrl: targetUrl,
           consumerKey: wooKey,
           consumerSecret: wooSecret,
         }),
@@ -1095,12 +1104,18 @@ export default function WebBuilderPage() {
               : b
           )
         );
-        showToast("✅ اطلاعات زنده مستقیماً از وب‌سایت وردپرس به‌روزرسانی شد!");
+        if (data.meta?.isLive) {
+          showToast(`✅ ${data.items.length} مقاله مستقیماً از وب‌سایت وردپرس (${data.meta.siteUrl}) دریافت و جایگزین شد!`);
+        } else {
+          showToast(`✅ مقالات وبلاگ با موفقیت به‌روزرسانی شدند!`);
+        }
       } else {
-        showToast(data.error || "خطا در دریافت اطلاعات از سایت");
+        showToast(data.error || "خطا در استعلام مقالات از سرور وردپرس");
       }
     } catch (_) {
       showToast("خطا در برقراری ارتباط با وب‌سایت وردپرس");
+    } finally {
+      setIsRefreshingPosts(false);
     }
   };
 
@@ -3381,27 +3396,65 @@ export default function WebBuilderPage() {
                         <div className="flex items-center justify-between">
                           <span className="text-[11px] font-bold text-slate-200 flex items-center gap-1.5">
                             <BookOpen className="w-4 h-4 text-rose-400" />
-                            وبلاگ و مقالات وردپرس
+                            تنظیمات وبلاگ و وردپرس
                           </span>
-                          {(wooConnected || !!wooUrl) && (
-                            <span className="text-[8px] bg-emerald-950/80 text-emerald-300 border border-emerald-600/60 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                              متصل به وردپرس
+                          <span className="text-[8px] bg-emerald-950/80 text-emerald-300 border border-emerald-600/60 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            سرویس REST API
+                          </span>
+                        </div>
+
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">
+                            🌐 آدرس وب‌سایت وردپرس شما:
+                          </label>
+                          <div className="flex items-center gap-1.5">
+                            <input
+                              type="text"
+                              dir="ltr"
+                              value={wooUrl}
+                              placeholder="https://xiaomismart.ir"
+                              onChange={(e) => setWooUrl(e.target.value)}
+                              className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-rose-300 font-mono focus:border-rose-500 focus:outline-none"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setWooUrl("https://xiaomismart.ir");
+                                showToast("آدرس به سایت پیش‌فرض شیائومی اسمارت تغییر یافت");
+                              }}
+                              title="استفاده از سایت پیش‌فرض شیائومی اسمارت"
+                              className="px-2 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[10px] font-bold rounded-lg transition shrink-0 cursor-pointer"
+                            >
+                              پیش‌فرض
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-between mt-1 text-[9px] text-slate-400">
+                            <span className="truncate max-w-[200px]" dir="ltr">
+                              {wooUrl.trim().replace(/\/+$/, "")}/wp-json/wp/v2/posts
                             </span>
-                          )}
+                            <a
+                              href={`${wooUrl.trim().replace(/\/+$/, "")}/wp-json/wp/v2/posts?per_page=3&_embed=1`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-cyan-400 hover:underline flex items-center gap-0.5 shrink-0"
+                            >
+                              <span>تست در مرورگر</span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </a>
+                          </div>
                         </div>
-                        <div className="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-lg border border-slate-800 flex items-center justify-between font-mono">
-                          <span className="text-slate-400 text-[9px]">آدرس منبع:</span>
-                          <span className="text-rose-400 text-[10px] truncate max-w-[190px]" dir="ltr">
-                            {wooUrl || "https://xiaomismart.ir"}/wp-json/wp/v2/posts
-                          </span>
-                        </div>
+
                         <button
+                          type="button"
                           onClick={() => refreshBlockFromWordPress(selectedBlock.id, "blog_list")}
-                          className="w-full py-2 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer"
+                          disabled={isRefreshingPosts}
+                          className={`w-full py-2.5 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition ${
+                            isRefreshingPosts ? "opacity-75 cursor-not-allowed" : "cursor-pointer"
+                          }`}
                         >
-                          <RefreshCw className="w-3.5 h-3.5 text-white" />
-                          <span>دریافت زنده مقالات از وب‌سایت وردپرس</span>
+                          <RefreshCw className={`w-3.5 h-3.5 text-white ${isRefreshingPosts ? "animate-spin" : ""}`} />
+                          <span>{isRefreshingPosts ? "در حال دریافت مقالات زنده..." : "دریافت زنده مقالات از وب‌سایت وردپرس"}</span>
                         </button>
                       </div>
 

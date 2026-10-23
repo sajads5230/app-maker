@@ -764,24 +764,24 @@ export const woocommerceRoutes: FastifyPluginAsync = async (server: FastifyInsta
       consumerSecret: consumerSecret || '',
     };
 
-    if ((!creds.siteUrl || !creds.consumerKey) && projectId) {
+    if ((!creds.siteUrl || creds.siteUrl.includes('techmarket.ir') || !creds.consumerKey) && projectId) {
       try {
         const proj = await prisma.project.findUnique({ where: { id: projectId } });
         if (proj) {
           const cfg = JSON.parse(proj.configJson);
           if (cfg.woocommerce) {
-            creds.siteUrl = creds.siteUrl || cfg.woocommerce.siteUrl;
-            creds.consumerKey = creds.consumerKey || cfg.woocommerce.consumerKey;
-            creds.consumerSecret = creds.consumerSecret || cfg.woocommerce.consumerSecret;
+            creds.siteUrl = cfg.woocommerce.siteUrl || creds.siteUrl;
+            creds.consumerKey = cfg.woocommerce.consumerKey || creds.consumerKey;
+            creds.consumerSecret = cfg.woocommerce.consumerSecret || creds.consumerSecret;
           }
-          if (!creds.siteUrl && cfg.wordpress?.siteUrl) {
+          if ((!creds.siteUrl || creds.siteUrl.includes('techmarket.ir')) && cfg.wordpress?.siteUrl) {
             creds.siteUrl = cfg.wordpress.siteUrl;
           }
         }
       } catch (_) {}
     }
 
-    if (!creds.siteUrl) {
+    if (!creds.siteUrl || creds.siteUrl.includes('techmarket.ir')) {
       creds.siteUrl = 'https://xiaomismart.ir';
     }
     if (!creds.consumerKey) {
@@ -795,16 +795,18 @@ export const woocommerceRoutes: FastifyPluginAsync = async (server: FastifyInsta
 
     switch (blockType) {
       case 'blog_list': {
-        const posts = await WordPressService.fetchPosts(creds.siteUrl, sanitizedLimit || 6);
+        const fetchResult = await WordPressService.fetchPostsWithMeta(creds.siteUrl, sanitizedLimit || 6);
         return reply.send({
           success: true,
           blockType: 'blog_list',
           title: 'آخرین مقالات و بررسی‌ها',
-          items: posts,
+          items: fetchResult.posts,
           meta: {
-            siteUrl: creds.siteUrl,
-            source: 'wordpress_rest_api',
-            itemCount: posts.length,
+            siteUrl: fetchResult.sourceUrl,
+            source: fetchResult.isLive ? 'wordpress_rest_api' : 'fallback',
+            isLive: fetchResult.isLive,
+            error: fetchResult.isLive ? undefined : fetchResult.error,
+            itemCount: fetchResult.posts.length,
           },
         });
       }
