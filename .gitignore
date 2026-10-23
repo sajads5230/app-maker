@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production / Build outputs
+dist/
+/build/
+apps/mobile-core/build/
+flutter-app/build/
+.next/
+out/
+
+# Explicitly ensure source code named build/dist is tracked
+!**/src/**/build/
+!**/src/**/dist/
+!**/src/**/build/**
+!**/src/**/dist/**
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+*.apk
+*.aab
+*.ipa
+ios/Pods/
+ios/.symlinks/
+
+# Workers dynamic workspaces & generated artifacts
+workers/build-worker/workspaces/
+workers/build-worker/keystores/
+*.keystore
+*.jks
+
+# Environment variables & Secrets
+.env
+.env*.local
+!.env.example
+!.env.*.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Editor & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

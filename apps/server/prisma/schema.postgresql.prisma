@@ -1,0 +1,74 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  phone         String         @unique
+  name          String?
+  role          String         @default("USER") // USER, ADMIN
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  projects      Project[]
+  subscriptions Subscription[]
+
+  @@index([role])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Project {
+  id             String     @id @default(uuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String
+  packageName    String
+  version        String     @default("1.0.0")
+  configJson     String     @db.Text // Large Server-Driven UI JSON payload
+  keystoreSha256 String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  buildJobs      BuildJob[]
+
+  @@index([userId])
+  @@index([packageName])
+  @@map("projects")
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan      String   // BASIC, PRO, LIFETIME
+  status    String   @default("ACTIVE") // ACTIVE, EXPIRED, CANCELLED
+  price     Int      // in Tomans
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId, status])
+  @@index([status, expiresAt])
+  @@map("subscriptions")
+}
+
+model BuildJob {
+  id          String    @id @default(uuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  platform    String    // APK, AAB, PWA, ALL
+  status      String    @default("QUEUED") // QUEUED, BUILDING, SUCCESS, FAILED
+  downloadUrl String?
+  aabUrl      String?
+  keystoreUrl String?
+  logs        String?   @db.Text
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([status, createdAt])
+  @@index([projectId])
+  @@map("build_jobs")
+}

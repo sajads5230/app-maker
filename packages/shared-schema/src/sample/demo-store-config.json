@@ -1,0 +1,318 @@
+{
+  "schemaVersion": "1.0.0",
+  "metadata": {
+    "id": "app-demo-techmarket",
+    "name": "تک‌مارکت",
+    "version": "1.0.0",
+    "buildNumber": 1,
+    "packageName": "ir.techmarket.app",
+    "iconUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=192&h=192&fit=crop",
+    "splashUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=1000&fit=crop",
+    "description": "فروشگاه تخصصی لوازم دیجیتال، لپ‌تاپ و گوشی موبایل",
+    "supportPhone": "02191000000",
+    "supportEmail": "support@techmarket.ir"
+  },
+  "theme": {
+    "mode": "light",
+    "isRTL": true,
+    "fontFamily": "Kalameh",
+    "borderRadius": {
+      "small": 6,
+      "medium": 12,
+      "large": 20,
+      "full": 999
+    },
+    "lightPalette": {
+      "primary": "#ef394e",
+      "primaryLight": "#ffebee",
+      "secondary": "#008eb9",
+      "background": "#f8f9fa",
+      "surface": "#ffffff",
+      "textPrimary": "#1f2937",
+      "textSecondary": "#6b7280",
+      "border": "#e5e7eb",
+      "success": "#10b981",
+      "error": "#ef4444",
+      "warning": "#f59e0b"
+    }
+  },
+  "navigation": {
+    "appBar": {
+      "showLogo": true,
+      "title": "تک‌مارکت",
+      "showSearch": true,
+      "searchPlaceholder": "جستجو در میان هزاران محصول...",
+      "showCartIcon": true,
+      "showNotificationIcon": true,
+      "showDrawerButton": true
+    },
+    "bottomNav": {
+      "enabled": true,
+      "tabs": [
+        {
+          "id": "tab_home",
+          "label": "خانه",
+          "icon": "home",
+          "targetPageId": "page_home"
+        },
+        {
+          "id": "tab_categories",
+          "label": "دسته‌بندی‌ها",
+          "icon": "grid",
+          "targetPageId": "page_categories"
+        },
+        {
+          "id": "tab_cart",
+          "label": "سبد خرید",
+          "icon": "shopping-cart",
+          "targetPageId": "page_cart",
+          "badgeCount": 2
+        },
+        {
+          "id": "tab_profile",
+          "label": "پروفایل من",
+          "icon": "user",
+          "targetPageId": "page_profile"
+        }
+      ]
+    },
+    "drawer": {
+      "enabled": true,
+      "headerBannerUrl": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=300&fit=crop",
+      "items": [
+        {
+          "id": "menu_orders",
+          "label": "سفارش‌های من",
+          "icon": "package",
+          "action": { "type": "open_page", "targetId": "page_orders" }
+        },
+        {
+          "id": "menu_favorites",
+          "label": "علاقه‌مندی‌ها",
+          "icon": "heart",
+          "action": { "type": "open_page", "targetId": "page_favorites" }
+        },
+        {
+          "id": "menu_contact",
+          "label": "پشتیبانی و تماس",
+          "icon": "phone",
+          "action": { "type": "contact_call", "url": "02191000000" },
+          "dividerAfter": true
+        },
+        {
+          "id": "menu_rules",
+          "label": "قوانین و مقررات",
+          "icon": "file-text",
+          "action": { "type": "open_page", "targetId": "page_terms" }
+        }
+      ]
+    }
+  },
+  "pages": [
+    {
+      "id": "page_home",
+      "title": "خانه",
+      "slug": "home",
+      "isHome": true,
+      "blocks": [
+        {
+          "id": "block_notice_1",
+          "type": "notice_box",
+          "variant": "info",
+          "message": "🚚 ارسال رایگان برای خریدهای بالای ۶۰۰ هزار تومان در سراسر کشور",
+          "iconName": "truck"
+        },
+        {
+          "id": "block_slider_1",
+          "type": "banner_slider",
+          "autoPlay": true,
+          "autoPlayIntervalMs": 4000,
+          "height": 190,
+          "aspectRatio": 2.1,
+          "indicatorStyle": "dots",
+          "borderRadius": 12,
+          "items": [
+            {
+              "id": "slide_1",
+              "imageUrl": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=400&fit=crop",
+              "title": "هدفون‌های حرفه‌ای سونی با تخفیف ویژه",
+              "action": { "type": "open_category", "targetId": "cat_audio" }
+            },
+            {
+              "id": "slide_2",
+              "imageUrl": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=400&fit=crop",
+              "title": "جشنواره لپ‌تاپ‌های مهندسی و گیمینگ",
+              "action": { "type": "open_category", "targetId": "cat_laptops" }
+            },
+            {
+              "id": "slide_3",
+              "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=400&fit=crop",
+              "title": "ساعت‌های هوشمند با گارانتی معتبر",
+              "action": { "type": "open_category", "targetId": "cat_watches" }
+            }
+          ]
+        },
+        {
+          "id": "block_categories_1",
+          "type": "categories",
+          "title": "دسته‌بندی‌های محبوب",
+          "layout": "grid_4_col",
+          "iconShape": "circle",
+          "items": [
+            {
+              "id": "cat_mobile",
+              "title": "موبایل",
+              "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop",
+              "action": { "type": "open_category", "targetId": "cat_mobile" }
+            },
+            {
+              "id": "cat_laptops",
+              "title": "لپ‌تاپ",
+              "imageUrl": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop",
+              "action": { "type": "open_category", "targetId": "cat_laptops" }
+            },
+            {
+              "id": "cat_audio",
+              "title": "هدفون و اسپیکر",
+              "imageUrl": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&h=150&fit=crop",
+              "action": { "type": "open_category", "targetId": "cat_audio" }
+            },
+            {
+              "id": "cat_watches",
+              "title": "ساعت هوشمند",
+              "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop",
+              "action": { "type": "open_category", "targetId": "cat_watches" }
+            }
+          ]
+        },
+        {
+          "id": "block_special_offers",
+          "type": "product_carousel",
+          "title": "پیشنهاد شگفت‌انگیز",
+          "subtitle": "تخفیف‌های محدود با زمان باقی‌مانده",
+          "filter": "special_offer",
+          "themeColor": "#ef394e",
+          "limit": 6,
+          "showSeeAllButton": true,
+          "seeAllAction": { "type": "open_category", "targetId": "special_offers" },
+          "items": [
+            {
+              "id": "prod_1",
+              "title": "هدفون بی‌سیم سونی مدل WH-1000XM5",
+              "price": 18450000,
+              "regularPrice": 21500000,
+              "discountPercent": 14,
+              "imageUrl": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop",
+              "stockStatus": "in_stock",
+              "rating": 4.8,
+              "reviewsCount": 124
+            },
+            {
+              "id": "prod_2",
+              "title": "ساعت هوشمند اپل واچ سری ۹ آلومینیوم",
+              "price": 24900000,
+              "regularPrice": 27000000,
+              "discountPercent": 8,
+              "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop",
+              "stockStatus": "in_stock",
+              "rating": 4.9,
+              "reviewsCount": 89
+            },
+            {
+              "id": "prod_3",
+              "title": "ماوس بی‌سیم لاجیتک مدل MX Master 3S",
+              "price": 6200000,
+              "regularPrice": 7200000,
+              "discountPercent": 14,
+              "imageUrl": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=300&fit=crop",
+              "stockStatus": "in_stock",
+              "rating": 4.7,
+              "reviewsCount": 56
+            }
+          ]
+        },
+        {
+          "id": "block_promo_banners_1",
+          "type": "promo_banners",
+          "layout": "two_column",
+          "aspectRatio": 1.6,
+          "banners": [
+            {
+              "id": "banner_left",
+              "imageUrl": "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&h=320&fit=crop",
+              "action": { "type": "open_category", "targetId": "cat_accessories" }
+            },
+            {
+              "id": "banner_right",
+              "imageUrl": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500&h=320&fit=crop",
+              "action": { "type": "open_category", "targetId": "cat_gaming" }
+            }
+          ]
+        },
+        {
+          "id": "block_latest_products",
+          "type": "product_grid",
+          "title": "جدیدترین محصولات فروشگاه",
+          "columns": 2,
+          "filter": "latest",
+          "limit": 4,
+          "items": [
+            {
+              "id": "prod_4",
+              "title": "کیبورد مکانیکال گیمینگ ردراگون K552",
+              "price": 2850000,
+              "imageUrl": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=300&fit=crop",
+              "stockStatus": "in_stock",
+              "rating": 4.5
+            },
+            {
+              "id": "prod_5",
+              "title": "پاوربانک ۲۰۰۰۰ میلی‌آمپر باسئوس ۶۵ وات",
+              "price": 3400000,
+              "imageUrl": "https://images.unsplash.com/photo-1609592807664-8461f0923f13?w=300&h=300&fit=crop",
+              "stockStatus": "in_stock",
+              "rating": 4.6
+            }
+          ]
+        },
+        {
+          "id": "block_blog_1",
+          "type": "blog_list",
+          "title": "مجله فناوری و راهنمای خرید",
+          "layout": "horizontal_cards",
+          "items": [
+            {
+              "id": "blog_1",
+              "title": "راهنمای جامع خرید بهترین هدفون نویزکنسلینگ در سال ۲۰۲۶",
+              "excerpt": "بررسی بهترین گزینه‌های بازار ایران به همراه مقایسه کیفیت و قیمت...",
+              "imageUrl": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=250&fit=crop",
+              "date": "۱۴ آبان ۱۴۰۵",
+              "author": "تحریریه تک‌مارکت",
+              "action": { "type": "open_url", "url": "https://techmarket.ir/blog/best-headphones" }
+            },
+            {
+              "id": "blog_2",
+              "title": "تفاوت نمایشگرهای OLED و AMOLED در گوشی‌های جدید",
+              "excerpt": "کدام تکنولوژی برای محافظت از چشم و مصرف کمتر باتری مناسب‌تر است؟",
+              "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=250&fit=crop",
+              "date": "۱۰ آبان ۱۴۰۵",
+              "author": "سجاد اکبری",
+              "action": { "type": "open_url", "url": "https://techmarket.ir/blog/oled-vs-amoled" }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "store": {
+    "currency": "تومان",
+    "currencySymbol": "تومان",
+    "currencyPosition": "left",
+    "enableGuestCheckout": true,
+    "minOrderAmount": 100000
+  },
+  "woocommerce": {
+    "enabled": true,
+    "siteUrl": "https://techmarket.ir"
+  }
+}

@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: appmaker-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-appmaker}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-appmaker_secure_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-appmaker_production}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=768MB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-appmaker} -d ${POSTGRES_DB:-appmaker_production}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Web-based database management GUI (Adminer)
+  adminer:
+    image: adminer:latest
+    container_name: appmaker-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Local S3-compatible Object Storage (MinIO)
+  minio:
+    image: minio/minio:latest
+    container_name: appmaker-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-appmaker_admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-appmaker_secure_s3_2026}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
+volumes:
+  postgres_data:
+    name: appmaker_postgres_data
+  minio_data:
+    name: appmaker_minio_data

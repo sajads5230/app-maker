@@ -1,0 +1,17 @@
+{
+  "name": "@app-maker/shared-schema",
+  "version": "1.0.0",
+  "description": "Standard Server-Driven UI schema and types for App Maker",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

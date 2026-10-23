@@ -1,0 +1,334 @@
+[
+  {
+    "id": "783227dc-0419-4ab1-a1e0-bd30b12233f2",
+    "phone": "09121234567",
+    "name": "مدیر پلتفرم تک‌مارکت",
+    "role": "ADMIN",
+    "createdAt": "2026-10-22T19:25:31.453Z",
+    "updatedAt": "2026-10-22T19:25:31.453Z",
+    "projects": [
+      {
+        "id": "app-demo-techmarket",
+        "userId": "783227dc-0419-4ab1-a1e0-bd30b12233f2",
+        "name": "تک‌مارکت",
+        "packageName": "ir.techmarket.app",
+        "version": "1.0.0",
+        "configJson": "{\"schemaVersion\":\"1.0.0\",\"metadata\":{\"name\":\"تک‌مارکت\",\"packageName\":\"ir.techmarket.app\",\"iconUrl\":\"http://localhost:4000/uploads/app-icon-techmarket.png\",\"splashUrl\":\"http://localhost:4000/uploads/app-icon-techmarket.png\"},\"theme\":{\"primaryColor\":\"#ef394e\",\"secondaryColor\":\"#008eb9\",\"cardBorderRadius\":14,\"cardStyle\":\"bordered\",\"fontFamily\":\"Kalameh\"},\"navigation\":{\"appBar\":{\"showSearch\":true,\"searchPlaceholder\":\"جستجو در بین ۵۰,۰۰۰ کالا...\",\"searchBarStyle\":\"capsule\"},\"bottomNav\":{\"enabled\":true,\"tabs\":[{\"id\":\"tab_home\",\"label\":\"خانه\",\"icon\":\"home\",\"targetPage\":\"home\"},{\"id\":\"tab_categories\",\"label\":\"دسته‌ها\",\"icon\":\"grid\",\"targetPage\":\"categories\"},{\"id\":\"tab_cart\",\"label\":\"سبد خرید\",\"icon\":\"cart\",\"targetPage\":\"cart\"},{\"id\":\"tab_profile\",\"label\":\"پروفایل\",\"icon\":\"user\",\"targetPage\":\"profile\"}]}},\"blocks\":[{\"id\":\"block_notice_1\",\"type\":\"notice_box\",\"variant\":\"info\",\"message\":\"🚚 ارسال رایگان برای خریدهای بالای ۶۰۰ هزار تومان در سراسر کشور\"},{\"id\":\"block_slider_1\",\"type\":\"banner_slider\",\"height\":160,\"items\":[{\"id\":\"s1\",\"imageUrl\":\"http://localhost:4000/uploads/banner-special-offers.png\",\"title\":\"جشنواره فروش ویژه تک‌مارکت\"},{\"id\":\"s2\",\"imageUrl\":\"http://localhost:4000/uploads/banner-accessories.png\",\"title\":\"تجهیزات هوشمند و جانبی موبایل\"}]},{\"id\":\"block_categories_1\",\"type\":\"categories\",\"title\":\"دسته‌بندی‌های محبوب\",\"items\":[{\"id\":\"c1\",\"title\":\"موبایل\",\"imageUrl\":\"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop\"},{\"id\":\"c2\",\"title\":\"لپ‌تاپ\",\"imageUrl\":\"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop\"},{\"id\":\"c3\",\"title\":\"صوتی\",\"imageUrl\":\"https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&h=150&fit=crop\"},{\"id\":\"c4\",\"title\":\"ساعت\",\"imageUrl\":\"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop\"}]},{\"id\":\"block_special_offers\",\"type\":\"product_carousel\",\"title\":\"پیشنهاد شگفت‌انگیز\",\"subtitle\":\"تخفیف‌های محدود با زمان باقی‌مانده\",\"themeColor\":\"#ef394e\",\"items\":[{\"id\":\"p1\",\"title\":\"هدفون بی‌سیم سونی WH-1000XM5\",\"price\":18450000,\"regularPrice\":21500000,\"discount\":14,\"imageUrl\":\"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop\"},{\"id\":\"p2\",\"title\":\"اپل واچ سری ۹ آلومینیوم\",\"price\":24900000,\"regularPrice\":27000000,\"discount\":8,\"imageUrl\":\"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop\"},{\"id\":\"p3\",\"title\":\"ماوس بی‌سیم لاجیتک Master 3S\",\"price\":6200000,\"regularPrice\":7200000,\"discount\":14,\"imageUrl\":\"https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=200&h=200&fit=crop\"}]},{\"id\":\"block_promo_1\",\"type\":\"promo_banners\",\"banners\":[{\"id\":\"b1\",\"imageUrl\":\"http://localhost:4000/uploads/promo-smartwatch.png\",\"title\":\"اکسسوری هوشمند\"},{\"id\":\"b2\",\"imageUrl\":\"http://localhost:4000/uploads/promo-gaming.png\",\"title\":\"تجهیزات گیمینگ\"}]},{\"id\":\"block_grid_1\",\"type\":\"product_grid\",\"title\":\"جدیدترین محصولات فروشگاه\",\"items\":[{\"id\":\"p4\",\"title\":\"کیبورد مکانیکال ردراگون K552\",\"price\":2850000,\"imageUrl\":\"https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=300&fit=crop\"},{\"id\":\"p5\",\"title\":\"پاوربانک ۲۰۰۰۰ میلی‌آمپر باسئوس\",\"price\":3400000,\"imageUrl\":\"https://images.unsplash.com/photo-1609592807664-8461f0923f13?w=300&h=300&fit=crop\"}]},{\"id\":\"block_blog_1\",\"type\":\"blog_list\",\"title\":\"مجله فناوری و راهنمای خرید\",\"items\":[{\"id\":\"bl1\",\"title\":\"راهنمای جامع خرید هدفون در سال ۲۰۲۶\",\"excerpt\":\"بررسی بهترین گزینه‌های بازار ایران به همراه کیفیت صدا\",\"date\":\"۱۴ آبان ۱۴۰۵\",\"imageUrl\":\"https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&h=150&fit=crop\"}]}]}",
+        "keystoreSha256": "60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82",
+        "createdAt": "2026-10-22T19:25:31.457Z",
+        "updatedAt": "2026-10-22T21:54:52.255Z",
+        "buildJobs": [
+          {
+            "id": "d1657b08-f403-4bcc-b10d-16705320a5ee",
+            "projectId": "app-demo-techmarket",
+            "platform": "APK",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": null,
+            "keystoreUrl": null,
+            "logs": "[۲۲:۵۶:۴۱] فایل APK با موفقیت کامپایل شد (حجم: ۲۲.۴ مگابایت).",
+            "createdAt": "2026-10-22T19:26:35.194Z",
+            "completedAt": "2026-10-22T19:26:41.717Z"
+          },
+          {
+            "id": "da492865-372f-4a74-8774-4d2cbabc4c21",
+            "projectId": "app-demo-techmarket",
+            "platform": "APK",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": null,
+            "keystoreUrl": null,
+            "logs": "[۲۳:۰۵:۵۹] تزریق متادیتا، نام پکیج و فایل کانفیگ با موفقیت انجام شد.\n[۲۳:۰۶:۰۰] کامپایل پکیج نصبی با موفقیت تکمیل شد.\n[۲۳:۰۶:۰۰] فایل نهایی در سرور ذخیره شد: ir.techmarket.app-v1.0.0.apk",
+            "createdAt": "2026-10-22T19:35:58.810Z",
+            "completedAt": "2026-10-22T19:36:00.631Z"
+          },
+          {
+            "id": "b1c6c78f-f2c3-4cba-958a-e0dc00d4d6c2",
+            "projectId": "app-demo-techmarket",
+            "platform": "APK",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": null,
+            "keystoreUrl": null,
+            "logs": "[۲۳:۰۶:۰۵] تزریق متادیتا، نام پکیج و فایل کانفیگ با موفقیت انجام شد.\n[۲۳:۰۶:۰۷] کامپایل پکیج نصبی با موفقیت تکمیل شد.\n[۲۳:۰۶:۰۷] فایل نهایی در سرور ذخیره شد: ir.techmarket.app-v1.0.0.apk",
+            "createdAt": "2026-10-22T19:36:04.165Z",
+            "completedAt": "2026-10-22T19:36:07.285Z"
+          },
+          {
+            "id": "cde2b01b-a57d-4b1d-9734-92239650ce81",
+            "projectId": "app-demo-techmarket",
+            "platform": "APK",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": null,
+            "keystoreUrl": null,
+            "logs": "[۲۳:۱۰:۰۰] تزریق متادیتا، نام پکیج و فایل کانفیگ با موفقیت انجام شد.\n[۲۳:۱۰:۰۲] کامپایل پکیج نصبی با موفقیت تکمیل شد.\n[۲۳:۱۰:۰۲] فایل نهایی در سرور ذخیره شد: ir.techmarket.app-v1.0.0.apk",
+            "createdAt": "2026-10-22T19:39:58.233Z",
+            "completedAt": "2026-10-22T19:40:02.033Z"
+          },
+          {
+            "id": "98f1b229-7b23-4aa5-8047-69790b51535c",
+            "projectId": "app-demo-techmarket",
+            "platform": "APK",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": null,
+            "keystoreUrl": null,
+            "logs": "[۰:۱۰:۱۱] تزریق متادیتا، نام پکیج و فایل کانفیگ با موفقیت انجام شد.\n[۰:۱۰:۱۲] کامپایل پکیج نصبی با موفقیت تکمیل شد.\n[۰:۱۰:۱۲] فایل نهایی در سرور ذخیره شد: ir.techmarket.app-v1.0.0.apk",
+            "createdAt": "2026-10-22T20:40:09.611Z",
+            "completedAt": "2026-10-22T20:40:12.992Z"
+          },
+          {
+            "id": "274ca040-f705-4004-b6aa-93f21c315fa2",
+            "projectId": "app-demo-techmarket",
+            "platform": "ALL",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.techmarket.app-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.techmarket.app-release-keystore.jks",
+            "logs": "[۰:۱۶:۲۸] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۰:۱۶:۲۸] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۰:۱۶:۲۸] اثر انگشت SHA-256 گواهی: 60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82\n[۰:۱۶:۲۸] اثر انگشت SHA-1 گواهی: 4D:00:96:C2:52:9E:E6:BB:61:0A:06:82:8F:B8:DA:17:C8:8B:CF:56\n[۰:۱۶:۲۸] تزریق متغیرهای امضای دیجیتال در android/key.properties و گریدل...\n[۰:۱۶:۲۹] تزریق متادیتا، نام پکیج و استایل کلمه FaNum با موفقیت انجام شد.\n[۰:۱۶:۳۱] تولید پکیج‌های استاندارد نصبی و باندل تجاری همراه با امضای دیجیتال...\n[۰:۱۶:۳۱] پکیج نصبی APK آماده شد: ir.techmarket.app-v1.0.0.apk\n[۰:۱۶:۳۱] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.techmarket.app-v1.0.0.aab\n[۰:۱۶:۳۱] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T20:46:27.075Z",
+            "completedAt": "2026-10-22T20:46:31.278Z"
+          },
+          {
+            "id": "e9504600-2ed6-461c-b5b9-f814121de7bd",
+            "projectId": "app-demo-techmarket",
+            "platform": "AAB",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.techmarket.app-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.techmarket.app-release-keystore.jks",
+            "logs": "[۰:۴۰:۱۷] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۰:۴۰:۱۷] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۰:۴۰:۱۷] اثر انگشت SHA-256 گواهی: 60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82\n[۰:۴۰:۱۷] اثر انگشت SHA-1 گواهی: 4D:00:96:C2:52:9E:E6:BB:61:0A:06:82:8F:B8:DA:17:C8:8B:CF:56\n[۰:۴۰:۱۷] تزریق متغیرهای امضای دیجیتال در android/key.properties و گریدل...\n[۰:۴۰:۱۷] تزریق متادیتا، نام پکیج و استایل کلمه FaNum با موفقیت انجام شد.\n[۰:۴۰:۱۸] تولید پکیج‌های استاندارد نصبی و باندل تجاری همراه با امضای دیجیتال...\n[۰:۴۰:۱۸] پکیج نصبی APK آماده شد: ir.techmarket.app-v1.0.0.apk\n[۰:۴۰:۱۸] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.techmarket.app-v1.0.0.aab\n[۰:۴۰:۱۸] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T21:10:16.328Z",
+            "completedAt": "2026-10-22T21:10:18.948Z"
+          },
+          {
+            "id": "7bbd806e-6b9a-4bbd-ba1a-2b6b0885e155",
+            "projectId": "app-demo-techmarket",
+            "platform": "ALL",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.techmarket.app-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.techmarket.app-release-keystore.jks",
+            "logs": "[۰:۴۲:۰۴] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۰:۴۲:۰۴] تخصیص محیط ایزوله بیلد اختصاصی (Build Sandbox) جهت جلوگیری از تداخل پروسه‌ها...\n[۰:۴۲:۰۴] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۰:۴۲:۰۴] اثر انگشت SHA-256 گواهی: 60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82\n[۰:۴۲:۰۴] اثر انگشت SHA-1 گواهی: 4D:00:96:C2:52:9E:E6:BB:61:0A:06:82:8F:B8:DA:17:C8:8B:CF:56\n[۰:۴۲:۰۴] تزریق متغیرهای امضای دیجیتال در محیط ایزوله سندباکس...\n[۰:۴۲:۰۵] تزریق متادیتا، نام پکیج و استایل کلمه FaNum در سندباکس با موفقیت انجام شد.\n[۰:۴۲:۰۶] تولید پکیج‌های استاندارد نصبی و باندل تجاری همراه با امضای دیجیتال...\n[۰:۴۲:۰۶] پکیج نصبی APK آماده شد: ir.techmarket.app-v1.0.0.apk\n[۰:۴۲:۰۶] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.techmarket.app-v1.0.0.aab\n[۰:۴۲:۰۶] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T21:12:02.515Z",
+            "completedAt": "2026-10-22T21:12:06.596Z"
+          },
+          {
+            "id": "98dada0e-c24f-422e-8465-327d7e1f69f8",
+            "projectId": "app-demo-techmarket",
+            "platform": "ALL",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.techmarket.app-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.techmarket.app-release-keystore.jks",
+            "logs": "[۰:۵۱:۲۶] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۰:۵۱:۲۶] تخصیص محیط ایزوله بیلد اختصاصی (Build Sandbox) جهت جلوگیری از تداخل پروسه‌ها...\n[۰:۵۱:۲۶] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۰:۵۱:۲۶] اثر انگشت SHA-256 گواهی: 60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82\n[۰:۵۱:۲۶] اثر انگشت SHA-1 گواهی: 4D:00:96:C2:52:9E:E6:BB:61:0A:06:82:8F:B8:DA:17:C8:8B:CF:56\n[۰:۵۱:۲۶] تزریق متغیرهای امضای دیجیتال در محیط ایزوله سندباکس...\n[۰:۵۱:۲۶] تزریق متادیتا، نام پکیج و استایل کلمه FaNum در سندباکس با موفقیت انجام شد.\n[۰:۵۱:۲۷] تولید پکیج‌های استاندارد نصبی و باندل تجاری همراه با امضای دیجیتال...\n[۰:۵۱:۲۷] پکیج نصبی APK آماده شد: ir.techmarket.app-v1.0.0.apk\n[۰:۵۱:۲۷] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.techmarket.app-v1.0.0.aab\n[۰:۵۱:۲۷] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T21:21:25.995Z",
+            "completedAt": "2026-10-22T21:21:27.821Z"
+          },
+          {
+            "id": "af2afbbf-0781-45ec-b874-cb20df71fbbd",
+            "projectId": "app-demo-techmarket",
+            "platform": "ALL",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.techmarket.app-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.techmarket.app-release-keystore.jks",
+            "logs": "[۰:۵۲:۲۵] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۰:۵۲:۲۵] تخصیص محیط ایزوله بیلد اختصاصی (Build Sandbox) جهت جلوگیری از تداخل پروسه‌ها...\n[۰:۵۲:۲۵] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۰:۵۲:۲۵] اثر انگشت SHA-256 گواهی: 60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82\n[۰:۵۲:۲۵] اثر انگشت SHA-1 گواهی: 4D:00:96:C2:52:9E:E6:BB:61:0A:06:82:8F:B8:DA:17:C8:8B:CF:56\n[۰:۵۲:۲۵] تزریق متغیرهای امضای دیجیتال در محیط ایزوله سندباکس...\n[۰:۵۲:۲۵] تزریق متادیتا، نام پکیج و استایل کلمه FaNum در سندباکس با موفقیت انجام شد.\n[۰:۵۲:۲۶] تولید پکیج‌های استاندارد نصبی و باندل تجاری همراه با امضای دیجیتال...\n[۰:۵۲:۲۶] پکیج نصبی APK آماده شد: ir.techmarket.app-v1.0.0.apk\n[۰:۵۲:۲۶] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.techmarket.app-v1.0.0.aab\n[۰:۵۲:۲۶] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T21:22:22.389Z",
+            "completedAt": "2026-10-22T21:22:26.773Z"
+          },
+          {
+            "id": "7f93a0a7-9331-4b83-8ad8-2f803f062637",
+            "projectId": "app-demo-techmarket",
+            "platform": "ALL",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.techmarket.app-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.techmarket.app-release-keystore.jks",
+            "logs": "[۱:۰۴:۰۳] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۱:۰۴:۰۳] تخصیص محیط ایزوله بیلد اختصاصی (Build Sandbox) جهت جلوگیری از تداخل پروسه‌ها...\n[۱:۰۴:۰۳] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۱:۰۴:۰۳] اثر انگشت SHA-256 گواهی: 60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82\n[۱:۰۴:۰۳] اثر انگشت SHA-1 گواهی: 4D:00:96:C2:52:9E:E6:BB:61:0A:06:82:8F:B8:DA:17:C8:8B:CF:56\n[۱:۰۴:۰۳] تزریق متغیرهای امضای دیجیتال در محیط ایزوله سندباکس...\n[۱:۰۴:۰۳] تزریق متادیتا، نام پکیج و استایل کلمه FaNum در سندباکس با موفقیت انجام شد.\n[۱:۰۴:۰۵] [توجه] ابزار Android SDK روی این سیستم شناسایی نشد. پکیج متادیتای شبیه‌ساز (Mock Preview) با حجم ۱.۳ کیلوبایت تولید شد.\n[۱:۰۴:۰۵] جهت تولید فایل نصبی واقعی (حجم ۲۰ تا ۳۵ مگابایت)، سرور بیلد نیازمند ابزار Android SDK و کامپایل واقعی گریدل است.\n[۱:۰۴:۰۵] پکیج نصبی APK آماده شد: ir.techmarket.app-v1.0.0.apk\n[۱:۰۴:۰۵] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.techmarket.app-v1.0.0.aab\n[۱:۰۴:۰۵] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T21:34:02.226Z",
+            "completedAt": "2026-10-22T21:34:05.696Z"
+          },
+          {
+            "id": "2c94fb1c-5b81-47b6-af10-abcd939dc588",
+            "projectId": "app-demo-techmarket",
+            "platform": "APK",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.techmarket.app-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.techmarket.app-release-keystore.jks",
+            "logs": "[۱:۱۰:۳۶] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۱:۱۰:۳۶] تخصیص محیط ایزوله بیلد اختصاصی (Build Sandbox) جهت جلوگیری از تداخل پروسه‌ها...\n[۱:۱۰:۳۶] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۱:۱۰:۳۶] اثر انگشت SHA-256 گواهی: 60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82\n[۱:۱۰:۳۶] اثر انگشت SHA-1 گواهی: 4D:00:96:C2:52:9E:E6:BB:61:0A:06:82:8F:B8:DA:17:C8:8B:CF:56\n[۱:۱۰:۳۶] تزریق متغیرهای امضای دیجیتال در محیط ایزوله سندباکس...\n[۱:۱۰:۳۷] تزریق متادیتا، نام پکیج و استایل کلمه FaNum در سندباکس با موفقیت انجام شد.\n[۱:۱۰:۴۰] کامپایل پکیج APK با موتور فلاتر در سندباکس...\n[۱:۱۶:۲۲] [توجه] ابزار Android SDK روی این سیستم شناسایی نشد. پکیج متادیتای شبیه‌ساز (Mock Preview) با حجم ۱.۳ کیلوبایت تولید شد.\n[۱:۱۶:۲۲] جهت تولید فایل نصبی واقعی (حجم ۲۰ تا ۳۵ مگابایت)، سرور بیلد نیازمند ابزار Android SDK و کامپایل واقعی گریدل است.\n[۱:۱۶:۲۲] پکیج نصبی APK آماده شد: ir.techmarket.app-v1.0.0.apk\n[۱:۱۶:۲۲] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.techmarket.app-v1.0.0.aab\n[۱:۱۶:۲۲] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T21:40:36.300Z",
+            "completedAt": "2026-10-22T21:46:22.627Z"
+          },
+          {
+            "id": "ff561d0d-5f88-4c73-98c7-61b14fd632de",
+            "projectId": "app-demo-techmarket",
+            "platform": "ALL",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.techmarket.app-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.techmarket.app-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.techmarket.app-release-keystore.jks",
+            "logs": "[۱:۲۲:۵۵] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۱:۲۲:۵۵] تخصیص محیط ایزوله بیلد اختصاصی (Build Sandbox) جهت جلوگیری از تداخل پروسه‌ها...\n[۱:۲۲:۵۵] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۱:۲۲:۵۵] اثر انگشت SHA-256 گواهی: 60:2B:5E:CD:87:63:00:AE:CC:5B:8F:15:D6:35:AA:D4:44:32:02:78:7B:4B:99:C1:82:D9:B8:3B:63:C7:01:82\n[۱:۲۲:۵۵] اثر انگشت SHA-1 گواهی: 4D:00:96:C2:52:9E:E6:BB:61:0A:06:82:8F:B8:DA:17:C8:8B:CF:56\n[۱:۲۲:۵۵] تزریق متغیرهای امضای دیجیتال در محیط ایزوله سندباکس...\n[۱:۲۲:۵۶] تزریق متادیتا، نام پکیج و استایل کلمه FaNum در سندباکس با موفقیت انجام شد.\n[۱:۲۳:۱۶] کامپایل پکیج APK با موتور فلاتر در سندباکس...\n[۱:۲۴:۳۴] کامپایل بسته رسمی Android App Bundle (AAB)...\n[۱:۲۴:۴۵] پکیج نصبی APK آماده شد: ir.techmarket.app-v1.0.0.apk\n[۱:۲۴:۴۵] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.techmarket.app-v1.0.0.aab\n[۱:۲۴:۴۵] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T21:52:54.244Z",
+            "completedAt": "2026-10-22T21:54:45.530Z"
+          },
+          {
+            "id": "e3c3eb3c-65fd-4c60-bbbe-ad4644222d5f",
+            "projectId": "app-demo-techmarket",
+            "platform": "ALL",
+            "status": "BUILDING",
+            "downloadUrl": null,
+            "aabUrl": null,
+            "keystoreUrl": null,
+            "logs": "[۱:۲۴:۵۲] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n",
+            "createdAt": "2026-10-22T21:54:51.885Z",
+            "completedAt": null
+          }
+        ]
+      },
+      {
+        "id": "2eaf4c0f-8da5-42cf-83c7-964378a7186d",
+        "userId": "783227dc-0419-4ab1-a1e0-bd30b12233f2",
+        "name": "بوتیک مد و لباس لیمو",
+        "packageName": "ir.limoo.boutique",
+        "version": "1.0.0",
+        "configJson": "{\"metadata\":{\"name\":\"بوتیک مد و لباس لیمو\",\"version\":\"1.0.0\",\"packageName\":\"ir.limoo.boutique\"},\"theme\":{\"primaryColor\":\"#8b5cf6\",\"secondaryColor\":\"#f43f5e\",\"fontFamily\":\"Kalameh\",\"borderRadius\":18,\"mode\":\"light\",\"isRTL\":true},\"blocks\":[{\"id\":\"b_banner\",\"type\":\"carousel\",\"title\":\"کالکشن جدید زمستانه\"}]}",
+        "keystoreSha256": null,
+        "createdAt": "2026-10-22T21:26:05.456Z",
+        "updatedAt": "2026-10-22T21:26:05.456Z",
+        "buildJobs": []
+      },
+      {
+        "id": "f490f368-d578-4b86-b5d8-3eec98dcf00e",
+        "userId": "783227dc-0419-4ab1-a1e0-bd30b12233f2",
+        "name": "سجاد",
+        "packageName": "ir.sajad.killer",
+        "version": "1.0.0",
+        "configJson": "{\"metadata\":{\"name\":\"رستوران و کافه گسترو\",\"version\":\"1.0.0\",\"packageName\":\"ir.gourmet.cafe\"},\"theme\":{\"primaryColor\":\"#f97316\",\"secondaryColor\":\"#b45309\",\"fontFamily\":\"Kalameh\",\"borderRadius\":16,\"mode\":\"light\",\"isRTL\":true},\"blocks\":[{\"id\":\"b_cafe_hero\",\"type\":\"carousel\",\"title\":\"طعم اصیل غذاهای ایتالیایی و سنتی\"},{\"id\":\"b_cafe_menu\",\"type\":\"categories\",\"title\":\"برگرها • پیتزا • سالاد و پیش‌غذا\"},{\"id\":\"b_cafe_specials\",\"type\":\"product_grid\",\"title\":\"پیشنهاد سرآشپز\"}]}",
+        "keystoreSha256": null,
+        "createdAt": "2026-10-22T21:40:14.482Z",
+        "updatedAt": "2026-10-22T21:40:14.482Z",
+        "buildJobs": []
+      }
+    ],
+    "subscriptions": [
+      {
+        "id": "d482e3e7-a382-4993-9286-04e385defa05",
+        "userId": "783227dc-0419-4ab1-a1e0-bd30b12233f2",
+        "plan": "LIFETIME",
+        "status": "ACTIVE",
+        "price": 21900000,
+        "expiresAt": "2036-10-19T19:25:31.451Z",
+        "createdAt": "2026-10-22T19:25:31.453Z"
+      },
+      {
+        "id": "9ec2c281-a47e-4d73-b2d5-a3dc784a2d21",
+        "userId": "783227dc-0419-4ab1-a1e0-bd30b12233f2",
+        "plan": "plan_pro",
+        "status": "ACTIVE",
+        "price": 13500000,
+        "expiresAt": "2027-10-22T21:17:34.488Z",
+        "createdAt": "2026-10-22T21:17:34.490Z"
+      },
+      {
+        "id": "4f6870a3-438a-4b7c-b2e4-36882fc02c32",
+        "userId": "783227dc-0419-4ab1-a1e0-bd30b12233f2",
+        "plan": "plan_pro",
+        "status": "ACTIVE",
+        "price": 13500000,
+        "expiresAt": "2027-10-22T21:18:16.322Z",
+        "createdAt": "2026-10-22T21:18:16.323Z"
+      }
+    ]
+  },
+  {
+    "id": "a4ccb970-dff4-4794-90cd-c751d7fada2f",
+    "phone": "09191112233",
+    "name": "سجاد احمدی",
+    "role": "USER",
+    "createdAt": "2026-10-22T21:15:18.079Z",
+    "updatedAt": "2026-10-22T21:15:18.079Z",
+    "projects": [
+      {
+        "id": "f41f2147-b3d3-41f2-992e-d62fb5f8c3c3",
+        "userId": "a4ccb970-dff4-4794-90cd-c751d7fada2f",
+        "name": "فروشگاه پوشاک لیمو",
+        "packageName": "ir.limoo.shop",
+        "version": "1.0.0",
+        "configJson": "{\"title\":\"فروشگاه لیمو\"}",
+        "keystoreSha256": null,
+        "createdAt": "2026-10-22T21:15:18.095Z",
+        "updatedAt": "2026-10-22T21:15:18.095Z",
+        "buildJobs": []
+      }
+    ],
+    "subscriptions": [
+      {
+        "id": "8da3dd11-2588-478e-ae36-5713c4de5916",
+        "userId": "a4ccb970-dff4-4794-90cd-c751d7fada2f",
+        "plan": "PRO",
+        "status": "ACTIVE",
+        "price": 13500000,
+        "expiresAt": "2027-10-22T21:15:18.078Z",
+        "createdAt": "2026-10-22T21:15:18.079Z"
+      }
+    ]
+  },
+  {
+    "id": "e9dcbc8f-bd09-4fbe-858d-fcd1bca67757",
+    "phone": "09353145656",
+    "name": "کاربر تستی E2E",
+    "role": "USER",
+    "createdAt": "2026-10-22T21:31:48.279Z",
+    "updatedAt": "2026-10-22T21:31:48.279Z",
+    "projects": [
+      {
+        "id": "5a061914-0cac-45fa-bd5d-4d76f0c8c22a",
+        "userId": "e9dcbc8f-bd09-4fbe-858d-fcd1bca67757",
+        "name": "اپلیکیشن تستی E2E",
+        "packageName": "ir.e2etest.app1792704708285",
+        "version": "1.0.0",
+        "configJson": "{\"theme\":{\"primaryColor\":\"#ef394e\"}}",
+        "keystoreSha256": "2F:2B:58:36:48:ED:9A:8D:7A:EB:6C:CA:AF:AD:30:53:EA:6F:76:C1:35:47:38:BE:D2:42:BB:DF:80:2E:E6:95",
+        "createdAt": "2026-10-22T21:31:48.287Z",
+        "updatedAt": "2026-10-22T21:31:49.843Z",
+        "buildJobs": [
+          {
+            "id": "98693953-be5c-4e36-866d-0e79660a9330",
+            "projectId": "5a061914-0cac-45fa-bd5d-4d76f0c8c22a",
+            "platform": "ALL",
+            "status": "SUCCESS",
+            "downloadUrl": "/downloads/ir.e2etest.app1792704708285-v1.0.0.apk",
+            "aabUrl": "/downloads/ir.e2etest.app1792704708285-v1.0.0.aab",
+            "keystoreUrl": "/downloads/ir.e2etest.app1792704708285-release-keystore.jks",
+            "logs": "[۱:۰۱:۴۸] آغاز فرآیند ساخت و آماده‌سازی پکیج تجاری...\n[۱:۰۱:۴۸] تخصیص محیط ایزوله بیلد اختصاصی (Build Sandbox) جهت جلوگیری از تداخل پروسه‌ها...\n[۱:۰۱:۴۸] اعتبارسنجی و صدور گواهی امضای دیجیتال اختصاصی (Keystore 2048-bit RSA)...\n[۱:۰۱:۴۹] اثر انگشت SHA-256 گواهی: 2F:2B:58:36:48:ED:9A:8D:7A:EB:6C:CA:AF:AD:30:53:EA:6F:76:C1:35:47:38:BE:D2:42:BB:DF:80:2E:E6:95\n[۱:۰۱:۴۹] اثر انگشت SHA-1 گواهی: FE:BA:F3:94:D1:91:0B:51:C8:3B:94:68:98:E8:F9:0B:62:90:7D:43\n[۱:۰۱:۴۹] تزریق متغیرهای امضای دیجیتال در محیط ایزوله سندباکس...\n[۱:۰۱:۴۹] تزریق متادیتا، نام پکیج و استایل کلمه FaNum در سندباکس با موفقیت انجام شد.\n[۱:۰۱:۵۱] [توجه] ابزار Android SDK روی این سیستم شناسایی نشد. پکیج متادیتای شبیه‌ساز (Mock Preview) با حجم ۱.۳ کیلوبایت تولید شد.\n[۱:۰۱:۵۱] جهت تولید فایل نصبی واقعی (حجم ۲۰ تا ۳۵ مگابایت)، سرور بیلد نیازمند ابزار Android SDK و کامپایل واقعی گریدل است.\n[۱:۰۱:۵۱] پکیج نصبی APK آماده شد: ir.e2etest.app1792704708285-v1.0.0.apk\n[۱:۰۱:۵۱] باندل تجاری AAB مخصوص کافه‌بازار و مایکت آماده شد: ir.e2etest.app1792704708285-v1.0.0.aab\n[۱:۰۱:۵۱] فایل کلید امضا (.jks) و اطلاعات پشتیبان جهت ثبت در پنل توسعه‌دهندگان آماده شد.\n",
+            "createdAt": "2026-10-22T21:31:48.309Z",
+            "completedAt": "2026-10-22T21:31:51.381Z"
+          }
+        ]
+      }
+    ],
+    "subscriptions": [
+      {
+        "id": "408baf9f-841d-4e05-910c-76e82a6a817e",
+        "userId": "e9dcbc8f-bd09-4fbe-858d-fcd1bca67757",
+        "plan": "PRO",
+        "status": "ACTIVE",
+        "price": 13500000,
+        "expiresAt": "2027-10-22T21:31:48.278Z",
+        "createdAt": "2026-10-22T21:31:48.279Z"
+      },
+      {
+        "id": "8afe6d98-c453-4831-a597-f1b9159cd906",
+        "userId": "e9dcbc8f-bd09-4fbe-858d-fcd1bca67757",
+        "plan": "plan_pro",
+        "status": "ACTIVE",
+        "price": 13500000,
+        "expiresAt": "2027-10-22T21:31:48.298Z",
+        "createdAt": "2026-10-22T21:31:48.299Z"
+      }
+    ]
+  }
+]

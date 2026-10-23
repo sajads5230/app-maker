@@ -1,0 +1,372 @@
+{
+  "schemaVersion": "1.0.0",
+  "metadata": {
+    "name": "تک‌مارکت",
+    "packageName": "ir.techmarket.app",
+    "iconUrl": "http://localhost:4000/uploads/app-icon-techmarket.png",
+    "splashUrl": "http://localhost:4000/uploads/app-icon-techmarket.png"
+  },
+  "theme": {
+    "primaryColor": "#ef394e",
+    "secondaryColor": "#008eb9",
+    "cardBorderRadius": 14,
+    "cardStyle": "bordered",
+    "fontFamily": "Kalameh"
+  },
+  "navigation": {
+    "appBar": {
+      "showSearch": true,
+      "searchPlaceholder": "جستجو در بین ۵۰,۰۰۰ کالا...",
+      "searchBarStyle": "capsule"
+    },
+    "bottomNav": {
+      "enabled": true,
+      "tabs": [
+        {
+          "id": "tab_home",
+          "label": "خانه",
+          "icon": "home",
+          "targetPage": "home"
+        },
+        {
+          "id": "tab_categories",
+          "label": "دسته‌ها",
+          "icon": "grid",
+          "targetPage": "categories"
+        },
+        {
+          "id": "tab_cart",
+          "label": "سبد خرید",
+          "icon": "cart",
+          "targetPage": "cart"
+        },
+        {
+          "id": "tab_profile",
+          "label": "پروفایل",
+          "icon": "user",
+          "targetPage": "profile"
+        }
+      ]
+    }
+  },
+  "blocks": [
+    {
+      "id": "block_notice_1",
+      "type": "notice_box",
+      "variant": "info",
+      "message": "🚚 ارسال رایگان برای خریدهای بالای ۶۰۰ هزار تومان در سراسر کشور"
+    },
+    {
+      "id": "block_slider_1",
+      "type": "banner_slider",
+      "height": 160,
+      "items": [
+        {
+          "id": "s1",
+          "imageUrl": "http://localhost:4000/uploads/banner-special-offers.png",
+          "title": "جشنواره فروش ویژه تک‌مارکت"
+        },
+        {
+          "id": "s2",
+          "imageUrl": "http://localhost:4000/uploads/banner-accessories.png",
+          "title": "تجهیزات هوشمند و جانبی موبایل"
+        }
+      ]
+    },
+    {
+      "id": "block_categories_1",
+      "type": "categories",
+      "title": "دسته‌بندی‌های محبوب",
+      "items": [
+        {
+          "id": "c1",
+          "title": "موبایل",
+          "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop"
+        },
+        {
+          "id": "c2",
+          "title": "لپ‌تاپ",
+          "imageUrl": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop"
+        },
+        {
+          "id": "c3",
+          "title": "صوتی",
+          "imageUrl": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&h=150&fit=crop"
+        },
+        {
+          "id": "c4",
+          "title": "ساعت",
+          "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": "block_special_offers",
+      "type": "product_carousel",
+      "title": "پیشنهاد شگفت‌انگیز",
+      "subtitle": "تخفیف‌های محدود با زمان باقی‌مانده",
+      "themeColor": "#ef394e",
+      "items": [
+        {
+          "id": "p1",
+          "title": "هدفون بی‌سیم سونی WH-1000XM5",
+          "price": 18450000,
+          "regularPrice": 21500000,
+          "discount": 14,
+          "imageUrl": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop"
+        },
+        {
+          "id": "p2",
+          "title": "اپل واچ سری ۹ آلومینیوم",
+          "price": 24900000,
+          "regularPrice": 27000000,
+          "discount": 8,
+          "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop"
+        },
+        {
+          "id": "p3",
+          "title": "ماوس بی‌سیم لاجیتک Master 3S",
+          "price": 6200000,
+          "regularPrice": 7200000,
+          "discount": 14,
+          "imageUrl": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=200&h=200&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": "block_promo_1",
+      "type": "promo_banners",
+      "banners": [
+        {
+          "id": "b1",
+          "imageUrl": "http://localhost:4000/uploads/promo-smartwatch.png",
+          "title": "اکسسوری هوشمند"
+        },
+        {
+          "id": "b2",
+          "imageUrl": "http://localhost:4000/uploads/promo-gaming.png",
+          "title": "تجهیزات گیمینگ"
+        }
+      ]
+    },
+    {
+      "id": "block_grid_1",
+      "type": "product_grid",
+      "title": "جدیدترین محصولات فروشگاه",
+      "items": [
+        {
+          "id": "p4",
+          "title": "کیبورد مکانیکال ردراگون K552",
+          "price": 2850000,
+          "imageUrl": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=300&fit=crop"
+        },
+        {
+          "id": "p5",
+          "title": "پاوربانک ۲۰۰۰۰ میلی‌آمپر باسئوس",
+          "price": 3400000,
+          "imageUrl": "https://images.unsplash.com/photo-1609592807664-8461f0923f13?w=300&h=300&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": "block_blog_1",
+      "type": "blog_list",
+      "title": "مجله فناوری و راهنمای خرید",
+      "items": [
+        {
+          "id": "bl1",
+          "title": "راهنمای جامع خرید هدفون در سال ۲۰۲۶",
+          "excerpt": "بررسی بهترین گزینه‌های بازار ایران به همراه کیفیت صدا",
+          "date": "۱۴ آبان ۱۴۰۵",
+          "imageUrl": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&h=150&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": "block_promo_banners_1792701574711",
+      "type": "promo_banners",
+      "title": "بنرهای تبلیغاتی دو قلو"
+    },
+    {
+      "id": "block_promo_banners_1792701581246",
+      "type": "promo_banners",
+      "title": "بنرهای تبلیغاتی دو قلو"
+    },
+    {
+      "id": "block_blog_list_1792701585567",
+      "type": "blog_list",
+      "title": "لیست مقالات و وبلاگ"
+    },
+    {
+      "id": "block_notice_box_1792701587209",
+      "type": "notice_box",
+      "title": "باکس اطلاع‌رسانی فوری",
+      "message": "🔔 اعلان جدید فروشگاه: تحویل فوری در شهر تهران فعال شد!",
+      "variant": "info"
+    }
+  ],
+  "pages": [
+    {
+      "id": "page_home",
+      "title": "صفحه اصلی",
+      "slug": "/",
+      "isHome": true,
+      "blocks": [
+        {
+          "id": "block_notice_1",
+          "type": "notice_box",
+          "variant": "info",
+          "message": "🚚 ارسال رایگان برای خریدهای بالای ۶۰۰ هزار تومان در سراسر کشور"
+        },
+        {
+          "id": "block_slider_1",
+          "type": "banner_slider",
+          "height": 160,
+          "items": [
+            {
+              "id": "s1",
+              "imageUrl": "http://localhost:4000/uploads/banner-special-offers.png",
+              "title": "جشنواره فروش ویژه تک‌مارکت"
+            },
+            {
+              "id": "s2",
+              "imageUrl": "http://localhost:4000/uploads/banner-accessories.png",
+              "title": "تجهیزات هوشمند و جانبی موبایل"
+            }
+          ]
+        },
+        {
+          "id": "block_categories_1",
+          "type": "categories",
+          "title": "دسته‌بندی‌های محبوب",
+          "items": [
+            {
+              "id": "c1",
+              "title": "موبایل",
+              "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop"
+            },
+            {
+              "id": "c2",
+              "title": "لپ‌تاپ",
+              "imageUrl": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop"
+            },
+            {
+              "id": "c3",
+              "title": "صوتی",
+              "imageUrl": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&h=150&fit=crop"
+            },
+            {
+              "id": "c4",
+              "title": "ساعت",
+              "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop"
+            }
+          ]
+        },
+        {
+          "id": "block_special_offers",
+          "type": "product_carousel",
+          "title": "پیشنهاد شگفت‌انگیز",
+          "subtitle": "تخفیف‌های محدود با زمان باقی‌مانده",
+          "themeColor": "#ef394e",
+          "items": [
+            {
+              "id": "p1",
+              "title": "هدفون بی‌سیم سونی WH-1000XM5",
+              "price": 18450000,
+              "regularPrice": 21500000,
+              "discount": 14,
+              "imageUrl": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop"
+            },
+            {
+              "id": "p2",
+              "title": "اپل واچ سری ۹ آلومینیوم",
+              "price": 24900000,
+              "regularPrice": 27000000,
+              "discount": 8,
+              "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop"
+            },
+            {
+              "id": "p3",
+              "title": "ماوس بی‌سیم لاجیتک Master 3S",
+              "price": 6200000,
+              "regularPrice": 7200000,
+              "discount": 14,
+              "imageUrl": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=200&h=200&fit=crop"
+            }
+          ]
+        },
+        {
+          "id": "block_promo_1",
+          "type": "promo_banners",
+          "banners": [
+            {
+              "id": "b1",
+              "imageUrl": "http://localhost:4000/uploads/promo-smartwatch.png",
+              "title": "اکسسوری هوشمند"
+            },
+            {
+              "id": "b2",
+              "imageUrl": "http://localhost:4000/uploads/promo-gaming.png",
+              "title": "تجهیزات گیمینگ"
+            }
+          ]
+        },
+        {
+          "id": "block_grid_1",
+          "type": "product_grid",
+          "title": "جدیدترین محصولات فروشگاه",
+          "items": [
+            {
+              "id": "p4",
+              "title": "کیبورد مکانیکال ردراگون K552",
+              "price": 2850000,
+              "imageUrl": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=300&fit=crop"
+            },
+            {
+              "id": "p5",
+              "title": "پاوربانک ۲۰۰۰۰ میلی‌آمپر باسئوس",
+              "price": 3400000,
+              "imageUrl": "https://images.unsplash.com/photo-1609592807664-8461f0923f13?w=300&h=300&fit=crop"
+            }
+          ]
+        },
+        {
+          "id": "block_blog_1",
+          "type": "blog_list",
+          "title": "مجله فناوری و راهنمای خرید",
+          "items": [
+            {
+              "id": "bl1",
+              "title": "راهنمای جامع خرید هدفون در سال ۲۰۲۶",
+              "excerpt": "بررسی بهترین گزینه‌های بازار ایران به همراه کیفیت صدا",
+              "date": "۱۴ آبان ۱۴۰۵",
+              "imageUrl": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&h=150&fit=crop"
+            }
+          ]
+        },
+        {
+          "id": "block_promo_banners_1792701574711",
+          "type": "promo_banners",
+          "title": "بنرهای تبلیغاتی دو قلو"
+        },
+        {
+          "id": "block_promo_banners_1792701581246",
+          "type": "promo_banners",
+          "title": "بنرهای تبلیغاتی دو قلو"
+        },
+        {
+          "id": "block_blog_list_1792701585567",
+          "type": "blog_list",
+          "title": "لیست مقالات و وبلاگ"
+        },
+        {
+          "id": "block_notice_box_1792701587209",
+          "type": "notice_box",
+          "title": "باکس اطلاع‌رسانی فوری",
+          "message": "🔔 اعلان جدید فروشگاه: تحویل فوری در شهر تهران فعال شد!",
+          "variant": "info"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,302 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  phone         String         @unique
+  name          String?
+  role          String         @default("USER") // USER, ADMIN
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  projects      Project[]
+  subscriptions Subscription[]
+}
+
+model Project {
+  id             String     @id @default(uuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String
+  packageName    String
+  version        String     @default("1.0.0")
+  configJson     String     // Full Server-Driven UI JSON configuration
+  keystoreSha256 String?    // Fingerprint of the project release keystore
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  buildJobs      BuildJob[]
+  nativeCategories NativeCategory[]
+  nativeProducts   NativeProduct[]
+  nativeOrders     NativeOrder[]
+  abandonedCarts   AbandonedCart[]
+  customForms      CustomForm[]
+  formSubmissions  FormSubmission[]
+  loyaltyAccounts  LoyaltyAccount[]
+  dokanVendors     DokanVendor[]
+  whiteLabel       WhiteLabelSetting?
+  appUpdate        AppUpdateConfig?
+
+  @@index([userId])
+  @@index([packageName])
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan      String   // BASIC, PRO, LIFETIME
+  status    String   @default("ACTIVE") // ACTIVE, EXPIRED, CANCELLED
+  price     Int      // in Tomans
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId, status])
+  @@index([status, expiresAt])
+}
+
+model BuildJob {
+  id          String    @id @default(uuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  platform    String    // APK, AAB, PWA, ALL
+  status      String    @default("QUEUED") // QUEUED, BUILDING, SUCCESS, FAILED
+  downloadUrl String?   // APK URL
+  aabUrl      String?   // AAB Bundle URL (CafeBazaar, Myket, Google Play)
+  keystoreUrl String?   // Keystore backup download URL
+  logs        String?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([status, createdAt])
+  @@index([projectId])
+}
+
+model NativeCategory {
+  id          String          @id @default(uuid())
+  projectId   String
+  project     Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String
+  icon        String?
+  image       String?
+  order       Int             @default(0)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  products    NativeProduct[]
+
+  @@index([projectId])
+}
+
+model NativeProduct {
+  id              String          @id @default(uuid())
+  projectId       String
+  project         Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  categoryId      String?
+  category        NativeCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  name            String
+  slug            String
+  price           Int             // in Tomans (final active price)
+  regularPrice    Int             // original price in Tomans
+  salePrice       Int?            // discounted price if on sale
+  stockQuantity   Int             @default(10)
+  stockStatus     String          @default("INSTOCK") // INSTOCK, OUTOFSTOCK
+  featuredImage   String?         // main product picture URL
+  gallery         String?         // JSON array of strings
+  description     String?
+  shortDesc       String?
+  rating          Float           @default(5.0)
+  ratingCount     Int             @default(1)
+  totalSales      Int             @default(0)
+  isFeatured      Boolean         @default(false)
+  isSpecialOffer  Boolean         @default(false) // شگفت‌انگیز
+  attributes      String?         // JSON: '{"color": ["مشکی", "سفید"], "warranty": "۱۸ ماهه"}'
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  orderItems      NativeOrderItem[]
+
+  @@index([projectId, categoryId])
+  @@index([projectId, isSpecialOffer])
+  @@index([projectId, isFeatured])
+}
+
+model NativeOrder {
+  id              String            @id @default(uuid())
+  projectId       String
+  project         Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  orderNumber     String            // e.g. "ORD-1403-1001"
+  customerName    String
+  customerPhone   String
+  customerAddress String
+  postalCode      String?
+  totalAmount     Int               // in Tomans
+  status          String            @default("PROCESSING") // PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+  paymentMethod   String            @default("ZARINPAL")   // ZARINPAL, SAMAN, SNAPP_PAY, COD
+  paymentStatus   String            @default("PAID")       // PENDING, PAID, FAILED
+  trackingCode    String?
+  notes           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  items           NativeOrderItem[]
+
+  @@index([projectId, status])
+  @@index([projectId, customerPhone])
+}
+
+model NativeOrderItem {
+  id           String        @id @default(uuid())
+  orderId      String
+  order        NativeOrder   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String?
+  product      NativeProduct? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName  String
+  productImage String?
+  quantity     Int           @default(1)
+  unitPrice    Int           // in Tomans
+  totalPrice   Int           // in Tomans
+
+  @@index([orderId])
+}
+
+model AbandonedCart {
+  id                   String    @id @default(uuid())
+  projectId            String
+  project              Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  customerPhone        String?
+  customerName         String?
+  itemsJson            String    // JSON array of cart items
+  totalAmount          Int       // in Tomans
+  status               String    @default("ABANDONED") // ABANDONED, RECOVERED, EXPIRED
+  recoveryDiscountCode String?   @default("CART10")
+  notificationSent     Boolean   @default(false)
+  notifiedAt           DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@index([projectId, status])
+  @@index([projectId, customerPhone])
+}
+
+model CustomForm {
+  id               String           @id @default(uuid())
+  projectId        String
+  project          Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title            String
+  description      String?
+  fieldsJson       String           // JSON array of FormField objects
+  submitButtonText String           @default("ثبت و ارسال")
+  successMessage   String           @default("اطلاعات شما با موفقیت ثبت شد.")
+  notifyPhone      String?
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  submissions      FormSubmission[]
+
+  @@index([projectId])
+}
+
+model FormSubmission {
+  id          String      @id @default(uuid())
+  formId      String
+  form        CustomForm  @relation(fields: [formId], references: [id], onDelete: Cascade)
+  projectId   String
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userPhone   String?
+  userName    String?
+  dataJson    String      // JSON of field answers
+  status      String      @default("PENDING") // PENDING, REVIEWED, RESOLVED, ARCHIVED
+  adminNotes  String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([formId])
+  @@index([projectId, status])
+}
+
+model LoyaltyAccount {
+  id               String               @id @default(uuid())
+  projectId        String
+  project          Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phone            String
+  customerName     String?
+  points           Int                  @default(0)
+  lifetimePoints   Int                  @default(0)
+  tier             String               @default("BRONZE") // BRONZE, SILVER, GOLD, VIP
+  lastClaimedDaily DateTime?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  transactions     LoyaltyTransaction[]
+
+  @@unique([projectId, phone])
+  @@index([projectId, phone])
+  @@index([projectId, tier])
+}
+
+model LoyaltyTransaction {
+  id           String         @id @default(uuid())
+  accountId    String
+  account      LoyaltyAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  pointsChange Int            // +100 or -50
+  type         String         // PURCHASE, DAILY_BONUS, REDEEM, MANUAL
+  couponCode   String?
+  description  String
+  createdAt    DateTime       @default(now())
+
+  @@index([accountId])
+}
+
+model DokanVendor {
+  id              String    @id @default(uuid())
+  projectId       String
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  storeName       String    // e.g. "بازرگانی شیائومی تهران"
+  ownerName       String    // e.g. "حاج رضا کریمی"
+  phone           String
+  email           String?
+  logoUrl         String?
+  bannerUrl       String?
+  rating          Float     @default(4.8)
+  isVerified      Boolean   @default(true)
+  commissionRate  Int       @default(10) // 10%
+  totalSales      Int       @default(0)  // in Tomans
+  address         String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([projectId, isVerified])
+}
+
+model WhiteLabelSetting {
+  id               String    @id @default(uuid())
+  projectId        String    @unique
+  project          Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  brandName        String    @default("App Maker")
+  logoUrl          String?
+  customDomain     String?   // e.g. "panel.myagency.ir"
+  dnsVerified      Boolean   @default(false)
+  supportPhone     String?
+  supportEmail     String?
+  hideBranding     Boolean   @default(false)
+  customFooterText String?
+  primaryColor     String    @default("#E11D48")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model AppUpdateConfig {
+  id              String    @id @default(uuid())
+  projectId       String    @unique
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  latestVersion   String    @default("1.1.0")
+  minVersion      String    @default("1.0.0")
+  forceUpdate     Boolean   @default(false)
+  apkDownloadUrl  String?
+  marketUrl       String?
+  changelog       String    @default("• بهبود عملکرد و سرعت برنامه\n• رفع باگ‌های جزئی\n• سازگاری کامل با اندروید ۱۴")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
