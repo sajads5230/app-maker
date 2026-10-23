@@ -1005,11 +1005,103 @@ export default function WebBuilderPage() {
       newBlock.title = "سامانه سرمایه‌گذاری هوشمند و افتتاح حساب آنلاین";
       newBlock.sponsor = "اسپانسر ویژه • شبکه تبلیغات تپسل";
       newBlock.buttonText = "نصب و دریافت هدیه";
+    } else if (template.type === "blog_list") {
+      newBlock.title = "آخرین مقالات و مجله تخصصی";
+      newBlock.items = [
+        {
+          id: `wp_post_${Date.now()}_1`,
+          title: "راهنمای جامع خرید محصولات هوشمند و تجهیزات مدرن",
+          excerpt: "بررسی فاکتورهای کلیدی انتخاب، مقایسه کارایی و نکات ضروری قبل از خرید کالاها.",
+          imageUrl: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=600&h=400&fit=crop",
+          date: "اخیراً",
+          url: wooUrl || "https://xiaomismart.ir",
+          author: "تحریریه فروشگاه",
+        },
+        {
+          id: `wp_post_${Date.now()}_2`,
+          title: "ترفندهای نگهداری و افزایش طول عمر باتری دستگاه‌ها",
+          excerpt: "روش‌های ساده و علمی برای محافظت از سلامت باتری‌ها و حفظ سرعت و عملکرد بهینه.",
+          imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop",
+          date: "اخیراً",
+          url: wooUrl || "https://xiaomismart.ir",
+          author: "پشتیبانی فنی",
+        },
+      ];
     }
 
     setBlocks([...blocks, newBlock]);
     setSelectedBlockId(newId);
     showToast(`بلوک "${template.title}" افزوده شد`);
+
+    // Live Hydration from WordPress / WooCommerce API if configured
+    const hydratableTypes = ["blog_list", "categories", "product_carousel", "product_grid", "coupon_card"];
+    if (hydratableTypes.includes(template.type) && (wooConnected || !!wooUrl)) {
+      showToast(`در حال استعلام دیتای زنده «${template.title}» از وب‌سایت...`);
+      fetch(`http://localhost:4000/api/projects/${projectId || "app-demo-techmarket"}/hydrate-block`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          blockType: template.type,
+          siteUrl: wooUrl,
+          consumerKey: wooKey,
+          consumerSecret: wooSecret,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.items) && data.items.length > 0) {
+            setBlocks((prev) =>
+              prev.map((b) =>
+                b.id === newId
+                  ? {
+                      ...b,
+                      title: data.title || b.title,
+                      items: data.items,
+                      source: data.meta?.source || "wordpress_live",
+                    }
+                  : b
+              )
+            );
+            showToast(`⚡ اطلاعات زنده بلوک «${template.title}» مستقیماً از وب‌سایت دریافت و ثبت شد!`);
+          }
+        })
+        .catch(() => {});
+    }
+  };
+
+  const refreshBlockFromWordPress = async (blockId: string, blockType: string) => {
+    showToast("در حال همگام‌سازی و دریافت دیتای زنده از وب‌سایت وردپرس...");
+    try {
+      const res = await fetch(`http://localhost:4000/api/projects/${projectId || "app-demo-techmarket"}/hydrate-block`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          blockType,
+          siteUrl: wooUrl,
+          consumerKey: wooKey,
+          consumerSecret: wooSecret,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.items) && data.items.length > 0) {
+        setBlocks((prev) =>
+          prev.map((b) =>
+            b.id === blockId
+              ? {
+                  ...b,
+                  items: data.items,
+                  source: data.meta?.source || "wordpress_live",
+                }
+              : b
+          )
+        );
+        showToast("✅ اطلاعات زنده مستقیماً از وب‌سایت وردپرس به‌روزرسانی شد!");
+      } else {
+        showToast(data.error || "خطا در دریافت اطلاعات از سایت");
+      }
+    } catch (_) {
+      showToast("خطا در برقراری ارتباط با وب‌سایت وردپرس");
+    }
   };
 
   const testWooConnection = async () => {
@@ -1662,6 +1754,61 @@ export default function WebBuilderPage() {
                                 <span className="bg-sky-600 text-white text-[8px] font-bold px-2 py-1 rounded-lg shrink-0">
                                   {block.buttonText || "مشاهده"}
                                 </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {block.type === "blog_list" && (
+                            <div className="bg-white p-2.5 rounded-xl border border-slate-100 shadow-xs">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-1.5">
+                                  <BookOpen className="w-3.5 h-3.5 text-rose-500" />
+                                  <span className="text-[10px] font-bold text-slate-800">
+                                    {block.title || "وبلاگ و آخرین مقالات"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  {(block.source === "wordpress_live" || wooConnected || !!wooUrl) && (
+                                    <span className="text-[7.5px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200 flex items-center gap-0.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                                      وردپرس زنده
+                                    </span>
+                                  )}
+                                  <span className="text-[8px] text-rose-500 font-bold">بیشتر ←</span>
+                                </div>
+                              </div>
+
+                              <div className="space-y-2">
+                                {(block.items || []).slice(0, 4).map((post: any, pIdx: number) => (
+                                  <div
+                                    key={post.id || pIdx}
+                                    className="flex items-start gap-2 p-1.5 rounded-lg bg-slate-50/80 border border-slate-100 hover:bg-slate-100/80 transition"
+                                  >
+                                    <img
+                                      src={post.imageUrl || "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop"}
+                                      alt=""
+                                      className="w-14 h-14 rounded-lg object-cover shrink-0 border border-slate-200"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center justify-between gap-1 mb-0.5">
+                                        <span className="text-[7.5px] text-slate-400 font-medium">
+                                          {post.date || "اخیراً"}
+                                        </span>
+                                        {post.author && (
+                                          <span className="text-[7px] bg-slate-200/60 text-slate-600 px-1 rounded truncate max-w-[70px]">
+                                            {post.author}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <h4 className="text-[9px] font-bold text-slate-800 line-clamp-1 leading-tight mb-0.5">
+                                        {post.title}
+                                      </h4>
+                                      <p className="text-[8px] text-slate-500 line-clamp-2 leading-tight">
+                                        {post.excerpt}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           )}
