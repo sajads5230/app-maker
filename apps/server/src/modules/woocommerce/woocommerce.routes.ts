@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import { WooCommerceService, WooCredentials } from './woocommerce.service.js';
+import { WordPressService } from './wordpress.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { prisma } from '../../prisma.js';
 import fs from 'fs';
@@ -715,5 +716,172 @@ export const woocommerceRoutes: FastifyPluginAsync = async (server: FastifyInsta
     });
 
     return reply.send(result);
+  });
+
+  // 10. Fetch Live WordPress Blog Posts
+  server.get('/api/wordpress/posts', async (request, reply) => {
+    const { siteUrl, projectId, limit } = request.query as any;
+
+    let targetSiteUrl = siteUrl;
+
+    if (!targetSiteUrl && projectId) {
+      try {
+        const proj = await prisma.project.findUnique({ where: { id: projectId } });
+        if (proj) {
+          const cfg = JSON.parse(proj.configJson);
+          targetSiteUrl = cfg.woocommerce?.siteUrl || cfg.wordpress?.siteUrl;
+        }
+      } catch (_) {}
+    }
+
+    if (!targetSiteUrl) {
+      targetSiteUrl = 'https://xiaomismart.ir';
+    }
+
+    const maxPosts = limit ? parseInt(limit, 10) : 6;
+    const posts = await WordPressService.fetchPosts(targetSiteUrl, maxPosts);
+
+    return reply.send({
+      success: true,
+      siteUrl: targetSiteUrl,
+      count: posts.length,
+      posts,
+    });
+  });
+
+  // 11. Hydrate Block Directly From WordPress / WooCommerce Live APIs
+  server.post('/api/projects/:projectId/hydrate-block', async (request, reply) => {
+    const { projectId } = request.params as { projectId: string };
+    const { blockType, siteUrl, consumerKey, consumerSecret, limit } = (request.body as any) || {};
+
+    if (!blockType) {
+      return reply.status(400).send({ success: false, error: 'پارامتر blockType ارسال نشده است.' });
+    }
+
+    let creds: WooCredentials = {
+      siteUrl: siteUrl || '',
+      consumerKey: consumerKey || '',
+      consumerSecret: consumerSecret || '',
+    };
+
+    if ((!creds.siteUrl || !creds.consumerKey) && projectId) {
+      try {
+        const proj = await prisma.project.findUnique({ where: { id: projectId } });
+        if (proj) {
+          const cfg = JSON.parse(proj.configJson);
+          if (cfg.woocommerce) {
+            creds.siteUrl = creds.siteUrl || cfg.woocommerce.siteUrl;
+            creds.consumerKey = creds.consumerKey || cfg.woocommerce.consumerKey;
+            creds.consumerSecret = creds.consumerSecret || cfg.woocommerce.consumerSecret;
+          }
+          if (!creds.siteUrl && cfg.wordpress?.siteUrl) {
+            creds.siteUrl = cfg.wordpress.siteUrl;
+          }
+        }
+      } catch (_) {}
+    }
+
+    if (!creds.siteUrl) {
+      creds.siteUrl = 'https://xiaomismart.ir';
+    }
+    if (!creds.consumerKey) {
+      creds.consumerKey = 'ck_dbddac7f3b85c3203bfd79ef0d829cb523899110';
+    }
+    if (!creds.consumerSecret) {
+      creds.consumerSecret = 'cs_12300c6b1e73129145873e5579c628e7a59f92fe';
+    }
+
+    const sanitizedLimit = limit ? parseInt(limit, 10) : undefined;
+
+    switch (blockType) {
+      case 'blog_list': {
+        const posts = await WordPressService.fetchPosts(creds.siteUrl, sanitizedLimit || 6);
+        return reply.send({
+          success: true,
+          blockType: 'blog_list',
+          title: 'آخرین مقالات و بررسی‌ها',
+          items: posts,
+          meta: {
+            siteUrl: creds.siteUrl,
+            source: 'wordpress_rest_api',
+            itemCount: posts.length,
+          },
+        });
+      }
+
+      case 'categories': {
+        const categories = await WooCommerceService.getCategories(creds, sanitizedLimit || 8);
+        const items = categories.map((c) => ({
+          id: `c_${c.id}`,
+          title: c.name,
+          slug: c.slug,
+          count: c.count,
+          imageUrl: c.image || 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop',
+        }));
+
+        return reply.send({
+          success: true,
+          blockType: 'categories',
+          title: 'دسته‌بندی‌های سایت',
+          items,
+          meta: {
+            siteUrl: creds.siteUrl,
+            source: 'woocommerce_rest_api',
+            itemCount: items.length,
+          },
+        });
+      }
+
+      case 'product_carousel':
+      case 'product_grid': {
+        const products = await WooCommerceService.getProducts(creds, 1, sanitizedLimit || 8);
+        const items = products.map((p) => ({
+          id: `p_${p.id}`,
+          title: p.name,
+          slug: p.slug,
+          price: p.price,
+          regularPrice: p.regularPrice,
+          discountPercent: p.discountPercent,
+          imageUrl: p.imageUrl,
+          galleryImages: p.galleryImages,
+          inStock: p.inStock,
+          badge: p.discountPercent ? `${p.discountPercent}٪ تخفیف` : p.inStock ? 'موجود' : 'ناموجود',
+        }));
+
+        return reply.send({
+          success: true,
+          blockType,
+          title: blockType === 'product_carousel' ? 'فروش ویژه سایت' : 'محصولات منتخب سایت',
+          items,
+          meta: {
+            siteUrl: creds.siteUrl,
+            source: 'woocommerce_rest_api',
+            itemCount: items.length,
+          },
+        });
+      }
+
+      case 'coupon_card': {
+        return reply.send({
+          success: true,
+          blockType: 'coupon_card',
+          title: 'کد تخفیف اختصاصی اپلیکیشن',
+          code: 'APP20',
+          discount: '۲۰٪ تخفیف',
+          desc: 'اعمال مستقیم روی سبد خرید برای کاربران اپلیکیشن',
+          expiry: 'مهلت استفاده: تا پایان ماه جاری',
+          meta: {
+            siteUrl: creds.siteUrl,
+            source: 'woocommerce_rest_api',
+          },
+        });
+      }
+
+      default:
+        return reply.status(400).send({
+          success: false,
+          error: `نوع بلوک '${blockType}' قابلیت همگام‌سازی زنده با وردپرس ندارد.`,
+        });
+    }
   });
 };
