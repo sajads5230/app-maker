@@ -3178,6 +3178,14 @@ export default function WebBuilderPage() {
                         </button>
                       </div>
 
+                      <button
+                        onClick={() => refreshBlockFromWordPress(selectedBlock.id, "categories")}
+                        className="w-full py-1.5 bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/50 text-rose-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                      >
+                        <RefreshCw className="w-3 h-3 text-rose-400" />
+                        <span>دریافت و بروزرسانی دسته‌بندی‌ها از ووکامرس</span>
+                      </button>
+
                       <div className="space-y-2">
                         {(selectedBlock.items || []).map((cat: any, cIdx: number) => (
                           <div key={cat.id || cIdx} className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1.5">
