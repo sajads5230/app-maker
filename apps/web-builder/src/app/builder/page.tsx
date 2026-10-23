@@ -3316,6 +3316,174 @@ export default function WebBuilderPage() {
                           />
                         </div>
                       </div>
+                      <button
+                        onClick={() => refreshBlockFromWordPress(selectedBlock.id, "product_carousel")}
+                        className="w-full py-2 bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/50 text-rose-300 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-rose-400" />
+                        <span>همگام‌سازی محصولات زنده از ووکامرس</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Product Grid Inspector */}
+                  {selectedBlock.type === "product_grid" && (
+                    <div className="space-y-3">
+                      <div className="p-3 bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700 rounded-xl space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+                            <LayoutGrid className="w-4 h-4 text-rose-400" />
+                            محصولات گرید ووکامرس
+                          </span>
+                          {(wooConnected || !!wooUrl) && (
+                            <span className="text-[8px] bg-emerald-950/80 text-emerald-300 border border-emerald-600/60 px-1.5 py-0.5 rounded font-bold">
+                              متصل به فروشگاه
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-slate-400">
+                          این بلوک محصولات منتشر شده در ووکامرس را در قالب گرید ۲ ستونه با تصویر، قیمت و برچسب تخفیف نمایش می‌دهد.
+                        </p>
+                        <button
+                          onClick={() => refreshBlockFromWordPress(selectedBlock.id, "product_grid")}
+                          className="w-full py-2 bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/50 text-rose-300 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                        >
+                          <RefreshCw className="w-3.5 h-3.5 text-rose-400" />
+                          <span>دریافت و بروزرسانی محصولات از ووکامرس</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-[11px] font-bold text-slate-300 block">
+                          محصولات لود شده ({selectedBlock.items?.length || 0} عدد):
+                        </label>
+                        <div className="max-h-56 overflow-y-auto space-y-1.5 pr-1">
+                          {(selectedBlock.items || []).map((prod: any, pIdx: number) => (
+                            <div key={prod.id || pIdx} className="p-2 rounded-lg bg-slate-800/80 border border-slate-700 flex items-center gap-2">
+                              <img src={prod.imageUrl} alt="" className="w-9 h-9 rounded object-cover border border-slate-600 shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <span className="text-[10px] font-bold text-white block truncate">{prod.title}</span>
+                                <span className="text-[9px] text-emerald-400 font-mono block">
+                                  {typeof prod.price === "number" ? prod.price.toLocaleString("fa-IR") + " تومان" : prod.price}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Blog List Inspector (WordPress Live Integration) */}
+                  {selectedBlock.type === "blog_list" && (
+                    <div className="space-y-3">
+                      <div className="p-3 bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700 rounded-xl space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-slate-200 flex items-center gap-1.5">
+                            <BookOpen className="w-4 h-4 text-rose-400" />
+                            وبلاگ و مقالات وردپرس
+                          </span>
+                          {(wooConnected || !!wooUrl) && (
+                            <span className="text-[8px] bg-emerald-950/80 text-emerald-300 border border-emerald-600/60 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              متصل به وردپرس
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-lg border border-slate-800 flex items-center justify-between font-mono">
+                          <span className="text-slate-400 text-[9px]">آدرس منبع:</span>
+                          <span className="text-rose-400 text-[10px] truncate max-w-[190px]" dir="ltr">
+                            {wooUrl || "https://xiaomismart.ir"}/wp-json/wp/v2/posts
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => refreshBlockFromWordPress(selectedBlock.id, "blog_list")}
+                          className="w-full py-2 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer"
+                        >
+                          <RefreshCw className="w-3.5 h-3.5 text-white" />
+                          <span>دریافت زنده مقالات از وب‌سایت وردپرس</span>
+                        </button>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="text-[11px] font-bold text-slate-300">
+                            مقالات وبلاگ ({selectedBlock.items?.length || 0} مقاله):
+                          </label>
+                          <button
+                            onClick={() => {
+                              const newPost = {
+                                id: `post_${Date.now()}`,
+                                title: "مقاله جدید فروشگاه",
+                                excerpt: "توضیحات خلاصه این مقاله در اپلیکیشن نمایش داده می‌شود.",
+                                imageUrl: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=600&h=400&fit=crop",
+                                date: "اخیراً",
+                                author: "مدیر سایت",
+                              };
+                              const updated = [newPost, ...(selectedBlock.items || [])];
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                              showToast("مقاله جدید افزوده شد");
+                            }}
+                            className="text-[10px] text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 cursor-pointer"
+                          >
+                            <Plus className="w-3 h-3" />
+                            <span>افزودن مقاله دستی</span>
+                          </button>
+                        </div>
+
+                        <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                          {(selectedBlock.items || []).map((post: any, pIdx: number) => (
+                            <div key={post.id || pIdx} className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1.5">
+                              <div className="flex items-start gap-2">
+                                <img
+                                  src={post.imageUrl || "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop"}
+                                  alt=""
+                                  className="w-12 h-12 rounded-lg object-cover border border-slate-600 shrink-0"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <input
+                                    type="text"
+                                    value={post.title || ""}
+                                    placeholder="عنوان مقاله"
+                                    onChange={(e) => {
+                                      const val = e.target.value;
+                                      const updated = [...selectedBlock.items];
+                                      updated[pIdx] = { ...updated[pIdx], title: val };
+                                      setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                    }}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] text-white font-bold mb-1"
+                                  />
+                                  <div className="flex items-center justify-between text-[9px] text-slate-400">
+                                    <span>{post.date || "تاریخ ثبت نشده"}</span>
+                                    <span>{post.author || "نویسنده"}</span>
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    const updated = selectedBlock.items.filter((_: any, i: number) => i !== pIdx);
+                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                  }}
+                                  className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer shrink-0"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                              <textarea
+                                rows={2}
+                                value={post.excerpt || ""}
+                                placeholder="خلاصه مقاله..."
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  const updated = [...selectedBlock.items];
+                                  updated[pIdx] = { ...updated[pIdx], excerpt: val };
+                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                }}
+                                className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[10px] text-slate-300"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </>
