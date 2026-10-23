@@ -53,3 +53,10 @@ lerna-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Databases & SQLite
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+apps/server/prisma/*.db
