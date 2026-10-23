@@ -30,6 +30,7 @@ interface AiAppGeneratorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onProjectCreated?: (newProject: any) => void;
+  currentProjectId?: string;
 }
 
 const PRESET_NICHES = [
@@ -133,9 +134,10 @@ const FEATURES = [
   { id: 'story_circles', label: 'استوری‌های متحرک اینستاگرامی', desc: 'معرفی جشنواره‌ها و تخفیف‌های داغ در هدر' },
 ];
 
-export function AiAppGeneratorModal({ isOpen, onClose, onProjectCreated }: AiAppGeneratorModalProps) {
+export function AiAppGeneratorModal({ isOpen, onClose, onProjectCreated, currentProjectId }: AiAppGeneratorModalProps) {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [applyMode, setApplyMode] = useState<'update_current' | 'create_new'>(currentProjectId ? 'update_current' : 'create_new');
   const [selectedNiche, setSelectedNiche] = useState('perfume');
   const [businessName, setBusinessName] = useState('عطر و ادکلن رویال پرفیوم');
   const [description, setDescription] = useState('فروشگاه تخصصی انواع عطرهای اورجینال، دکانت و ادوپرفیوم‌های نیش با مشاوره بویایی آنلاین');
@@ -201,6 +203,8 @@ export function AiAppGeneratorModal({ isOpen, onClose, onProjectCreated }: AiApp
           description,
           style: selectedStyle,
           features: selectedFeatures,
+          targetProjectId: currentProjectId,
+          applyMode,
         }),
       });
 
@@ -215,7 +219,9 @@ export function AiAppGeneratorModal({ isOpen, onClose, onProjectCreated }: AiApp
             onProjectCreated(data.project);
           }
           onClose();
-          router.push(`/builder?projectId=${data.project.id}`);
+          if (!onProjectCreated) {
+            window.location.href = `/builder?projectId=${data.project.id}`;
+          }
         }, 800);
       } else {
         setIsGenerating(false);
@@ -428,6 +434,59 @@ export function AiAppGeneratorModal({ isOpen, onClose, onProjectCreated }: AiApp
                       );
                     })}
                   </div>
+
+                  {/* Apply Mode Choice */}
+                  {currentProjectId && (
+                    <div className="pt-3 border-t border-slate-800 mt-4">
+                      <span className="text-xs text-slate-300 font-bold block mb-2">نحوه اعمال تغییرات هوش مصنوعی:</span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div
+                          onClick={() => setApplyMode('update_current')}
+                          className={`p-3 rounded-2xl border cursor-pointer transition flex items-start gap-2.5 ${
+                            applyMode === 'update_current'
+                              ? 'bg-rose-950/30 border-rose-500/60 text-white shadow-md'
+                              : 'bg-slate-950/50 border-slate-800 text-slate-400 hover:bg-slate-900'
+                          }`}
+                        >
+                          <div className={`w-4 h-4 rounded-full border mt-0.5 flex items-center justify-center shrink-0 ${
+                            applyMode === 'update_current' ? 'border-rose-500 bg-rose-600' : 'border-slate-600'
+                          }`}>
+                            {applyMode === 'update_current' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                              <span>اعمال روی همین پروژه باز</span>
+                              <span className="text-[9px] bg-rose-500/20 text-rose-300 px-1.5 py-0.5 rounded font-bold">پیشنهادی</span>
+                            </div>
+                            <div className="text-[10px] text-slate-400 mt-0.5">
+                              رنگ‌بندی، بنرها و بلوک‌های همین استدیو بلافاصله آپدیت می‌شوند
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          onClick={() => setApplyMode('create_new')}
+                          className={`p-3 rounded-2xl border cursor-pointer transition flex items-start gap-2.5 ${
+                            applyMode === 'create_new'
+                              ? 'bg-indigo-950/30 border-indigo-500/60 text-white shadow-md'
+                              : 'bg-slate-950/50 border-slate-800 text-slate-400 hover:bg-slate-900'
+                          }`}
+                        >
+                          <div className={`w-4 h-4 rounded-full border mt-0.5 flex items-center justify-center shrink-0 ${
+                            applyMode === 'create_new' ? 'border-indigo-500 bg-indigo-600' : 'border-slate-600'
+                          }`}>
+                            {applyMode === 'create_new' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold text-white">ایجاد به عنوان پروژه جدید</div>
+                            <div className="text-[10px] text-slate-400 mt-0.5">
+                              پروژه فعلی حفظ شده و یک پروژه تازه با این اطلاعات ثبت می‌شود
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

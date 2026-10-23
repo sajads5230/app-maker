@@ -7,19 +7,20 @@ interface LiveQrModalProps {
   isOpen: boolean;
   onClose: () => void;
   appName?: string;
+  projectId?: string;
 }
 
-export function LiveQrModal({ isOpen, onClose, appName = "شیائومی اسمارت" }: LiveQrModalProps) {
+export function LiveQrModal({ isOpen, onClose, appName = "شیائومی اسمارت", projectId }: LiveQrModalProps) {
   const [copied, setCopied] = useState(false);
-  const [selectedTarget, setSelectedTarget] = useState<"simulator" | "builder" | "custom">("simulator");
+  const [selectedTarget, setSelectedTarget] = useState<"pwa" | "simulator" | "builder">("pwa");
   const [customIp, setCustomIp] = useState("192.168.100.88");
 
   if (!isOpen) return null;
 
   const targetUrls = {
+    pwa: `http://${customIp}:3000/pwa?id=${projectId || ''}`,
     simulator: `http://${customIp}:5000/simulator.html`,
     builder: `http://${customIp}:3000`,
-    custom: `http://${customIp}:5000/simulator.html`,
   };
 
   const activeUrl = targetUrls[selectedTarget];
@@ -59,6 +60,17 @@ export function LiveQrModal({ isOpen, onClose, appName = "شیائومی اسم�
         <div className="p-5 flex flex-col items-center">
           {/* Target Selector Tabs */}
           <div className="w-full flex items-center gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 mb-4 text-[11px]">
+            <button
+              onClick={() => setSelectedTarget("pwa")}
+              className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition ${
+                selectedTarget === "pwa"
+                  ? "bg-rose-600 text-white shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>نسخه وب PWA</span>
+            </button>
             <button
               onClick={() => setSelectedTarget("simulator")}
               className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition ${

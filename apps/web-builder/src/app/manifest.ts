@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'فروشگاه هوشمند شیائومی اسمارت',
     short_name: 'شیائومی اسمارت',
     description: 'خرید انواع تجهیزات هوشمند خانگی، ساعت، دوربین و جارو رباتیک شیائومی با گارانتی رسمی',
-    start_url: '/',
+    start_url: '/pwa',
     display: 'standalone',
     background_color: '#ffffff',
     theme_color: '#EF394E',

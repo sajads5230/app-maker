@@ -36,6 +36,17 @@ import {
   Store,
   Briefcase,
   LogIn,
+  User,
+  Send,
+  LifeBuoy,
+  Lock,
+  MessageSquare,
+  Bot,
+  Headphones,
+  Star,
+  Flame,
+  Zap,
+  Inbox,
 } from "lucide-react";
 import BroadcastNotificationModal from "@/components/BroadcastNotificationModal";
 import { AbandonedCartModal } from "@/components/AbandonedCartModal";
@@ -47,6 +58,7 @@ import { WhiteLabelPortalModal } from "@/components/WhiteLabelPortalModal";
 import { AiAppGeneratorModal } from "@/components/AiAppGeneratorModal";
 import { AppUpdateModal } from "@/components/AppUpdateModal";
 import { AppAnalyticsModal } from "@/components/AppAnalyticsModal";
+import { MigrationWizardModal } from "@/components/MigrationWizardModal";
 
 interface OverviewMetrics {
   totalUsers: number;
@@ -138,7 +150,7 @@ interface SystemSettings {
 
 export default function SuperAdminPage() {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "users" | "subscriptions" | "projects" | "builds" | "settings"
+    "overview" | "users" | "subscriptions" | "projects" | "builds" | "settings" | "tickets"
   >("overview");
 
   const [loading, setLoading] = useState(true);
@@ -146,6 +158,24 @@ export default function SuperAdminPage() {
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
   const [recentBuilds, setRecentBuilds] = useState<any[]>([]);
+
+  // Tickets & Support Desk State
+  const [adminTickets, setAdminTickets] = useState<any[]>([]);
+  const [selectedAdminTicket, setSelectedAdminTicket] = useState<any | null>(null);
+  const [ticketStats, setTicketStats] = useState<any | null>(null);
+  const [cannedResponses, setCannedResponses] = useState<any[]>([]);
+  const [ticketFilterStatus, setTicketFilterStatus] = useState("ALL");
+  const [ticketFilterDepartment, setTicketFilterDepartment] = useState("ALL");
+  const [ticketFilterPriority, setTicketFilterPriority] = useState("ALL");
+  const [ticketSearchQuery, setTicketSearchQuery] = useState("");
+  const [adminReplyText, setAdminReplyText] = useState("");
+  const [adminAgentName, setAdminAgentName] = useState("مهندس حسینی (پشتیبانی ارشد فلاتر)");
+  const [adminNewStatus, setAdminNewStatus] = useState("ANSWERED");
+  const [isSendingTicketReply, setIsSendingTicketReply] = useState(false);
+  const [adminNoteText, setAdminNoteText] = useState("");
+  const [isAddingAdminNote, setIsAddingAdminNote] = useState(false);
+  const [adminActiveSubTab, setAdminActiveSubTab] = useState<"reply" | "notes">("reply");
+  const [showMigrationModal, setShowMigrationModal] = useState(false);
 
   // Users State
   const [users, setUsers] = useState<UserItem[]>([]);
@@ -214,6 +244,15 @@ export default function SuperAdminPage() {
     fetchAllAdminData();
   }, [activeTab]);
 
+  useEffect(() => {
+    if (activeTab === "tickets") {
+      const timer = setTimeout(() => {
+        fetchAllAdminData();
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab, ticketFilterStatus, ticketFilterDepartment, ticketFilterPriority, ticketSearchQuery]);
+
   const fetchAllAdminData = async () => {
     setLoading(true);
     try {
@@ -247,6 +286,31 @@ export default function SuperAdminPage() {
         const res = await fetch("http://localhost:4000/api/admin/builds");
         const data = await res.json();
         if (data.success) setBuilds(data.builds || []);
+      } else if (activeTab === "tickets") {
+        const queryParams = new URLSearchParams();
+        if (ticketFilterStatus !== "ALL") queryParams.set("status", ticketFilterStatus);
+        if (ticketFilterDepartment !== "ALL") queryParams.set("department", ticketFilterDepartment);
+        if (ticketFilterPriority !== "ALL") queryParams.set("priority", ticketFilterPriority);
+        if (ticketSearchQuery.trim()) queryParams.set("search", ticketSearchQuery.trim());
+
+        const [tRes, sRes, cRes] = await Promise.all([
+          fetch(`http://localhost:4000/api/support/admin/tickets?${queryParams.toString()}`).then((r) => r.json()),
+          fetch("http://localhost:4000/api/support/admin/stats").then((r) => r.json()),
+          fetch("http://localhost:4000/api/support/admin/canned-responses").then((r) => r.json()),
+        ]);
+
+        if (tRes.success && tRes.tickets) {
+          setAdminTickets(tRes.tickets);
+          if (selectedAdminTicket) {
+            const fresh = tRes.tickets.find((t: any) => t.id === selectedAdminTicket.id);
+            if (fresh) setSelectedAdminTicket(fresh);
+            else if (tRes.tickets.length > 0) setSelectedAdminTicket(tRes.tickets[0]);
+          } else if (tRes.tickets.length > 0) {
+            setSelectedAdminTicket(tRes.tickets[0]);
+          }
+        }
+        if (sRes.success && sRes.stats) setTicketStats(sRes.stats);
+        if (cRes.success && cRes.cannedResponses) setCannedResponses(cRes.cannedResponses);
       } else if (activeTab === "settings") {
         const res = await fetch("http://localhost:4000/api/admin/settings");
         const data = await res.json();
@@ -399,6 +463,72 @@ export default function SuperAdminPage() {
     } catch (_) {
       alert("خطا در لغو اشتراک");
     }
+  };
+
+  const handleSendTicketReply = async (ticketId: string) => {
+    if (!adminReplyText.trim()) return;
+    setIsSendingTicketReply(true);
+    try {
+      const res = await fetch(`http://localhost:4000/api/support/admin/tickets/${ticketId}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          agentName: adminAgentName,
+          content: adminReplyText.trim(),
+          newStatus: adminNewStatus,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("پاسخ کارشناس با موفقیت برای مشتری ارسال شد");
+        setAdminReplyText("");
+        fetchAllAdminData();
+      }
+    } catch (_) {
+      alert("خطا در ارسال پاسخ");
+    } finally {
+      setIsSendingTicketReply(false);
+    }
+  };
+
+  const handleAddTicketNote = async (ticketId: string) => {
+    if (!adminNoteText.trim()) return;
+    setIsAddingAdminNote(true);
+    try {
+      const res = await fetch(`http://localhost:4000/api/support/admin/tickets/${ticketId}/notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ author: "سوپرادمین سیستم", content: adminNoteText.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("یادداشت محرمانه داخلی با موفقیت ثبت شد");
+        setAdminNoteText("");
+        fetchAllAdminData();
+      }
+    } catch (_) {
+      alert("خطا در ثبت یادداشت");
+    } finally {
+      setIsAddingAdminNote(false);
+    }
+  };
+
+  const handleUpdateTicketMeta = async (ticketId: string, meta: any) => {
+    if (selectedAdminTicket && selectedAdminTicket.id === ticketId) {
+      setSelectedAdminTicket((prev: any) => (prev ? { ...prev, ...meta } : null));
+    }
+    try {
+      const res = await fetch(`http://localhost:4000/api/support/admin/tickets/${ticketId}/meta`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(meta),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("اطلاعات تیکت به‌روزرسانی شد");
+        fetchAllAdminData();
+      }
+    } catch (_) {}
   };
 
   const handleSaveSettings = async (e: React.FormEvent) => {
@@ -583,6 +713,25 @@ export default function SuperAdminPage() {
           </button>
 
           <button
+            onClick={() => setActiveTab("tickets")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-right ${
+              activeTab === "tickets"
+                ? "bg-rose-600 text-white shadow-lg shadow-rose-600/20"
+                : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <LifeBuoy className="w-4 h-4 shrink-0 text-amber-400" />
+              <span>مدیریت تیکت‌های پشتیبانی</span>
+            </div>
+            {ticketStats?.open > 0 && (
+              <span className="text-[10px] bg-rose-500 text-white px-2 py-0.5 rounded-full font-bold">
+                {ticketStats.open} جدید
+              </span>
+            )}
+          </button>
+
+          <button
             onClick={() => setActiveTab("settings")}
             className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-right ${
               activeTab === "settings"
@@ -592,6 +741,14 @@ export default function SuperAdminPage() {
           >
             <Settings className="w-4 h-4 shrink-0" />
             <span>تنظیمات کلان سامانه</span>
+          </button>
+
+          <button
+            onClick={() => setShowMigrationModal(true)}
+            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-right text-purple-400 hover:text-white hover:bg-purple-950/40 border border-purple-500/30"
+          >
+            <Sparkles className="w-4 h-4 shrink-0 text-purple-400" />
+            <span>انتقال پروژه از سایت‌های دیگر</span>
           </button>
 
           <div className="mt-auto pt-4 border-t border-slate-800">
@@ -1433,8 +1590,726 @@ export default function SuperAdminPage() {
               </button>
             </form>
           )}
+
+          {/* 7. TICKETS & SUPPORT COMMAND CENTER TAB */}
+          {activeTab === "tickets" && (
+            <div className="space-y-6 animate-in fade-in pb-10">
+              {/* Header Banner with Realtime Status */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-slate-900 via-purple-950/20 to-slate-900 border border-slate-800/80 p-5 rounded-3xl shadow-xl">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500/20 via-purple-500/20 to-indigo-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 shadow-lg shadow-rose-950/40">
+                    <LifeBuoy className="w-6 h-6 animate-pulse" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2.5">
+                      <h2 className="text-base sm:text-lg font-black text-white">میز کار پشتیبانی و فرماندهی تیکت‌ها</h2>
+                      <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                        مرکز پاسخگویی آنلاین
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-1">
+                      بررسی و پاسخگویی به درخواست‌های فنی، همگام‌سازی ووکامرس، خطاهای موتور بیلد و امور مالی مشترکین
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={fetchAllAdminData}
+                    disabled={loading}
+                    className="flex items-center gap-2 bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-700/80 shadow-md transition cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-rose-400" : ""}`} />
+                    <span>بروزرسانی زنده</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* 6 High-Impact KPI Stat Cards */}
+              {ticketStats && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+                  {/* Total Tickets */}
+                  <div className="p-4 bg-slate-900/90 border border-slate-800/80 rounded-2xl text-right relative overflow-hidden group hover:border-slate-700 transition shadow-sm">
+                    <div className="flex items-center justify-between text-slate-400 mb-1">
+                      <span className="text-[11px] font-bold">کل تیکت‌ها</span>
+                      <Inbox className="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition" />
+                    </div>
+                    <div className="text-2xl font-black text-white">{ticketStats.total}</div>
+                    <span className="text-[10px] text-slate-500 mt-1 block">آرشیو تمام درخواست‌ها</span>
+                  </div>
+
+                  {/* Open / Needs Action */}
+                  <div className="p-4 bg-rose-950/20 border border-rose-500/40 rounded-2xl text-right relative overflow-hidden group shadow-lg shadow-rose-950/20">
+                    <div className="flex items-center justify-between text-rose-400 mb-1">
+                      <span className="text-[11px] font-bold flex items-center gap-1">
+                        <Flame className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
+                        نیازمند پاسخ
+                      </span>
+                      <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                    </div>
+                    <div className="text-2xl font-black text-rose-300">{ticketStats.open}</div>
+                    <span className="text-[10px] text-rose-400/80 mt-1 block">در انتظار بررسی کارشناس</span>
+                  </div>
+
+                  {/* In Progress */}
+                  <div className="p-4 bg-amber-950/20 border border-amber-500/30 rounded-2xl text-right relative overflow-hidden group shadow-sm">
+                    <div className="flex items-center justify-between text-amber-400 mb-1">
+                      <span className="text-[11px] font-bold flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        در حال بررسی
+                      </span>
+                    </div>
+                    <div className="text-2xl font-black text-amber-300">{ticketStats.inProgress}</div>
+                    <span className="text-[10px] text-amber-400/80 mt-1 block">تحلیل فنی و دیباگ</span>
+                  </div>
+
+                  {/* Answered */}
+                  <div className="p-4 bg-blue-950/20 border border-blue-500/30 rounded-2xl text-right relative overflow-hidden group shadow-sm">
+                    <div className="flex items-center justify-between text-blue-400 mb-1">
+                      <span className="text-[11px] font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        پاسخ کارشناس
+                      </span>
+                    </div>
+                    <div className="text-2xl font-black text-blue-300">{ticketStats.answered}</div>
+                    <span className="text-[10px] text-blue-400/80 mt-1 block">منتظر تست کاربر</span>
+                  </div>
+
+                  {/* Avg Response Speed */}
+                  <div className="p-4 bg-emerald-950/20 border border-emerald-500/30 rounded-2xl text-right relative overflow-hidden group shadow-sm">
+                    <div className="flex items-center justify-between text-emerald-400 mb-1">
+                      <span className="text-[11px] font-bold flex items-center gap-1">
+                        <Zap className="w-3.5 h-3.5" />
+                        زمان پاسخگویی
+                      </span>
+                    </div>
+                    <div className="text-2xl font-black text-emerald-300">
+                      {ticketStats.avgResponseTimeMinutes} <span className="text-xs font-normal">دقیقه</span>
+                    </div>
+                    <span className="text-[10px] text-emerald-400/80 mt-1 block">میانگین سرعت پاسخ</span>
+                  </div>
+
+                  {/* Customer Satisfaction CSAT */}
+                  <div className="p-4 bg-purple-950/20 border border-purple-500/30 rounded-2xl text-right relative overflow-hidden group shadow-sm">
+                    <div className="flex items-center justify-between text-purple-400 mb-1">
+                      <span className="text-[11px] font-bold flex items-center gap-1">
+                        <Star className="w-3.5 h-3.5 fill-current text-amber-400" />
+                        رضایت مشتریان
+                      </span>
+                    </div>
+                    <div className="text-2xl font-black text-purple-200">
+                      {ticketStats.satisfactionRatePercent}٪
+                    </div>
+                    <span className="text-[10px] text-purple-300/80 mt-1 block">امتیاز {ticketStats.avgRating} از ۵</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Search & Filter Toolbar */}
+              <div className="p-4 bg-slate-900/90 border border-slate-800/80 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs shadow-md">
+                {/* Search Bar */}
+                <div className="flex items-center gap-2 flex-1 min-w-[280px]">
+                  <div className="relative flex-1">
+                    <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-3" />
+                    <input
+                      type="text"
+                      value={ticketSearchQuery}
+                      onChange={(e) => setTicketSearchQuery(e.target.value)}
+                      placeholder="جستجو با شماره تیکت #TK، نام مشتری، شماره موبایل یا موضوع..."
+                      className="w-full bg-slate-950 border border-slate-700/80 rounded-xl pr-10 pl-8 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition font-sans"
+                    />
+                    {ticketSearchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setTicketSearchQuery("")}
+                        className="absolute left-3 top-2.5 text-slate-400 hover:text-white cursor-pointer"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Filter Select Dropdowns */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Status Dropdown */}
+                  <div className="flex items-center gap-1.5 bg-slate-950 border border-slate-700/80 rounded-xl px-2.5 py-1">
+                    <span className="text-[11px] text-slate-400">وضعیت:</span>
+                    <select
+                      value={ticketFilterStatus}
+                      onChange={(e) => setTicketFilterStatus(e.target.value)}
+                      className="bg-transparent text-xs text-white focus:outline-none font-sans cursor-pointer py-1"
+                    >
+                      <option value="ALL">همه وضعیت‌ها</option>
+                      <option value="OPEN">🔴 نیازمند پاسخ (Open)</option>
+                      <option value="IN_PROGRESS">🟡 در حال بررسی (In Progress)</option>
+                      <option value="ANSWERED">🔵 پاسخ داده شده (Answered)</option>
+                      <option value="RESOLVED">🟢 حل شده (Resolved)</option>
+                      <option value="CLOSED">⚪ بسته شده (Closed)</option>
+                    </select>
+                  </div>
+
+                  {/* Department Dropdown */}
+                  <div className="flex items-center gap-1.5 bg-slate-950 border border-slate-700/80 rounded-xl px-2.5 py-1">
+                    <span className="text-[11px] text-slate-400">دپارتمان:</span>
+                    <select
+                      value={ticketFilterDepartment}
+                      onChange={(e) => setTicketFilterDepartment(e.target.value)}
+                      className="bg-transparent text-xs text-white focus:outline-none font-sans cursor-pointer py-1"
+                    >
+                      <option value="ALL">همه دپارتمان‌ها</option>
+                      <option value="TECHNICAL">پشتیبانی فنی و فلاتر</option>
+                      <option value="WOOCOMMERCE">همگام‌سازی ووکامرس</option>
+                      <option value="STORE_PUBLISHING">انتشار در مارکت</option>
+                      <option value="BUILD_ENGINE">موتور بیلد</option>
+                      <option value="BILLING">امور مالی و ارتقای پلن</option>
+                    </select>
+                  </div>
+
+                  {/* Priority Dropdown */}
+                  <div className="flex items-center gap-1.5 bg-slate-950 border border-slate-700/80 rounded-xl px-2.5 py-1">
+                    <span className="text-[11px] text-slate-400">اولویت:</span>
+                    <select
+                      value={ticketFilterPriority}
+                      onChange={(e) => setTicketFilterPriority(e.target.value)}
+                      className="bg-transparent text-xs text-white focus:outline-none font-sans cursor-pointer py-1"
+                    >
+                      <option value="ALL">همه اولویت‌ها</option>
+                      <option value="URGENT">🔥 فوری و اضطراری</option>
+                      <option value="HIGH">⚡ اولویت بالا</option>
+                      <option value="MEDIUM">اولویت متوسط</option>
+                      <option value="LOW">اولویت عادی</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Master-Detail Command Cockpit (Full-height split) */}
+              <div className="grid grid-cols-12 gap-5 min-h-[680px] bg-slate-900/60 border border-slate-800/80 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-sm">
+                {/* RIGHT SIDE: Tickets Queue List (4 cols) */}
+                <div className="col-span-12 lg:col-span-4 border-l border-slate-800/80 flex flex-col bg-slate-950/40">
+                  <div className="p-3.5 border-b border-slate-800/80 bg-slate-950/80 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black text-white">صف تیکت‌ها</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">
+                        {adminTickets.length} مورد
+                      </span>
+                    </div>
+                    {(ticketFilterStatus !== "ALL" || ticketFilterDepartment !== "ALL" || ticketFilterPriority !== "ALL" || ticketSearchQuery) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTicketFilterStatus("ALL");
+                          setTicketFilterDepartment("ALL");
+                          setTicketFilterPriority("ALL");
+                          setTicketSearchQuery("");
+                        }}
+                        className="text-[10px] text-rose-400 hover:text-rose-300 font-bold cursor-pointer"
+                      >
+                        پاک کردن فیلترها
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto p-3 space-y-2.5 max-h-[620px]">
+                    {adminTickets.length === 0 ? (
+                      <div className="py-20 text-center space-y-2">
+                        <Inbox className="w-10 h-10 text-slate-600 mx-auto" />
+                        <p className="text-xs text-slate-400 font-bold">هیچ تیکتی با این مشخصات یافت نشد</p>
+                        <p className="text-[11px] text-slate-500">فیلترها را تغییر داده یا جستجو را پاک کنید</p>
+                      </div>
+                    ) : (
+                      adminTickets.map((t) => {
+                        const isSelected = selectedAdminTicket?.id === t.id;
+                        const isUrgent = t.priority === "URGENT";
+                        const isOpen = t.status === "OPEN";
+
+                        return (
+                          <div
+                            key={t.id}
+                            onClick={() => setSelectedAdminTicket(t)}
+                            className={`p-3.5 rounded-2xl border text-right transition cursor-pointer relative group ${
+                              isSelected
+                                ? "bg-slate-900 border-rose-500 shadow-xl shadow-rose-950/30 ring-1 ring-rose-500/50"
+                                : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/90"
+                            }`}
+                          >
+                            {/* Status Indicator Bar */}
+                            {isOpen && (
+                              <div className="absolute right-0 top-3 bottom-3 w-1 bg-rose-500 rounded-l" />
+                            )}
+
+                            {/* Card Header: Ticket # & Priority */}
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-mono text-[11px] font-black text-rose-400 bg-rose-950/40 px-2 py-0.5 rounded-lg border border-rose-500/20">
+                                  {t.ticketNumber}
+                                </span>
+                                {t.userPlan && (
+                                  <span className="text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                                    {t.userPlan}
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="flex items-center gap-1">
+                                {isUrgent ? (
+                                  <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse">
+                                    <Flame className="w-3 h-3 text-rose-400" />
+                                    فوری
+                                  </span>
+                                ) : t.priority === "HIGH" ? (
+                                  <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                    <Zap className="w-3 h-3 text-amber-400" />
+                                    بالا
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] px-2 py-0.5 rounded-full text-slate-400 bg-slate-800 border border-slate-700">
+                                    {t.priority === "MEDIUM" ? "متوسط" : "عادی"}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Subject */}
+                            <h4 className="text-xs font-bold text-white mb-2 line-clamp-1 group-hover:text-rose-200 transition">
+                              {t.subject}
+                            </h4>
+
+                            {/* Customer Info & Status */}
+                            <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/60">
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">
+                                  {t.userName?.charAt(0) || "U"}
+                                </div>
+                                <span className="font-medium text-slate-300 line-clamp-1 max-w-[110px]">{t.userName}</span>
+                              </div>
+
+                              <div className="flex items-center gap-1 text-[10px] font-bold">
+                                {t.status === "OPEN" && (
+                                  <span className="text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/30">
+                                    ● نیازمند پاسخ
+                                  </span>
+                                )}
+                                {t.status === "IN_PROGRESS" && (
+                                  <span className="text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/30">
+                                    ● در حال بررسی
+                                  </span>
+                                )}
+                                {t.status === "ANSWERED" && (
+                                  <span className="text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/30">
+                                    ● پاسخ داده شد
+                                  </span>
+                                )}
+                                {t.status === "RESOLVED" && (
+                                  <span className="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                                    ● حل شده
+                                  </span>
+                                )}
+                                {t.status === "CLOSED" && (
+                                  <span className="text-slate-500 bg-slate-800 px-2 py-0.5 rounded-md border border-slate-700">
+                                    ● بسته
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                {/* LEFT SIDE: Ticket Conversation & Answering Cockpit (8 cols) */}
+                <div className="col-span-12 lg:col-span-8 flex flex-col bg-slate-900/40">
+                  {selectedAdminTicket ? (
+                    <div className="flex-1 flex flex-col h-full">
+                      {/* Header: Customer Profile & Quick Status Bar */}
+                      <div className="p-4 border-b border-slate-800/80 bg-slate-950/80 flex flex-wrap items-center justify-between gap-3">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs font-black text-rose-400 bg-rose-950/40 px-2 py-0.5 rounded-md border border-rose-500/20">
+                              {selectedAdminTicket.ticketNumber}
+                            </span>
+                            <h3 className="text-sm font-black text-white">{selectedAdminTicket.subject}</h3>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2.5 text-xs text-slate-400">
+                            <div className="flex items-center gap-1 text-slate-300">
+                              <User className="w-3.5 h-3.5 text-slate-400" />
+                              <span>مشتری:</span>
+                              <strong className="text-white font-bold">{selectedAdminTicket.userName}</strong>
+                            </div>
+                            <span>•</span>
+                            <div className="flex items-center gap-1 font-mono text-slate-300">
+                              <Phone className="w-3 h-3 text-slate-400" />
+                              <span>{selectedAdminTicket.userPhone}</span>
+                            </div>
+                            <span>•</span>
+                            <span className="px-2 py-0.5 bg-amber-500/15 text-amber-300 rounded-md font-bold text-[10px] border border-amber-500/30">
+                              پلن {selectedAdminTicket.userPlan || "PRO"}
+                            </span>
+                            {selectedAdminTicket.appPackageName && (
+                              <>
+                                <span>•</span>
+                                <span className="font-mono text-[11px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                                  {selectedAdminTicket.appPackageName}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Status & Priority Live Dropdowns & Quick Action */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1">
+                            <span className="text-[11px] text-slate-400">وضعیت:</span>
+                            <select
+                              value={selectedAdminTicket.status}
+                              onChange={(e) => handleUpdateTicketMeta(selectedAdminTicket.id, { status: e.target.value })}
+                              className="bg-transparent text-xs text-white focus:outline-none font-sans cursor-pointer py-0.5"
+                            >
+                              <option value="OPEN">🔴 نیازمند پاسخ (Open)</option>
+                              <option value="IN_PROGRESS">🟡 در حال بررسی (In Progress)</option>
+                              <option value="ANSWERED">🔵 پاسخ داده شده (Answered)</option>
+                              <option value="RESOLVED">🟢 حل شده (Resolved)</option>
+                              <option value="CLOSED">⚪ بسته شده (Closed)</option>
+                            </select>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1">
+                            <span className="text-[11px] text-slate-400">اولویت:</span>
+                            <select
+                              value={selectedAdminTicket.priority}
+                              onChange={(e) => handleUpdateTicketMeta(selectedAdminTicket.id, { priority: e.target.value })}
+                              className="bg-transparent text-xs text-white focus:outline-none font-sans cursor-pointer py-0.5"
+                            >
+                              <option value="URGENT">🔥 فوری و اضطراری</option>
+                              <option value="HIGH">⚡ اولویت بالا</option>
+                              <option value="MEDIUM">اولویت متوسط</option>
+                              <option value="LOW">اولویت عادی</option>
+                            </select>
+                          </div>
+
+                          {selectedAdminTicket.status !== "RESOLVED" && (
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateTicketMeta(selectedAdminTicket.id, { status: "RESOLVED" })}
+                              className="px-2.5 py-1 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>حل شد</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Conversation Messages Timeline */}
+                      <div className="flex-1 p-5 overflow-y-auto space-y-4 max-h-[380px] bg-slate-950/20">
+                        {selectedAdminTicket.messages.map((msg: any) => {
+                          const isUser = msg.sender === "USER";
+                          const isAi = msg.sender === "AI_BOT";
+                          return (
+                            <div
+                              key={msg.id}
+                              className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
+                            >
+                              <div
+                                className={`p-4 rounded-2xl max-w-[85%] space-y-1.5 shadow-md border ${
+                                  isUser
+                                    ? "bg-slate-800/90 border-slate-700/80 text-right rounded-tr-none text-slate-100"
+                                    : isAi
+                                    ? "bg-gradient-to-br from-cyan-950/30 to-slate-900 border-cyan-500/30 text-right rounded-tl-none text-cyan-100"
+                                    : "bg-gradient-to-br from-purple-950/40 via-slate-900 to-indigo-950/30 border-purple-500/40 text-right rounded-tl-none text-purple-100"
+                                }`}
+                              >
+                                <div className="flex items-center justify-between text-xs pb-1 border-b border-slate-700/40 gap-4">
+                                  <span
+                                    className={`font-bold flex items-center gap-1.5 ${
+                                      isUser ? "text-slate-200" : isAi ? "text-cyan-400" : "text-purple-300"
+                                    }`}
+                                  >
+                                    {isUser ? (
+                                      <User className="w-3.5 h-3.5 text-blue-400" />
+                                    ) : isAi ? (
+                                      <Bot className="w-3.5 h-3.5 text-cyan-400" />
+                                    ) : (
+                                      <Headphones className="w-3.5 h-3.5 text-purple-400" />
+                                    )}
+                                    <span>{msg.senderName}</span>
+                                    {!isUser && !isAi && (
+                                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold">
+                                        پشتیبان رسمی
+                                      </span>
+                                    )}
+                                  </span>
+                                  <span className="text-[10px] text-slate-400 font-mono">
+                                    {new Date(msg.createdAt).toLocaleTimeString("fa-IR", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </span>
+                                </div>
+                                <p className="text-xs leading-relaxed whitespace-pre-line text-slate-200">
+                                  {msg.content}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+
+                        {/* Customer Rating Card if Resolved */}
+                        {selectedAdminTicket.rating && (
+                          <div className="p-4 bg-gradient-to-r from-amber-950/30 via-purple-950/20 to-slate-900 border border-amber-500/30 rounded-2xl flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-1 text-amber-400">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star
+                                    key={star}
+                                    className={`w-4 h-4 ${
+                                      star <= selectedAdminTicket.rating ? "fill-current" : "text-slate-600"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                              <div>
+                                <div className="text-xs font-bold text-white">
+                                  امتیاز مشتری: {selectedAdminTicket.rating} از ۵
+                                </div>
+                                {selectedAdminTicket.ratingFeedback && (
+                                  <div className="text-[11px] text-slate-300 mt-0.5">
+                                    "{selectedAdminTicket.ratingFeedback}"
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                              نظر ثبت‌شده مشتری
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Internal Notes Display */}
+                        {selectedAdminTicket.internalNotes && selectedAdminTicket.internalNotes.length > 0 && (
+                          <div className="p-3.5 bg-amber-950/20 border border-amber-500/30 rounded-2xl space-y-2 mt-4 shadow-sm">
+                            <div className="text-[11px] font-bold text-amber-400 flex items-center justify-between">
+                              <span className="flex items-center gap-1.5">
+                                <Lock className="w-3.5 h-3.5" />
+                                یادداشت‌های محرمانه تیم فنی (فقط مدیران و کارشناسان پشتیبانی می‌بینند):
+                              </span>
+                              <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono">
+                                {selectedAdminTicket.internalNotes.length} یادداشت
+                              </span>
+                            </div>
+                            <div className="space-y-1.5">
+                              {selectedAdminTicket.internalNotes.map((n: any) => (
+                                <div
+                                  key={n.id}
+                                  className="text-xs text-slate-300 bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80 flex items-start justify-between gap-3"
+                                >
+                                  <div>
+                                    <strong className="text-amber-400 block text-[11px] mb-0.5">{n.author}:</strong>
+                                    <p className="text-slate-200">{n.content}</p>
+                                  </div>
+                                  <span className="text-[10px] text-slate-500 font-mono shrink-0">
+                                    {new Date(n.createdAt).toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Action & Reply Studio */}
+                      <div className="p-4 border-t border-slate-800/80 bg-slate-950/90 space-y-3 mt-auto">
+                        {/* Tabs Switcher: Official Reply vs Internal Note */}
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
+                            <button
+                              type="button"
+                              onClick={() => setAdminActiveSubTab("reply")}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                                adminActiveSubTab === "reply"
+                                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/30"
+                                  : "text-slate-400 hover:text-white"
+                              }`}
+                            >
+                              <Send className="w-3.5 h-3.5" />
+                              <span>ارسال پاسخ رسمی به کاربر</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setAdminActiveSubTab("notes")}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                                adminActiveSubTab === "notes"
+                                  ? "bg-amber-600 text-white shadow-md shadow-amber-600/30"
+                                  : "text-slate-400 hover:text-white"
+                              }`}
+                            >
+                              <Lock className="w-3.5 h-3.5" />
+                              <span>ثبت یادداشت محرمانه داخلی</span>
+                            </button>
+                          </div>
+
+                          {/* Quick Canned Responses Dropdown */}
+                          {adminActiveSubTab === "reply" && cannedResponses.length > 0 && (
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[11px] text-slate-400 flex items-center gap-1">
+                                <Sparkles className="w-3 h-3 text-amber-400" />
+                                پاسخ‌های آماده:
+                              </span>
+                              <select
+                                onChange={(e) => {
+                                  const selected = cannedResponses.find((c) => c.id === e.target.value);
+                                  if (selected) setAdminReplyText(selected.content);
+                                }}
+                                className="bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1 text-[11px] text-white focus:outline-none focus:border-rose-500 font-sans cursor-pointer"
+                              >
+                                <option value="">انتخاب از قالب‌های آماده...</option>
+                                {cannedResponses.map((c) => (
+                                  <option key={c.id} value={c.id}>
+                                    {c.title}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Reply Tab Active */}
+                        {adminActiveSubTab === "reply" ? (
+                          <>
+                            <div className="relative">
+                              <textarea
+                                value={adminReplyText}
+                                onChange={(e) => setAdminReplyText(e.target.value)}
+                                rows={3}
+                                placeholder="متن پاسخ رسمی کارشناس پشتیبانی را اینجا بنویسید..."
+                                className="w-full bg-slate-900/90 border border-slate-700/80 rounded-2xl p-3.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 resize-none transition shadow-inner"
+                              />
+                            </div>
+
+                            {/* Canned Quick Pills */}
+                            {cannedResponses.length > 0 && (
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                <span className="text-[10px] text-slate-500 font-bold">پیشنهاد سریع:</span>
+                                {cannedResponses.slice(0, 3).map((c) => (
+                                  <button
+                                    key={c.id}
+                                    type="button"
+                                    onClick={() => setAdminReplyText(c.content)}
+                                    className="text-[10px] px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition cursor-pointer"
+                                  >
+                                    + {c.title}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+
+                            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                              <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1">
+                                  <span className="text-[11px] text-slate-400">نام کارشناس:</span>
+                                  <input
+                                    type="text"
+                                    value={adminAgentName}
+                                    onChange={(e) => setAdminAgentName(e.target.value)}
+                                    placeholder="نام کارشناس پشتیبانی"
+                                    className="bg-transparent text-xs text-white w-44 font-sans focus:outline-none"
+                                  />
+                                </div>
+
+                                <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1">
+                                  <span className="text-[11px] text-slate-400">وضعیت پس از ارسال:</span>
+                                  <select
+                                    value={adminNewStatus}
+                                    onChange={(e) => setAdminNewStatus(e.target.value)}
+                                    className="bg-transparent text-xs text-white font-sans focus:outline-none cursor-pointer"
+                                  >
+                                    <option value="ANSWERED">پاسخ داده شد</option>
+                                    <option value="RESOLVED">حل شد</option>
+                                    <option value="IN_PROGRESS">در حال بررسی</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => handleSendTicketReply(selectedAdminTicket.id)}
+                                disabled={isSendingTicketReply || !adminReplyText.trim()}
+                                className="px-6 py-2.5 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 disabled:opacity-50 text-white font-bold text-xs rounded-xl flex items-center gap-2 transition cursor-pointer shadow-lg shadow-rose-600/30 active:scale-95"
+                              >
+                                {isSendingTicketReply ? (
+                                  <RefreshCw className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <Send className="w-4 h-4" />
+                                )}
+                                <span>ارسال پاسخ رسمی به مشتری</span>
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          /* Notes Tab Active */
+                          <div className="space-y-3">
+                            <textarea
+                              value={adminNoteText}
+                              onChange={(e) => setAdminNoteText(e.target.value)}
+                              rows={2}
+                              placeholder="یادداشت محرمانه داخلی را بنویسید (فقط مدیران و کارشناسان پشتیبانی می‌بینند و کاربر هرگز به آن دسترسی ندارد)..."
+                              className="w-full bg-slate-900/90 border border-amber-500/40 rounded-2xl p-3.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 resize-none transition shadow-inner"
+                            />
+                            <div className="flex items-center justify-between">
+                              <span className="text-[11px] text-amber-400/80 flex items-center gap-1">
+                                <Lock className="w-3 h-3" />
+                                این یادداشت به عنوان گزارش محرمانه ذخیره می‌شود
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleAddTicketNote(selectedAdminTicket.id)}
+                                disabled={isAddingAdminNote || !adminNoteText.trim()}
+                                className="px-5 py-2 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-xs rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-lg shadow-amber-600/20 active:scale-95"
+                              >
+                                {isAddingAdminNote ? (
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <Lock className="w-3.5 h-3.5" />
+                                )}
+                                <span>ثبت یادداشت محرمانه داخلی</span>
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex-1 flex flex-col items-center justify-center text-slate-500 text-xs space-y-3 py-24">
+                      <div className="w-16 h-16 rounded-3xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-center text-slate-400">
+                        <LifeBuoy className="w-8 h-8 opacity-60" />
+                      </div>
+                      <p className="font-bold text-slate-400">تیکتی را برای مشاهده و پاسخ انتخاب نمایید</p>
+                      <p className="text-[11px] text-slate-500 max-w-xs text-center">
+                        برای مدیریت جزئیات، تغییر اولویت و ارسال پاسخ، روی یکی از تیکت‌های لیست سمت راست کلیک کنید.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
+
+      {/* 3-Step Migration Wizard Modal */}
+      <MigrationWizardModal
+        isOpen={showMigrationModal}
+        onClose={() => setShowMigrationModal(false)}
+        onMigrationComplete={() => {
+          fetchAllAdminData();
+        }}
+      />
 
       {/* MODAL 1: ADD NEW USER */}
       {showAddUserModal && (

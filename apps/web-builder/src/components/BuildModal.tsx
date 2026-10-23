@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { QrCodeCard } from "./QrCodeCard";
 import {
   X,
   Hammer,
@@ -19,6 +20,10 @@ import {
   Layers,
   Cpu,
   Code2,
+  Globe,
+  ExternalLink,
+  Crown,
+  Store,
 } from "lucide-react";
 
 interface BuildModalProps {
@@ -33,6 +38,8 @@ interface BuildModalProps {
   onStartBuild: (platform?: "ALL" | "APK" | "AAB" | "PWA") => void;
   targetPlatform: "ALL" | "APK" | "AAB" | "PWA";
   setTargetPlatform: (platform: "ALL" | "APK" | "AAB" | "PWA") => void;
+  onOpenSubscriptionModal?: () => void;
+  onOpenStoreRelease?: () => void;
 }
 
 export function BuildModal({
@@ -47,6 +54,8 @@ export function BuildModal({
   onStartBuild,
   targetPlatform,
   setTargetPlatform,
+  onOpenSubscriptionModal,
+  onOpenStoreRelease,
 }: BuildModalProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const terminalEndRef = useRef<HTMLDivElement>(null);
@@ -150,12 +159,29 @@ export function BuildModal({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            {onOpenSubscriptionModal && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenSubscriptionModal();
+                }}
+                className="px-3 py-1 bg-gradient-to-r from-amber-500/20 to-rose-500/20 hover:from-amber-500/30 hover:to-rose-500/30 text-amber-300 border border-amber-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                title="مشاهده پلن‌های اشتراک تجاری و ارتقا"
+              >
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>پلن‌های تجاری</span>
+              </button>
+            )}
+
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Modal Body */}
@@ -310,6 +336,54 @@ export function BuildModal({
                 </a>
               </div>
 
+              {/* Direct PWA Web App Button */}
+              <div className="pt-1">
+                <a
+                  href={`/pwa?id=${projectId || ''}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-blue-600/20 flex items-center justify-between transition group"
+                >
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-blue-300" />
+                    <div className="text-right">
+                      <div className="flex items-center gap-2">
+                        <span className="block font-black">اجرای نسخه وب و PWA (مخصوص کاربران آیفون)</span>
+                        <span className="text-[9px] bg-blue-400/20 text-blue-200 px-1.5 py-0.2 rounded font-medium">اجرا بدون نصب</span>
+                      </div>
+                      <span className="text-[10px] text-blue-200 font-normal">دسترسی آنلاین به فروشگاه در مرورگر و امکان نصب به عنوان Web App</span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition" />
+                </a>
+              </div>
+
+              {/* Direct Market Release Hub Button */}
+              {onOpenStoreRelease && (
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenStoreRelease();
+                    }}
+                    className="w-full p-3 bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-teal-600/25 flex items-center justify-between transition group cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Store className="w-4 h-4 text-emerald-300" />
+                      <div className="text-right">
+                        <div className="flex items-center gap-2">
+                          <span className="block font-black">مرکز انتشار در کافه‌بازار و مایکت</span>
+                          <span className="text-[9px] bg-emerald-400/25 text-emerald-200 px-1.5 py-0.2 rounded font-medium">تست سازگاری ۱۰۰٪</span>
+                        </div>
+                        <span className="text-[10px] text-teal-100 font-normal">متادیتای سئو، چک‌لیست تایید و ارسال با API</span>
+                      </div>
+                    </div>
+                    <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition" />
+                  </button>
+                </div>
+              )}
+
               {/* Keystore and Copy Link Footer */}
               <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-emerald-500/20 text-[11px]">
                 {currentJob.keystoreUrl && (
@@ -346,6 +420,15 @@ export function BuildModal({
                     )}
                   </button>
                 )}
+              </div>
+
+              {/* Mobile Direct QR Code Scanner */}
+              <div className="pt-2">
+                <QrCodeCard
+                  apkUrl={currentJob.downloadUrl ? `http://localhost:4000${currentJob.downloadUrl}` : undefined}
+                  pwaUrl={typeof window !== "undefined" ? `${window.location.origin}/pwa?id=${projectId || ""}` : undefined}
+                  appName={appName}
+                />
               </div>
             </div>
           )}

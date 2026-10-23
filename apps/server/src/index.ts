@@ -21,6 +21,9 @@ import { dokanRoutes } from './modules/dokan/dokan.routes.js';
 import { whiteLabelRoutes } from './modules/white-label/white-label.routes.js';
 import { appUpdateRoutes } from './modules/app-update/app-update.routes.js';
 import { aiGeneratorRoutes } from './modules/ai-generator/ai-generator.routes.js';
+import { storeReleaseRoutes } from './modules/store-release/store-release.routes.js';
+import { monitoringRoutes } from './modules/monitoring/monitoring.routes.js';
+import { supportRoutes } from './modules/support/support.routes.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -177,6 +180,9 @@ async function start() {
     await server.register(whiteLabelRoutes);
     await server.register(appUpdateRoutes);
     await server.register(aiGeneratorRoutes);
+    await server.register(storeReleaseRoutes);
+    await server.register(monitoringRoutes);
+    await server.register(supportRoutes);
 
     // 4. Health Check
     server.get('/api/health', async () => {

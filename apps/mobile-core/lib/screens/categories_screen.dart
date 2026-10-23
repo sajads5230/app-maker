@@ -6,8 +6,15 @@ import 'search_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
   final AppConfigModel? config;
+  final int initialCategoryIndex;
+  final String? initialCategoryTitle;
 
-  const CategoriesScreen({super.key, this.config});
+  const CategoriesScreen({
+    super.key,
+    this.config,
+    this.initialCategoryIndex = 0,
+    this.initialCategoryTitle,
+  });
 
   @override
   State<CategoriesScreen> createState() => _CategoriesScreenState();
@@ -16,62 +23,112 @@ class CategoriesScreen extends StatefulWidget {
 class _CategoriesScreenState extends State<CategoriesScreen> {
   int _selectedCategoryIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategoryIndex = widget.initialCategoryIndex;
+    if (widget.initialCategoryTitle != null && widget.initialCategoryTitle!.isNotEmpty) {
+      final cats = _getCategories();
+      final targetTitle = widget.initialCategoryTitle!.trim().toLowerCase();
+      final foundIdx = cats.indexWhere((c) {
+        final t = (c['title'] ?? '').toString().trim().toLowerCase();
+        return t == targetTitle || t.contains(targetTitle) || targetTitle.contains(t);
+      });
+      if (foundIdx != -1) {
+        _selectedCategoryIndex = foundIdx;
+      }
+    }
+  }
+
   final List<Map<String, dynamic>> _defaultCategories = [
     {
-      'title': 'موبایل و تبلت',
-      'icon': Icons.phone_android_rounded,
-      'banner': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=200&fit=crop',
+      'title': 'خانه و آشپزخانه هوشمند',
+      'icon': Icons.kitchen_rounded,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg',
+      'banner': 'https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg',
       'subcategories': [
-        {'title': 'گوشی سامسونگ', 'count': '۱۴۲ کالا', 'icon': Icons.smartphone},
-        {'title': 'گوشی شیائومی', 'count': '۹۸ کالا', 'icon': Icons.phone_iphone},
-        {'title': 'گوشی اپل (آیفون)', 'count': '۴۵ کالا', 'icon': Icons.apple},
-        {'title': 'تبلت و آیپد', 'count': '۳۱ کالا', 'icon': Icons.tablet_mac},
-        {'title': 'قاب و کاور', 'count': '۵۱۰ کالا', 'icon': Icons.shield_outlined},
-        {'title': 'شارژر و آداپتور', 'count': '۱۲۴ کالا', 'icon': Icons.power},
+        {'title': 'جارو رباتیک هوشمند', 'count': '۱۴ کالا', 'icon': Icons.cleaning_services_rounded},
+        {'title': 'ماشین لباسشویی هوشمند', 'count': '۵ کالا', 'icon': Icons.local_laundry_service_rounded},
+        {'title': 'تصفیه هوا و آب هوشمند', 'count': '۸ کالا', 'icon': Icons.air_rounded},
+        {'title': 'مشاهده همه محصولات خانه هوشمند', 'count': '۲۱ کالا', 'icon': Icons.grid_view_rounded},
       ],
     },
     {
-      'title': 'لپ‌تاپ و کامپیوتر',
-      'icon': Icons.laptop_mac_rounded,
-      'banner': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=200&fit=crop',
+      'title': 'دوربین های نظارتی هوشمند',
+      'icon': Icons.videocam_rounded,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/09/18.jpg',
+      'banner': 'https://xiaomismart.ir/wp-content/uploads/2025/09/18.jpg',
       'subcategories': [
-        {'title': 'لپ‌تاپ گیمینگ', 'count': '۳۴ کالا', 'icon': Icons.sports_esports},
-        {'title': 'لپ‌تاپ مهندسی و اداری', 'count': '۵۶ کالا', 'icon': Icons.laptop},
-        {'title': 'ماوس و کیبورد', 'count': '۸۹ کالا', 'icon': Icons.mouse},
-        {'title': 'مانیتور', 'count': '۲۷ کالا', 'icon': Icons.desktop_windows},
-        {'title': 'هارد و حافظه SSD', 'count': '۶۳ کالا', 'icon': Icons.storage},
+        {'title': 'دوربین مداربسته ۳۶۰ درجه', 'count': '۶ کالا', 'icon': Icons.videocam_rounded},
+        {'title': 'دوربین فضای باز و ضدآب', 'count': '۴ کالا', 'icon': Icons.camera_indoor_rounded},
+        {'title': 'مشاهده همه دوربین‌های نظارتی', 'count': '۱۲ کالا', 'icon': Icons.grid_view_rounded},
       ],
     },
     {
-      'title': 'صوتی و هدفون',
-      'icon': Icons.headphones_rounded,
-      'banner': 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&h=200&fit=crop',
+      'title': 'سیستم سرمایش و گرمایش هوشمند',
+      'icon': Icons.ac_unit_rounded,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/8-11.jpg',
+      'banner': 'https://xiaomismart.ir/wp-content/uploads/2025/11/8-11.jpg',
       'subcategories': [
-        {'title': 'هدفون روگوشی', 'count': '۴۱ کالا', 'icon': Icons.headset},
-        {'title': 'هندزفری بی‌سیم', 'count': '۷۸ کالا', 'icon': Icons.earbuds},
-        {'title': 'اسپیکر بلوتوثی', 'count': '۵۲ کالا', 'icon': Icons.speaker},
-        {'title': 'میکروفون استودیویی', 'count': '۱۹ کالا', 'icon': Icons.mic},
+        {'title': 'کولر گازی مرکزی هوشمند', 'count': '۱۱ کالا', 'icon': Icons.ac_unit_rounded},
+        {'title': 'هیتر و بخاری هوشمند', 'count': '۹ کالا', 'icon': Icons.heat_pump_rounded},
+        {'title': 'پنکه برجی هوشمند', 'count': '۹ کالا', 'icon': Icons.mode_fan_off_rounded},
+        {'title': 'مشاهده همه محصولات سرمایش و گرمایش', 'count': '۲۹ کالا', 'icon': Icons.grid_view_rounded},
       ],
     },
     {
-      'title': 'ساعت و گجت',
-      'icon': Icons.watch_rounded,
-      'banner': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=200&fit=crop',
+      'title': 'سیستم صوتی و تصویری هوشمند',
+      'icon': Icons.speaker_rounded,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/12-3.jpg',
+      'banner': 'https://xiaomismart.ir/wp-content/uploads/2025/11/12-3.jpg',
       'subcategories': [
-        {'title': 'ساعت هوشمند اپل', 'count': '۱۸ کالا', 'icon': Icons.watch},
-        {'title': 'ساعت هوشمند سامسونگ', 'count': '۱۴ کالا', 'icon': Icons.watch_later},
-        {'title': 'مچ‌بند سلامتی', 'count': '۲۹ کالا', 'icon': Icons.fitness_center},
-        {'title': 'بند و اکسسوری ساعت', 'count': '۱۱۰ کالا', 'icon': Icons.style},
+        {'title': 'اسپیکر هوشمند شیائومی', 'count': '۱۰ کالا', 'icon': Icons.speaker_rounded},
+        {'title': 'ویدیو پروژکتور خانگی', 'count': '۶ کالا', 'icon': Icons.tv_rounded},
+        {'title': 'مشاهده همه صوتی و تصویری', 'count': '۱۶ کالا', 'icon': Icons.grid_view_rounded},
       ],
     },
     {
-      'title': 'لوازم جانبی',
-      'icon': Icons.cable_rounded,
-      'banner': 'https://images.unsplash.com/photo-1609592807664-8461f0923f13?w=600&h=200&fit=crop',
+      'title': 'قفل، دستگیره و زنگ هوشمند',
+      'icon': Icons.lock_rounded,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/10/20.jpg',
+      'banner': 'https://xiaomismart.ir/wp-content/uploads/2025/10/20.jpg',
       'subcategories': [
-        {'title': 'پاوربانک', 'count': '۴۸ کالا', 'icon': Icons.battery_charging_full},
-        {'title': 'کابل تایپ C و لایتنینگ', 'count': '۱۶۵ کالا', 'icon': Icons.cable},
-        {'title': 'هولدر و پایه موبایل', 'count': '۷۲ کالا', 'icon': Icons.screen_lock_rotation},
+        {'title': 'دستگیره دیجیتال تشخیص چهره', 'count': '۷ کالا', 'icon': Icons.door_front_door_rounded},
+        {'title': 'زنگ درب تصویری هوشمند', 'count': '۵ کالا', 'icon': Icons.doorbell_rounded},
+        {'title': 'مشاهده همه قفل‌ها و زنگ‌ها', 'count': '۱۲ کالا', 'icon': Icons.grid_view_rounded},
+      ],
+    },
+    {
+      'title': 'کلید و پریز هوشمند',
+      'icon': Icons.toggle_on_rounded,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/12-5.jpg',
+      'banner': 'https://xiaomismart.ir/wp-content/uploads/2025/11/12-5.jpg',
+      'subcategories': [
+        {'title': 'کلید لمسی تک و دو پل', 'count': '۱۸ کالا', 'icon': Icons.toggle_on_rounded},
+        {'title': 'پریز وای‌فای هوشمند', 'count': '۱۵ کالا', 'icon': Icons.power_rounded},
+        {'title': 'مشاهده همه کلید و پریزها', 'count': '۳۳ کالا', 'icon': Icons.grid_view_rounded},
+      ],
+    },
+    {
+      'title': 'نور و روشنایی هوشمند',
+      'icon': Icons.lightbulb_rounded,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/Untitled-1.jpg',
+      'banner': 'https://xiaomismart.ir/wp-content/uploads/2025/11/Untitled-1.jpg',
+      'subcategories': [
+        {'title': 'لامپ هوشمند رنگی RGB', 'count': '۱۲ کالا', 'icon': Icons.lightbulb_rounded},
+        {'title': 'ریسه و چراغ خواب هوشمند', 'count': '۶ کالا', 'icon': Icons.nightlight_rounded},
+        {'title': 'مشاهده همه روشنایی هوشمند', 'count': '۱۸ کالا', 'icon': Icons.grid_view_rounded},
+      ],
+    },
+    {
+      'title': 'هاب و سنسور های هوشمند',
+      'icon': Icons.hub_rounded,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/10/12-7.jpg',
+      'banner': 'https://xiaomismart.ir/wp-content/uploads/2025/10/12-7.jpg',
+      'subcategories': [
+        {'title': 'گیت‌وی و هاب مرکزی Zigbee', 'count': '۶ کالا', 'icon': Icons.hub_rounded},
+        {'title': 'سنسور دما، رطوبت و حضور', 'count': '۸ کالا', 'icon': Icons.sensors_rounded},
+        {'title': 'مشاهده همه سنسورها', 'count': '۱۴ کالا', 'icon': Icons.grid_view_rounded},
       ],
     },
   ];
@@ -85,18 +142,65 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           final title = (it['title'] ?? it['name'] ?? '').toString();
           final img = (it['imageUrl'] ?? '').toString();
           final countVal = it['count'] != null ? '${it['count']} کالا' : 'موجود در انبار';
+
+          List<Map<String, dynamic>> subs = [];
+          if (title.contains('آشپزخانه') || title.contains('خانه')) {
+            subs = [
+              {'title': 'جارو رباتیک هوشمند', 'count': '۱۴ کالا', 'icon': Icons.cleaning_services_rounded},
+              {'title': 'ماشین لباسشویی هوشمند', 'count': '۵ کالا', 'icon': Icons.local_laundry_service_rounded},
+              {'title': 'تصفیه هوا و آب هوشمند', 'count': '۸ کالا', 'icon': Icons.air_rounded},
+              {'title': 'مشاهده همه کالاهای $title', 'count': countVal, 'icon': Icons.grid_view_rounded},
+            ];
+          } else if (title.contains('سرمایش') || title.contains('گرمایش')) {
+            subs = [
+              {'title': 'کولر گازی هوشمند', 'count': '۱۱ کالا', 'icon': Icons.ac_unit_rounded},
+              {'title': 'بخاری و هیتر هوشمند', 'count': '۹ کالا', 'icon': Icons.heat_pump_rounded},
+              {'title': 'پنکه و فن هوشمند', 'count': '۹ کالا', 'icon': Icons.mode_fan_off_rounded},
+              {'title': 'مشاهده همه کالاهای $title', 'count': countVal, 'icon': Icons.grid_view_rounded},
+            ];
+          } else if (title.contains('دوربین') || title.contains('نظارتی')) {
+            subs = [
+              {'title': 'دوربین نظارتی ۳۶۰ درجه', 'count': '۶ کالا', 'icon': Icons.videocam_rounded},
+              {'title': 'دوربین فضای باز ضدآب', 'count': '۴ کالا', 'icon': Icons.camera_indoor_rounded},
+              {'title': 'مشاهده همه کالاهای $title', 'count': countVal, 'icon': Icons.grid_view_rounded},
+            ];
+          } else if (title.contains('قفل') || title.contains('دستگیره') || title.contains('زنگ')) {
+            subs = [
+              {'title': 'دستگیره دیجیتال هوشمند', 'count': '۷ کالا', 'icon': Icons.door_front_door_rounded},
+              {'title': 'زنگ درب تصویری هوشمند', 'count': '۵ کالا', 'icon': Icons.doorbell_rounded},
+              {'title': 'مشاهده همه کالاهای $title', 'count': countVal, 'icon': Icons.grid_view_rounded},
+            ];
+          } else if (title.contains('کلید') || title.contains('پریز')) {
+            subs = [
+              {'title': 'کلید لمسی تک و دو پل', 'count': '۱۸ کالا', 'icon': Icons.toggle_on_rounded},
+              {'title': 'پریز هوشمند وای‌فای', 'count': '۱۵ کالا', 'icon': Icons.power_rounded},
+              {'title': 'مشاهده همه کالاهای $title', 'count': countVal, 'icon': Icons.grid_view_rounded},
+            ];
+          } else if (title.contains('صوتی') || title.contains('تصویری')) {
+            subs = [
+              {'title': 'اسپیکر هوشمند شیائومی', 'count': '۱۰ کالا', 'icon': Icons.speaker_rounded},
+              {'title': 'پروژکتور هوشمند', 'count': '۶ کالا', 'icon': Icons.tv_rounded},
+              {'title': 'مشاهده همه کالاهای $title', 'count': countVal, 'icon': Icons.grid_view_rounded},
+            ];
+          } else if (title.contains('نور') || title.contains('روشنایی')) {
+            subs = [
+              {'title': 'لامپ هوشمند رنگی RGB', 'count': '۱۲ کالا', 'icon': Icons.lightbulb_rounded},
+              {'title': 'ریسه و چراغ خواب هوشمند', 'count': '۶ کالا', 'icon': Icons.nightlight_rounded},
+              {'title': 'مشاهده همه کالاهای $title', 'count': countVal, 'icon': Icons.grid_view_rounded},
+            ];
+          } else {
+            subs = [
+              {'title': 'سنسور و هاب مرکزی', 'count': countVal, 'icon': Icons.hub_rounded},
+              {'title': 'مشاهده همه کالاهای $title', 'count': countVal, 'icon': Icons.grid_view_rounded},
+            ];
+          }
+
           return {
             'title': title,
-            'banner': img.isNotEmpty ? img : 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=600&h=200&fit=crop',
+            'banner': img.isNotEmpty ? img : 'https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg',
             'imageUrl': img,
             'icon': Icons.category_rounded,
-            'subcategories': [
-              {
-                'title': 'مشاهده همه کالاهای $title',
-                'count': countVal,
-                'icon': Icons.grid_view_rounded,
-              },
-            ],
+            'subcategories': subs,
           };
         }).toList();
       }

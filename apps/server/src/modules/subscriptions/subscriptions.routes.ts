@@ -227,7 +227,10 @@ export const subscriptionRoutes: FastifyPluginAsync = async (server: FastifyInst
       </div>
     </div>
 
-    <a href="http://localhost:3000" class="btn">بازگشت به استودیو اپ‌ساز</a>
+    <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+      <a href="http://localhost:3000/builder?payment=success&refId=${refId}" class="btn" style="background: #10b981;">ورود به استودیو و شروع بیلد اپلیکیشن</a>
+      <a href="http://localhost:3000/dashboard?tab=invoices" class="btn" style="background: #3b82f6;">مشاهده و دریافت فاکتور رسمی</a>
+    </div>
   </div>
 </body>
 </html>`;
@@ -299,6 +302,120 @@ export const subscriptionRoutes: FastifyPluginAsync = async (server: FastifyInst
       subscription: activeSub,
       daysRemaining,
       quota: quotaInfo,
+    });
+  });
+
+  // 6. Get User Invoices List
+  server.get('/api/subscriptions/invoices', async (request, reply) => {
+    const user = await resolveUser(request);
+    let userId = user?.id;
+    if (!userId) {
+      const defaultUser = await prisma.user.findFirst();
+      userId = defaultUser?.id;
+    }
+
+    if (!userId) {
+      return reply.status(401).send({ success: false, error: 'کاربر احراز هویت نشده است.' });
+    }
+
+    const dbUser = await prisma.user.findUnique({ where: { id: userId } });
+    const subs = await prisma.subscription.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const invoices = subs.map((sub) => {
+      const planKey = sub.plan.toLowerCase().includes('lifetime')
+        ? 'plan_lifetime'
+        : sub.plan.toLowerCase().includes('pro')
+        ? 'plan_pro'
+        : 'plan_basic';
+      const plan = QuotaService.PLANS[planKey] || QuotaService.PLANS.plan_basic;
+      const totalAmount = sub.price;
+      const baseAmount = Math.round(totalAmount / 1.09);
+      const vatAmount = totalAmount - baseAmount;
+
+      return {
+        id: sub.id,
+        invoiceNumber: `INV-${new Date(sub.createdAt).getFullYear()}-${sub.id.slice(0, 6).toUpperCase()}`,
+        date: sub.createdAt,
+        expiresAt: sub.expiresAt,
+        status: sub.status === 'ACTIVE' ? 'PAID' : sub.status,
+        planId: plan.id,
+        planName: plan.name,
+        period: plan.period,
+        baseAmount,
+        vatAmount,
+        totalAmount,
+        trackingCode: `SHP-${sub.id.slice(0, 8).toUpperCase()}`,
+        seller: {
+          companyName: 'شرکت فناوران نرم‌افزار اپ‌ساز (سهامی خاص)',
+          economicCode: '41159837261',
+          nationalId: '14012938471',
+          regNumber: '584920',
+          phone: '021-91008877',
+          address: 'تهران، پارک فناوری اطلاعات، برج فناوری دانش‌بنیان، طبقه ۸',
+        },
+        buyer: {
+          name: dbUser?.name || 'مشتری گرامی',
+          phone: dbUser?.phone || '09121234567',
+        },
+      };
+    });
+
+    return reply.send({ success: true, invoices });
+  });
+
+  // 7. Get Single Invoice Detail
+  server.get('/api/subscriptions/invoices/:id', async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const sub = await prisma.subscription.findUnique({
+      where: { id },
+      include: { user: true },
+    });
+
+    if (!sub) {
+      return reply.status(404).send({ success: false, error: 'فاکتور مورد نظر یافت نشد.' });
+    }
+
+    const planKey = sub.plan.toLowerCase().includes('lifetime')
+      ? 'plan_lifetime'
+      : sub.plan.toLowerCase().includes('pro')
+      ? 'plan_pro'
+      : 'plan_basic';
+    const plan = QuotaService.PLANS[planKey] || QuotaService.PLANS.plan_basic;
+    const totalAmount = sub.price;
+    const baseAmount = Math.round(totalAmount / 1.09);
+    const vatAmount = totalAmount - baseAmount;
+
+    return reply.send({
+      success: true,
+      invoice: {
+        id: sub.id,
+        invoiceNumber: `INV-${new Date(sub.createdAt).getFullYear()}-${sub.id.slice(0, 6).toUpperCase()}`,
+        date: sub.createdAt,
+        expiresAt: sub.expiresAt,
+        status: sub.status === 'ACTIVE' ? 'PAID' : sub.status,
+        planId: plan.id,
+        planName: plan.name,
+        period: plan.period,
+        baseAmount,
+        vatAmount,
+        totalAmount,
+        trackingCode: `SHP-${sub.id.slice(0, 8).toUpperCase()}`,
+        seller: {
+          companyName: 'شرکت فناوران نرم‌افزار اپ‌ساز (سهامی خاص)',
+          economicCode: '41159837261',
+          nationalId: '14012938471',
+          regNumber: '584920',
+          phone: '021-91008877',
+          address: 'تهران، پارک فناوری اطلاعات، برج فناوری دانش‌بنیان، طبقه ۸',
+        },
+        buyer: {
+          name: sub.user?.name || 'مشتری گرامی',
+          phone: sub.user?.phone || '09121234567',
+        },
+      },
     });
   });
 };

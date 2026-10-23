@@ -54,14 +54,18 @@ export class WordPressService {
    * Fetches live blog posts from WordPress REST API (/wp-json/wp/v2/posts?_embed=1)
    */
   static async fetchPostsWithMeta(siteUrl: string, limit: number = 6): Promise<WordPressFetchResult> {
-    let sanitizedUrl = siteUrl.trim().replace(/\/+$/, '');
-    if (!sanitizedUrl.startsWith('http://') && !sanitizedUrl.startsWith('https://')) {
-      sanitizedUrl = `https://${sanitizedUrl}`;
+    let sanitizedUrl = (siteUrl || '').trim().replace(/\/+$/, '');
+    if (!sanitizedUrl) {
+      return {
+        posts: [],
+        isLive: false,
+        sourceUrl: '',
+        error: 'آدرس وب‌سایت وردپرس تنظیم نشده است.',
+      };
     }
 
-    // Auto-resolve placeholder domains to active live store
-    if (sanitizedUrl.includes('techmarket.ir')) {
-      sanitizedUrl = 'https://xiaomismart.ir';
+    if (!sanitizedUrl.startsWith('http://') && !sanitizedUrl.startsWith('https://')) {
+      sanitizedUrl = `https://${sanitizedUrl}`;
     }
 
     const apiUrl = `${sanitizedUrl}/wp-json/wp/v2/posts?per_page=${limit}&_embed=1`;

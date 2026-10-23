@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import archiver from 'archiver';
 import { prisma } from '../prisma.js';
 
 export interface SourceExportResult {
@@ -137,18 +136,17 @@ flutter build appbundle --release
 `;
 
     // Archiving setup
+    const archiverModule: any = await import('archiver');
+    const ZipClass = archiverModule.ZipArchive || archiverModule.default?.ZipArchive || archiverModule.default;
+
     return new Promise((resolve, reject) => {
       const output = fs.createWriteStream(zipFilePath);
-      const rawArchiver: any = archiver;
-      const ZipClass = rawArchiver.ZipArchive || (typeof rawArchiver === 'function' ? rawArchiver : null);
 
       if (!ZipClass) {
         throw new Error('کلاس ساخت آرشیو زیپ (ZipArchive) در پکیج یافت نشد.');
       }
 
-      const zipArchiver = rawArchiver.ZipArchive
-        ? new rawArchiver.ZipArchive({ zlib: { level: 9 } })
-        : rawArchiver('zip', { zlib: { level: 9 } });
+      const zipArchiver = new ZipClass({ zlib: { level: 9 } });
 
       output.on('close', () => {
         const stats = fs.statSync(zipFilePath);

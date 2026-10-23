@@ -34,11 +34,22 @@ workers/build-worker/keystores/
 *.keystore
 *.jks
 
+# Public downloads & generated zip/release archives
+apps/server/public/downloads/*
+!apps/server/public/downloads/.gitkeep
+
 # Environment variables & Secrets
 .env
 .env*.local
 !.env.example
 !.env.*.example
+
+# Databases & SQLite
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+apps/server/prisma/*.db
 
 # Logs
 npm-debug.log*
@@ -53,10 +64,8 @@ lerna-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+*.tsbuildinfo
 
-# Databases & SQLite
-*.db
-*.db-journal
-*.sqlite
-*.sqlite3
-apps/server/prisma/*.db
+# Test outputs
+*_results.json
+e2e_results.json

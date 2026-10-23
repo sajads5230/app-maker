@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import { prisma } from '../../prisma.js';
 import { QuotaService } from '../subscriptions/quota.service.js';
+import { BuildService } from './build.service.js';
 
 export const buildRoutes: FastifyPluginAsync = async (server: FastifyInstance) => {
   // 1. Trigger Cloud Build Job
@@ -33,6 +34,11 @@ export const buildRoutes: FastifyPluginAsync = async (server: FastifyInstance) =
         status: 'QUEUED',
         logs: `[${new Date().toLocaleTimeString('fa-IR')}] درخواست خروجی تجاری (${targetPlatform}) با امضای دیجیتال Release در صف پردازش قرار گرفت...`,
       },
+    });
+
+    // Automatically trigger async execution in background worker
+    BuildService.executeBuild(job.id, projectId, targetPlatform).catch((err) => {
+      server.log.error(err);
     });
 
     return reply.status(202).send({

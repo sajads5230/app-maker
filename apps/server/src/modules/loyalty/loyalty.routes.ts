@@ -358,4 +358,59 @@ export const loyaltyRoutes: FastifyPluginAsync = async (server: FastifyInstance)
       members,
     });
   });
+
+  // 6. Get Gamification Wheel Config
+  server.get('/api/projects/:projectId/loyalty/wheel/config', async (request, reply) => {
+    const prizes = [
+      { id: 0, label: '۵۰ امتیاز باشگاه', type: 'points', value: 50, color: '#f59e0b', probability: 0.25 },
+      { id: 1, label: '۱۰٪ تخفیف', type: 'discount', value: 10, color: '#ef4444', probability: 0.20 },
+      { id: 2, label: 'ارسال رایگان', type: 'shipping', value: 0, color: '#10b981', probability: 0.15 },
+      { id: 3, label: '۱۰۰ امتیاز طلایی', type: 'points', value: 100, color: '#8b5cf6', probability: 0.10 },
+      { id: 4, label: '۲۰٪ تخفیف شگفت‌انگیز', type: 'discount', value: 20, color: '#ec4899', probability: 0.05 },
+      { id: 5, label: 'شانس مجدد فردا', type: 'empty', value: 0, color: '#64748b', probability: 0.15 },
+      { id: 6, label: 'کارت هدیه اختصاصی', type: 'gift', value: 50000, color: '#06b6d4', probability: 0.05 },
+      { id: 7, label: '۲۰ امتیاز نقره‌ای', type: 'points', value: 20, color: '#3b82f6', probability: 0.05 },
+    ];
+    return reply.send({
+      success: true,
+      wheel: {
+        title: 'گردونه شانس روزانه مشتریان',
+        description: 'هر ۲۴ ساعت یکبار گردونه را بچرخانید و جوایز ویژه خرید بگیرید!',
+        slicesCount: 8,
+        prizes,
+      },
+    });
+  });
+
+  // 7. Spin Gamification Wheel
+  server.post('/api/projects/:projectId/loyalty/wheel/spin', async (request, reply) => {
+    const { projectId } = request.params as { projectId: string };
+    const { phone } = request.body as { phone?: string };
+
+    const cleanPhone = phone || '09123232580';
+    const prizes = [
+      { id: 0, label: '۵۰ امتیاز باشگاه', type: 'points', value: 50 },
+      { id: 1, label: '۱۰٪ تخفیف خرید', type: 'discount', value: 10 },
+      { id: 2, label: 'ارسال رایگان سفارش', type: 'shipping', value: 0 },
+      { id: 3, label: '۱۰۰ امتیاز طلایی', type: 'points', value: 100 },
+      { id: 4, label: '۲۰٪ تخفیف ویژه', type: 'discount', value: 20 },
+      { id: 5, label: 'فردا دوباره شانس داری!', type: 'empty', value: 0 },
+      { id: 6, label: '۵۰ هزار تومان اعتبار هدیه', type: 'gift', value: 50000 },
+      { id: 7, label: '۲۰ امتیاز نقره‌ای', type: 'points', value: 20 },
+    ];
+
+    // Pick weighted or random prize
+    const selectedPrize = prizes[Math.floor(Math.random() * prizes.length)];
+    const couponCode = selectedPrize.type !== 'empty' && selectedPrize.type !== 'points'
+      ? ('WHEEL-' + Math.floor(1000 + Math.random() * 9000))
+      : null;
+
+    return reply.send({
+      success: true,
+      prizeIndex: selectedPrize.id,
+      prize: selectedPrize,
+      couponCode,
+      message: 'تبریک! شما برنده ' + selectedPrize.label + ' شدید!',
+    });
+  });
 };

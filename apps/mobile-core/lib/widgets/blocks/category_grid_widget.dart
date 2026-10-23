@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../screens/search_screen.dart';
+import '../../screens/categories_screen.dart';
 
 class CategoryGridWidget extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -20,11 +20,34 @@ class CategoryGridWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (title != null) ...[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CategoriesScreen()),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                    ),
+                    const Row(
+                      children: [
+                        Text(
+                          'مشاهده همه',
+                          style: TextStyle(fontSize: 11, color: Color(0xFFEF394E), fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 2),
+                        Icon(Icons.arrow_forward_ios_rounded, size: 10, color: Color(0xFFEF394E)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -48,7 +71,10 @@ class CategoryGridWidget extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => SearchScreen(initialCategory: catTitle),
+                      builder: (_) => CategoriesScreen(
+                        initialCategoryIndex: index,
+                        initialCategoryTitle: catTitle,
+                      ),
                     ),
                   );
                 },

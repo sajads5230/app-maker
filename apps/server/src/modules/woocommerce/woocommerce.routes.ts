@@ -226,9 +226,9 @@ export const woocommerceRoutes: FastifyPluginAsync = async (server: FastifyInsta
     const { siteUrl, consumerKey, consumerSecret, projectId } = request.query as any;
 
     let creds: WooCredentials = {
-      siteUrl: siteUrl || 'https://xiaomismart.ir',
-      consumerKey: consumerKey || 'ck_dbddac7f3b85c3203bfd79ef0d829cb523899110',
-      consumerSecret: consumerSecret || 'cs_12300c6b1e73129145873e5579c628e7a59f92fe',
+      siteUrl: siteUrl || '',
+      consumerKey: consumerKey || '',
+      consumerSecret: consumerSecret || '',
     };
 
     if (projectId) {
@@ -256,9 +256,9 @@ export const woocommerceRoutes: FastifyPluginAsync = async (server: FastifyInsta
     const { siteUrl, consumerKey, consumerSecret, name, topic, deliveryUrl, secret, projectId } = request.body as any;
 
     let creds: WooCredentials = {
-      siteUrl: siteUrl || 'https://xiaomismart.ir',
-      consumerKey: consumerKey || 'ck_dbddac7f3b85c3203bfd79ef0d829cb523899110',
-      consumerSecret: consumerSecret || 'cs_12300c6b1e73129145873e5579c628e7a59f92fe',
+      siteUrl: siteUrl || '',
+      consumerKey: consumerKey || '',
+      consumerSecret: consumerSecret || '',
     };
 
     const targetUrl = deliveryUrl || `http://localhost:4000/api/woocommerce/webhook?projectId=${projectId || 'app-demo-techmarket'}`;
@@ -278,9 +278,9 @@ export const woocommerceRoutes: FastifyPluginAsync = async (server: FastifyInsta
     const { siteUrl, consumerKey, consumerSecret } = request.query as any;
 
     const creds: WooCredentials = {
-      siteUrl: siteUrl || 'https://xiaomismart.ir',
-      consumerKey: consumerKey || 'ck_dbddac7f3b85c3203bfd79ef0d829cb523899110',
-      consumerSecret: consumerSecret || 'cs_12300c6b1e73129145873e5579c628e7a59f92fe',
+      siteUrl: siteUrl || '',
+      consumerKey: consumerKey || '',
+      consumerSecret: consumerSecret || '',
     };
 
     const result = await WooCommerceService.deleteWebhook(creds, parseInt(id, 10));
@@ -764,31 +764,35 @@ export const woocommerceRoutes: FastifyPluginAsync = async (server: FastifyInsta
       consumerSecret: consumerSecret || '',
     };
 
-    if ((!creds.siteUrl || creds.siteUrl.includes('techmarket.ir') || !creds.consumerKey) && projectId) {
+    if ((!creds.siteUrl || !creds.consumerKey) && projectId) {
       try {
         const proj = await prisma.project.findUnique({ where: { id: projectId } });
         if (proj) {
           const cfg = JSON.parse(proj.configJson);
           if (cfg.woocommerce) {
-            creds.siteUrl = cfg.woocommerce.siteUrl || creds.siteUrl;
-            creds.consumerKey = cfg.woocommerce.consumerKey || creds.consumerKey;
-            creds.consumerSecret = cfg.woocommerce.consumerSecret || creds.consumerSecret;
+            creds.siteUrl = creds.siteUrl || cfg.woocommerce.siteUrl || '';
+            creds.consumerKey = creds.consumerKey || cfg.woocommerce.consumerKey || '';
+            creds.consumerSecret = creds.consumerSecret || cfg.woocommerce.consumerSecret || '';
           }
-          if ((!creds.siteUrl || creds.siteUrl.includes('techmarket.ir')) && cfg.wordpress?.siteUrl) {
+          if (!creds.siteUrl && cfg.wordpress?.siteUrl) {
             creds.siteUrl = cfg.wordpress.siteUrl;
           }
         }
       } catch (_) {}
     }
 
-    if (!creds.siteUrl || creds.siteUrl.includes('techmarket.ir')) {
-      creds.siteUrl = 'https://xiaomismart.ir';
+    if (!creds.siteUrl || creds.siteUrl.trim() === '') {
+      return reply.status(400).send({
+        success: false,
+        error: 'آدرس وب‌سایت وردپرس / ووکامرس برای این فروشگاه تنظیم نشده است. لطفاً ابتدا در تنظیمات فروشگاه، آدرس سایت را وارد کنید.',
+      });
     }
-    if (!creds.consumerKey) {
-      creds.consumerKey = 'ck_dbddac7f3b85c3203bfd79ef0d829cb523899110';
-    }
-    if (!creds.consumerSecret) {
-      creds.consumerSecret = 'cs_12300c6b1e73129145873e5579c628e7a59f92fe';
+
+    if (blockType !== 'blog_list' && (!creds.consumerKey || !creds.consumerSecret)) {
+      return reply.status(400).send({
+        success: false,
+        error: 'کلیدهای اتصال به ووکامرس (Consumer Key و Consumer Secret) برای این فروشگاه تنظیم نشده است. لطفاً ابتدا در تب پلاگین‌ها کلیدهای API را مشخص کنید.',
+      });
     }
 
     const sanitizedLimit = limit ? parseInt(limit, 10) : undefined;

@@ -14,6 +14,11 @@ import { WhiteLabelPortalModal } from '@/components/WhiteLabelPortalModal';
 import { AiAppGeneratorModal } from '@/components/AiAppGeneratorModal';
 import { AppUpdateModal } from '@/components/AppUpdateModal';
 import { AppAnalyticsModal } from '@/components/AppAnalyticsModal';
+import { InvoiceModal } from '@/components/InvoiceModal';
+import { StoreReleaseModal } from '@/components/StoreReleaseModal';
+import { LiveHealthMonitoringModal } from '@/components/LiveHealthMonitoringModal';
+import { SupportDeskModal } from '@/components/SupportDeskModal';
+import { MigrationWizardModal } from '@/components/MigrationWizardModal';
 
 interface Project {
   id: string;
@@ -61,7 +66,9 @@ export default function DashboardPage() {
 
   // Modals state
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showMigrationModal, setShowMigrationModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [buildingProjectId, setBuildingProjectId] = useState<string | null>(null);
   const [storeCatalogProjectId, setStoreCatalogProjectId] = useState<string | null>(null);
@@ -75,6 +82,9 @@ export default function DashboardPage() {
   const [showAiModal, setShowAiModal] = useState(false);
   const [updateProjectId, setUpdateProjectId] = useState<string | null>(null);
   const [analyticsProjectId, setAnalyticsProjectId] = useState<string | null>(null);
+  const [releaseModalProject, setReleaseModalProject] = useState<Project | null>(null);
+  const [showMonitoringModal, setShowMonitoringModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
   const [isImpersonating, setIsImpersonating] = useState(false);
 
   // Auth Modal state
@@ -345,6 +355,25 @@ export default function DashboardPage() {
               صفحه اصلی
             </Link>
 
+            {/* Live Server Telemetry */}
+            <button
+              onClick={() => setShowMonitoringModal(true)}
+              className="text-xs font-medium text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer"
+              title="مانیتورینگ سلامت سرور، تاخیر دیتابیس و لاگ‌های زنده"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>سلامت سرور</span>
+            </button>
+
+            {/* Support Desk */}
+            <button
+              onClick={() => setShowSupportModal(true)}
+              className="text-xs font-bold text-blue-300 hover:text-white px-3 py-1.5 rounded-lg border border-blue-800/40 bg-blue-950/40 hover:bg-blue-900/60 transition-colors flex items-center gap-1.5 cursor-pointer"
+              title="پشتیبانی آنلاین و دستیار هوشمند ۲۴ ساعته"
+            >
+              <span>پشتیبانی آنلاین</span>
+            </button>
+
             <Link
               href="/admin"
               className="text-xs font-bold text-rose-300 hover:text-white px-3 py-1.5 rounded-lg border border-rose-800/40 bg-rose-950/40 hover:bg-rose-900/60 transition-colors flex items-center gap-1.5"
@@ -405,12 +434,20 @@ export default function DashboardPage() {
             <div className="text-[11px] text-slate-400 mt-2">
               اعتبار: {subInfo?.daysRemaining || 3650} روز باقی‌مانده
             </div>
-            <button
-              onClick={() => setShowUpgradeModal(true)}
-              className="mt-3 text-xs text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1"
-            >
-              تمدید یا تغییر پلن ←
-            </button>
+            <div className="flex items-center gap-3 mt-3">
+              <button
+                onClick={() => setShowUpgradeModal(true)}
+                className="text-xs text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 cursor-pointer"
+              >
+                تمدید یا تغییر پلن ←
+              </button>
+              <button
+                onClick={() => setShowInvoiceModal(true)}
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 cursor-pointer"
+              >
+                فاکتورهای رسمی
+              </button>
+            </div>
           </div>
 
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5">
@@ -472,6 +509,15 @@ export default function DashboardPage() {
                 <span className="text-sm">✨</span>
                 <span>تولید با هوش مصنوعی (AI)</span>
               </button>
+                            <button
+                onClick={() => setShowMigrationModal(true)}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 font-bold text-xs border border-amber-500/40 flex items-center gap-2 transition-all shadow-sm cursor-pointer"
+                title="مهاجرت و انتقال پروژه از پازلی، مستراپ، جو‌اپ و وب‌تو‌اپ"
+              >
+                <span className="text-sm">🔄</span>
+                <span>مهاجرت از سایر اپ‌سازها</span>
+              </button>
+
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 flex items-center gap-2 transition-all"
@@ -491,6 +537,15 @@ export default function DashboardPage() {
               <div className="text-3xl mb-2">📱</div>
               <h3 className="text-sm font-bold text-white mb-1">هنوز هیچ اپلیکیشنی نساخته‌اید!</h3>
               <p className="text-xs text-slate-400 mb-4">می‌توانید با انتخاب یکی از قالب‌های آماده در چند ثانیه شروع کنید.</p>
+                            <button
+                onClick={() => setShowMigrationModal(true)}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 font-bold text-xs border border-amber-500/40 flex items-center gap-2 transition-all shadow-sm cursor-pointer"
+                title="مهاجرت و انتقال پروژه از پازلی، مستراپ، جو‌اپ و وب‌تو‌اپ"
+              >
+                <span className="text-sm">🔄</span>
+                <span>مهاجرت از سایر اپ‌سازها</span>
+              </button>
+
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="px-4 py-2 bg-rose-600 text-white rounded-lg text-xs font-bold"
@@ -647,6 +702,13 @@ export default function DashboardPage() {
                       </button>
                     </div>
 
+                    <button
+                      onClick={() => setReleaseModalProject(proj)}
+                      className="w-full py-2 rounded-xl bg-gradient-to-r from-teal-500/15 via-emerald-500/15 to-cyan-500/15 hover:from-teal-500/25 hover:to-cyan-500/25 text-teal-300 border border-teal-500/30 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                    >
+                      <span>🏪 انتشار در بازار و مایکت (تست سازگاری)</span>
+                    </button>
+
                     <div className="grid grid-cols-2 gap-2 text-center text-[10px]">
                       <a
                         href={`http://localhost:4000/downloads/${proj.packageName}-v${proj.version || '1.0.0'}.apk`}
@@ -677,10 +739,12 @@ export default function DashboardPage() {
               <h2 className="text-base font-bold text-white">کتابخانه قالب‌های آماده اصناف</h2>
               <p className="text-xs text-slate-400">انتخاب و ساخت فوری فروشگاه متناسب با کسب‌وکار شما</p>
             </div>
-            <span className="text-xs text-rose-400 font-bold">۵ قالب از پیش‌طراحی شده</span>
+            <span className="text-xs text-rose-400 font-bold bg-rose-500/10 px-2.5 py-1 rounded-full border border-rose-500/20">
+              ۱۴ صنف تخصصی
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
             {STORE_TEMPLATES.map((tmpl) => (
               <div
                 key={tmpl.id}
@@ -691,8 +755,15 @@ export default function DashboardPage() {
                 className="bg-slate-950/60 border border-slate-800 hover:border-rose-500/40 rounded-xl p-3.5 cursor-pointer transition-all hover:scale-[1.02] flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-2xl mb-2">{tmpl.icon}</div>
-                  <h4 className="font-bold text-xs text-white mb-1">{tmpl.name}</h4>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-2xl">{tmpl.icon}</span>
+                    <span
+                      className="w-2.5 h-2.5 rounded-full border border-white/20"
+                      style={{ backgroundColor: tmpl.theme.primaryColor }}
+                    />
+                  </div>
+                  <h4 className="font-bold text-xs text-white mb-1 line-clamp-1">{tmpl.name}</h4>
+                  <span className="text-[9.5px] text-slate-400 block mb-1">{tmpl.category}</span>
                   <p className="text-[10px] text-slate-400 line-clamp-2 leading-relaxed">{tmpl.description}</p>
                 </div>
                 <div className="mt-3 pt-2 border-t border-slate-850 flex items-center justify-between text-[10px]">
@@ -925,8 +996,11 @@ export default function DashboardPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">انتخاب قالب اولیه</label>
-                <div className="grid grid-cols-2 gap-2">
+                <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
+                  <span>انتخاب قالب اولیه صنف کسب‌وکار</span>
+                  <span className="text-[10px] text-rose-400 font-normal">۱۴ قالب فعال</span>
+                </label>
+                <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1">
                   {STORE_TEMPLATES.map((tmpl) => (
                     <button
                       type="button"
@@ -938,8 +1012,11 @@ export default function DashboardPage() {
                           : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
                       }`}
                     >
-                      <span className="text-lg">{tmpl.icon}</span>
-                      <span className="truncate">{tmpl.name}</span>
+                      <span className="text-lg shrink-0">{tmpl.icon}</span>
+                      <div className="truncate text-right">
+                        <span className="truncate block font-bold text-[11px]">{tmpl.name}</span>
+                        <span className="text-[9.5px] text-slate-500 block truncate">{tmpl.category}</span>
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -1147,6 +1224,44 @@ export default function DashboardPage() {
           projectId={analyticsProjectId}
         />
       )}
+
+      {/* Official Tax Invoice & Financial Receipts Modal */}
+      <InvoiceModal
+        isOpen={showInvoiceModal}
+        onClose={() => setShowInvoiceModal(false)}
+      />
+
+      {/* Store Release & Compatibility Modal */}
+      {releaseModalProject && (
+        <StoreReleaseModal
+          isOpen={Boolean(releaseModalProject)}
+          onClose={() => setReleaseModalProject(null)}
+          projectId={releaseModalProject.id}
+          appName={releaseModalProject.name}
+          packageName={releaseModalProject.packageName}
+        />
+      )}
+
+      {/* Live Health & Telemetry Modal */}
+      <LiveHealthMonitoringModal
+        isOpen={showMonitoringModal}
+        onClose={() => setShowMonitoringModal(false)}
+      />
+
+      {/* 24/7 Support Desk Modal */}
+      <SupportDeskModal
+        isOpen={showSupportModal}
+        onClose={() => setShowSupportModal(false)}
+      />
+
+      {/* 3-Step Migration Wizard Modal */}
+      <MigrationWizardModal
+        isOpen={showMigrationModal}
+        onClose={() => setShowMigrationModal(false)}
+        onMigrationComplete={() => {
+          fetchDashboardData();
+        }}
+      />
     </div>
   );
 }

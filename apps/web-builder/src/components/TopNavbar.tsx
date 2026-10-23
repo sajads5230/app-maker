@@ -34,6 +34,12 @@ import {
   Sliders,
   ExternalLink,
   Zap,
+  Globe,
+  Crown,
+  Receipt,
+  Activity,
+  LifeBuoy,
+  MessageSquare,
 } from "lucide-react";
 
 interface TopNavbarProps {
@@ -60,11 +66,20 @@ interface TopNavbarProps {
   onOpenWhiteLabel?: () => void;
   onOpenAiWizard?: () => void;
   onOpenAppUpdate?: () => void;
+  onOpenStoreRelease?: () => void;
   onOpenAnalytics?: () => void;
   onOpenNotificationModal?: () => void;
   onOpenQrModal?: () => void;
+  onOpenSubscriptionModal?: () => void;
+  onOpenInvoiceModal?: () => void;
+  onOpenMonitoring?: () => void;
+  onOpenSupport?: () => void;
+  onOpenSuperAdminSupport?: () => void;
+  onOpenMigrationWizard?: () => void;
+  onOpenSmsConfig?: () => void;
   onSaveProject: () => void;
   onOpenBuildModal: () => void;
+  projectId?: string;
 }
 
 export function TopNavbar({
@@ -91,11 +106,20 @@ export function TopNavbar({
   onOpenWhiteLabel,
   onOpenAiWizard,
   onOpenAppUpdate,
+  onOpenStoreRelease,
   onOpenAnalytics,
   onOpenNotificationModal,
   onOpenQrModal,
+  onOpenSubscriptionModal,
+  onOpenInvoiceModal,
+  onOpenMonitoring,
+  onOpenSupport,
+  onOpenSuperAdminSupport,
+  onOpenMigrationWizard,
+  onOpenSmsConfig,
   onSaveProject,
   onOpenBuildModal,
+  projectId,
 }: TopNavbarProps) {
   // Dropdown states
   const [activeMenu, setActiveMenu] = useState<"store" | "tools" | null>(null);
@@ -414,6 +438,68 @@ export function TopNavbar({
                 </button>
               )}
 
+              
+              {onOpenSmsConfig && (
+                <button
+                  onClick={() => handleAction(onOpenSmsConfig)}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-right hover:bg-slate-800/70 text-slate-200 hover:text-white transition text-xs group"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/30">
+                    <MessageSquare className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-white group-hover:text-indigo-300">درگاه پیامک و OTP</div>
+                    <div className="text-[10px] text-slate-400">کاوه‌نگار، فراز و وب‌سرویس پترن</div>
+                  </div>
+                </button>
+              )}
+
+              
+              {onOpenMigrationWizard && (
+                <button
+                  onClick={() => handleAction(onOpenMigrationWizard)}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-right hover:bg-slate-800/70 text-slate-200 hover:text-white transition text-xs group"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/30">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-white group-hover:text-amber-300">مهاجرت از سایر اپ‌سازها</div>
+                    <div className="text-[10px] text-slate-400">انتقال پروژه ۳ مرحله‌ای با حفظ کاربران بازار</div>
+                  </div>
+                </button>
+              )}
+
+              {onOpenSuperAdminSupport && (
+                <button
+                  onClick={() => handleAction(onOpenSuperAdminSupport)}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-right hover:bg-slate-800/70 text-slate-200 hover:text-white transition text-xs group"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/30">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-white group-hover:text-purple-300">میز کار سوپرادمین (پشتیبانی کل)</div>
+                    <div className="text-[10px] text-slate-400">پاسخگویی به تیکت‌های دریافتی از تمام کاربران</div>
+                  </div>
+                </button>
+              )}
+
+              {onOpenStoreRelease && (
+                <button
+                  onClick={() => handleAction(onOpenStoreRelease)}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-right hover:bg-slate-800/70 text-slate-200 hover:text-white transition text-xs group"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-teal-500/15 text-teal-400 flex items-center justify-center shrink-0 border border-teal-500/30">
+                    <Store className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-white group-hover:text-teal-300">انتشار در بازار و مایکت</div>
+                    <div className="text-[10px] text-slate-400">تست سازگاری ۱۰۰٪، سئو و ثبت مستقیم</div>
+                  </div>
+                </button>
+              )}
+
               {onOpenAppUpdate && (
                 <button
                   onClick={() => handleAction(onOpenAppUpdate)}
@@ -494,6 +580,20 @@ export function TopNavbar({
                 </button>
               </div>
 
+              {/* PWA Web Link */}
+              <a
+                href={`/pwa?id=${projectId || ''}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-right hover:bg-blue-950/40 text-blue-300 hover:text-blue-200 transition text-xs font-bold"
+              >
+                <div className="flex items-center gap-2">
+                  <Globe className="w-3.5 h-3.5 text-blue-400" />
+                  <span>اجرای نسخه وب (PWA)</span>
+                </div>
+                <ExternalLink className="w-3 h-3 text-blue-400/60" />
+              </a>
+
               {/* Admin Link */}
               <Link
                 href="/admin"
@@ -509,6 +609,30 @@ export function TopNavbar({
           )}
         </div>
 
+        {/* 3.4. Live Health Telemetry Badge */}
+        {onOpenMonitoring && (
+          <button
+            onClick={onOpenMonitoring}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs transition cursor-pointer shadow-xs"
+            title="مشاهده مانیتورینگ بلادرنگ سلامت سرور، تاخیر دیتابیس و لاگ‌ها"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+            <span className="hidden xl:inline text-[11px] font-bold">سرور فعال</span>
+          </button>
+        )}
+
+        {/* 3.5. Direct Web Version (PWA) Button */}
+        <a
+          href={`/pwa?id=${projectId || ''}`}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-bold transition shadow-xs"
+          title="مشاهده و اجرای آنلاین وب‌اپلیکیشن (PWA) در تب جدید"
+        >
+          <Globe className="w-3.5 h-3.5 text-blue-400" />
+          <span className="hidden sm:inline">نسخه وب</span>
+        </a>
+
         {/* 4. Live QR Preview (Compact Icon Button) */}
         {onOpenQrModal && (
           <button
@@ -517,6 +641,42 @@ export function TopNavbar({
             title="پیش‌نمایش زنده اپلیکیشن با اسکن QR کد در گوشی"
           >
             <QrCode className="w-4 h-4 text-cyan-400" />
+          </button>
+        )}
+
+                {/* 4.4. Direct Migration Wizard Button */}
+        {onOpenMigrationWizard && (
+          <button
+            onClick={onOpenMigrationWizard}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition shadow-xs cursor-pointer"
+            title="ویزارد ۳ مرحله‌ای مهاجرت از سایر اپ‌سازها با حفظ کاربران بازار"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden md:inline">مهاجرت پروژه</span>
+          </button>
+        )}
+
+        {/* 4.5. Subscription & Plans Button */}
+        {onOpenSubscriptionModal && (
+          <button
+            onClick={onOpenSubscriptionModal}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-purple-500/15 hover:from-amber-500/25 hover:to-rose-500/25 text-amber-300 border border-amber-500/30 text-xs font-bold transition shadow-xs cursor-pointer"
+            title="مشاهده و ارتقای پلن‌های اشتراک تجاری و فاکتورها"
+          >
+            <Crown className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">پلن تجاری</span>
+          </button>
+        )}
+
+        {/* 4.6. Online Support Desk Button */}
+        {onOpenSupport && (
+          <button
+            onClick={onOpenSupport}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-bold transition shadow-xs cursor-pointer"
+            title="پشتیبانی آنلاین ۲۴ ساعته و گفتگوی زنده با هوش مصنوعی"
+          >
+            <LifeBuoy className="w-3.5 h-3.5 text-blue-400" />
+            <span className="hidden sm:inline text-xs font-bold">پشتیبانی</span>
           </button>
         )}
 

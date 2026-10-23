@@ -24,6 +24,7 @@ import {
   Link2,
   ExternalLink,
   ChevronLeft,
+  ChevronRight,
   Search,
   ShoppingCart,
   Menu,
@@ -91,6 +92,7 @@ import { AppetoMarketModal } from "@/components/AppetoMarketModal";
 import { PluginConfigModal } from "@/components/PluginConfigModal";
 import { MediaLibraryModal } from "@/components/MediaLibraryModal";
 import { BuildModal } from "@/components/BuildModal";
+import { QrCodeCard } from "@/components/QrCodeCard";
 import { ToastNotification } from "@/components/ToastNotification";
 import BroadcastNotificationModal from "@/components/BroadcastNotificationModal";
 import { LiveQrModal } from "@/components/LiveQrModal";
@@ -104,6 +106,13 @@ import { WhiteLabelPortalModal } from "@/components/WhiteLabelPortalModal";
 import { AiAppGeneratorModal } from "@/components/AiAppGeneratorModal";
 import { AppUpdateModal } from "@/components/AppUpdateModal";
 import { AppAnalyticsModal } from "@/components/AppAnalyticsModal";
+import { StoryViewerModal } from "@/components/StoryViewerModal";
+import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { InvoiceModal } from "@/components/InvoiceModal";
+import { StoreReleaseModal } from "@/components/StoreReleaseModal";
+import { LiveHealthMonitoringModal } from "@/components/LiveHealthMonitoringModal";
+import { SupportDeskModal } from "@/components/SupportDeskModal";
+import { MigrationWizardModal } from "@/components/MigrationWizardModal";
 
 interface BlockItem {
   id: string;
@@ -165,20 +174,26 @@ const INITIAL_BLOCKS: BlockItem[] = [
     id: "block_slider_1",
     type: "banner_slider",
     height: 160,
+    interval: 4,
+    autoPlay: true,
     items: [
-      { id: "s1", imageUrl: "http://localhost:4000/uploads/banner-special-offers.png", title: "جشنواره فروش ویژه تک‌مارکت" },
-      { id: "s2", imageUrl: "http://localhost:4000/uploads/banner-accessories.png", title: "تجهیزات هوشمند و جانبی موبایل" },
+      { id: "s1", imageUrl: "http://localhost:4000/uploads/banner-special-offers.png", title: "جشنواره فروش ویژه تک‌مارکت", link: "/categories", openInNewTab: false },
+      { id: "s2", imageUrl: "http://localhost:4000/uploads/banner-accessories.png", title: "تجهیزات هوشمند و جانبی موبایل", link: "/search?q=جانبی", openInNewTab: false },
     ],
   },
   {
     id: "block_categories_1",
     type: "categories",
-    title: "دسته‌بندی‌های محبوب",
+    title: "دسته‌بندی‌های کالا",
     items: [
-      { id: "c1", title: "موبایل", imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop" },
-      { id: "c2", title: "لپ‌تاپ", imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop" },
-      { id: "c3", title: "صوتی", imageUrl: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=150&h=150&fit=crop" },
-      { id: "c4", title: "ساعت", imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop" },
+      { id: "c_1575", title: "خانه و آشپزخانه هوشمند", count: 21, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg" },
+      { id: "c_1579", title: "دوربین های نظارتی هوشمند", count: 12, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/09/18.jpg" },
+      { id: "c_1577", title: "سیستم سرمایش و گرمایش هوشمند", count: 29, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/11/8-11.jpg" },
+      { id: "c_1573", title: "سیستم صوتی و تصویری هوشمند", count: 16, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/11/12-3.jpg" },
+      { id: "c_1576", title: "قفل، دستگیره و زنگ هوشمند", count: 12, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/10/20.jpg" },
+      { id: "c_1578", title: "کلید و پریز هوشمند", count: 33, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/11/12-5.jpg" },
+      { id: "c_1572", title: "نور و روشنایی هوشمند", count: 18, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/11/Untitled-1.jpg" },
+      { id: "c_1574", title: "هاب و سنسور های هوشمند", count: 14, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/10/12-7.jpg" },
     ],
   },
   {
@@ -188,17 +203,17 @@ const INITIAL_BLOCKS: BlockItem[] = [
     subtitle: "تخفیف‌های محدود با زمان باقی‌مانده",
     themeColor: "#ef394e",
     items: [
-      { id: "p1", title: "هدفون بی‌سیم سونی WH-1000XM5", price: 18450000, regularPrice: 21500000, discount: 14, imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop" },
-      { id: "p2", title: "اپل واچ سری ۹ آلومینیوم", price: 24900000, regularPrice: 27000000, discount: 8, imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop" },
-      { id: "p3", title: "ماوس بی‌سیم لاجیتک Master 3S", price: 6200000, regularPrice: 7200000, discount: 14, imageUrl: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=200&h=200&fit=crop" },
+      { id: "p1", title: "ماشین لباسشویی 14 کیلوگرمی، سه مخزن PRO شیائومی MIJIA مدل XHQG140MJ202", category: "خانه و آشپزخانه هوشمند", price: 114995000, regularPrice: 125000000, discount: 8, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg" },
+      { id: "p2", title: "جارو رباتیک 5 شیائومی MI مدل PV31CN", category: "خانه و آشپزخانه هوشمند", price: 129000000, regularPrice: 138000000, discount: 7, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/12/1-1.jpg" },
+      { id: "p3", title: "کولر گازی ایستاده هوشمند شیائومی MIJIA مدل 72LW", category: "سیستم سرمایش و گرمایش هوشمند", price: 481750000, regularPrice: 510000000, discount: 6, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/11/8-11.jpg" },
     ],
   },
   {
     id: "block_promo_1",
     type: "promo_banners",
     banners: [
-      { id: "b1", imageUrl: "http://localhost:4000/uploads/promo-smartwatch.png", title: "اکسسوری هوشمند" },
-      { id: "b2", imageUrl: "http://localhost:4000/uploads/promo-gaming.png", title: "تجهیزات گیمینگ" },
+      { id: "b1", imageUrl: "http://localhost:4000/uploads/promo-smartwatch.png", title: "اکسسوری هوشمند", link: "/categories", openInNewTab: false },
+      { id: "b2", imageUrl: "http://localhost:4000/uploads/promo-gaming.png", title: "تجهیزات گیمینگ", link: "/search?q=تجهیزات", openInNewTab: false },
     ],
   },
   {
@@ -206,8 +221,12 @@ const INITIAL_BLOCKS: BlockItem[] = [
     type: "product_grid",
     title: "جدیدترین محصولات فروشگاه",
     items: [
-      { id: "p4", title: "کیبورد مکانیکال ردراگون K552", price: 2850000, imageUrl: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=300&fit=crop" },
-      { id: "p5", title: "پاوربانک ۲۰۰۰۰ میلی‌آمپر باسئوس", price: 3400000, imageUrl: "https://images.unsplash.com/photo-1609592807664-8461f0923f13?w=300&h=300&fit=crop" },
+      { id: "p4", title: "دوربین مداربسته هوشمند 4PRO شیائومی مدل MJSXJ11HL", category: "دوربین های نظارتی هوشمند", price: 27025000, regularPrice: 29500000, discount: 8, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/09/18.jpg" },
+      { id: "p5", title: "کلید لمسی هوشمند شیائومی MI مدل XMZHP02LM", category: "کلید و پریز هوشمند", price: 25850000, regularPrice: 28000000, discount: 8, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/11/12-5.jpg" },
+      { id: "p6", title: "قفل درب هوشمند E30 شیائومی Mi مدل XMZNMST11LK", category: "قفل، دستگیره و زنگ هوشمند", price: 58750000, regularPrice: 64000000, discount: 8, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/10/20.jpg" },
+      { id: "p7", title: "لامپ سقفی هوشمند شیائومی Philips مدل 9290029660", category: "نور و روشنایی هوشمند", price: 199750000, regularPrice: 218000000, discount: 8, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/11/Untitled-1.jpg" },
+      { id: "p8", title: "هاب هوشمند شیائومی مدل ZSWG01CM", category: "هاب و سنسور های هوشمند", price: 17625000, regularPrice: 19500000, discount: 10, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/10/12-7.jpg" },
+      { id: "p9", title: "اسپیکر و مانیتور لمسی هوشمند Pro 8 شیائومی Mi مدل X08A", category: "سیستم صوتی و تصویری هوشمند", price: 27025000, regularPrice: 29900000, discount: 10, imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/11/12-3.jpg" },
     ],
   },
   {
@@ -255,6 +274,23 @@ const AVAILABLE_TEMPLATES = [
   { type: "notice_box", title: "باکس اطلاع‌رسانی فوری", icon: Bell, desc: "نوار اعلان ارسال رایگان یا تخفیف" },
 ];
 
+const PAGE_LABELS: Record<string, string> = {
+  home: "صفحه اصلی",
+  categories: "دسته‌بندی‌ها",
+  search: "جستجو و فیلتر",
+  product: "صفحه کالا (PDP)",
+  cart: "سبد خرید",
+  profile: "پروفایل کاربر",
+};
+
+const LINK_PRESETS = [
+  { label: "دسته‌ها", icon: "🗂️", url: "/categories" },
+  { label: "جستجو", icon: "🔍", url: "/search" },
+  { label: "سبد خرید", icon: "🛒", url: "/cart" },
+  { label: "حساب کاربری", icon: "👤", url: "/profile" },
+  { label: "تخفیف‌ها", icon: "🔥", url: "/search?q=تخفیف" },
+];
+
 export default function WebBuilderPage() {
   const [projectId, setProjectId] = useState("app-demo-techmarket");
   const [appName, setAppName] = useState("تک‌مارکت");
@@ -279,9 +315,79 @@ export default function WebBuilderPage() {
   const [previewPhoneInput, setPreviewPhoneInput] = useState("09123232580");
   const [previewCodeInput, setPreviewCodeInput] = useState("");
 
-  // Tabs in Inspector
+  // Story Viewer Modal & Slide Management State
+  const [activeStoryForViewer, setActiveStoryForViewer] = useState<any | null>(null);
+  const [viewerStories, setViewerStories] = useState<any[]>([]);
+  const [expandedStorySlidesId, setExpandedStorySlidesId] = useState<string | null>(null);
+
+  // Tabs in Inspector & Multi-Page Modular Blocks
   const [activeTab, setActiveTab] = useState<"inspector" | "navigation" | "theme" | "plugins" | "media" | "woocommerce" | "build">("inspector");
-  const [blocks, setBlocks] = useState<BlockItem[]>(INITIAL_BLOCKS);
+  const [pageBlocks, setPageBlocks] = useState<Record<string, BlockItem[]>>({
+    home: INITIAL_BLOCKS,
+    categories: [],
+    search: [],
+    product: [],
+    cart: [],
+    profile: [],
+  });
+
+  const blocks = pageBlocks[previewPage] || [];
+
+  const setBlocks = (action: BlockItem[] | ((prev: BlockItem[]) => BlockItem[])) => {
+    setPageBlocks((all) => {
+      const current = all[previewPage] || [];
+      const next = typeof action === "function" ? action(current) : action;
+      return {
+        ...all,
+        [previewPage]: next,
+      };
+    });
+  };
+
+  const switchPreviewPage = (pageId: "home" | "categories" | "search" | "product" | "cart" | "profile") => {
+    setPreviewPage(pageId);
+    const targetBlocks = pageBlocks[pageId] || [];
+    setSelectedBlockId(targetBlocks.length > 0 ? targetBlocks[0].id : null);
+  };
+
+  const [canvasSliderIndices, setCanvasSliderIndices] = useState<Record<string, number>>({});
+
+  const handleCanvasLinkClick = (link?: string, title?: string, openInNewTab?: boolean) => {
+    if (!link || link.trim() === "") {
+      showToast("💡 برای این آیتم لینکی تنظیم نشده است (می‌توانید از پنل تنظیمات لینک مقصد را مشخص کنید)");
+      return;
+    }
+    const trimmed = link.trim();
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+      showToast(`🌐 باز کردن لینک خارجی: ${trimmed}`);
+      if (openInNewTab !== false) {
+        window.open(trimmed, "_blank", "noopener,noreferrer");
+      } else {
+        window.location.href = trimmed;
+      }
+      return;
+    }
+    const clean = trimmed.toLowerCase();
+    if (clean.includes("categories")) {
+      switchPreviewPage("categories");
+      showToast("هدایت به تب دسته‌بندی‌ها");
+    } else if (clean.includes("cart")) {
+      switchPreviewPage("cart");
+      showToast("هدایت به سبد خرید");
+    } else if (clean.includes("profile")) {
+      switchPreviewPage("profile");
+      showToast("هدایت به حساب کاربری");
+    } else if (clean.includes("search")) {
+      switchPreviewPage("search");
+      showToast("هدایت به بخش جستجو");
+    } else if (clean.includes("product")) {
+      switchPreviewPage("product");
+      showToast("هدایت به صفحه کالا");
+    } else {
+      showToast(`هدایت به مسیر: ${trimmed}`);
+    }
+  };
+
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>("block_slider_1");
 
   // Standalone Store & Catalog State
@@ -351,6 +457,51 @@ export default function WebBuilderPage() {
     { id: "tab_profile", label: "پروفایل", icon: "user", targetPage: "profile" },
   ]);
 
+  // Real-time synchronization with Web Version (PWA)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const syncData = {
+      projectId: projectId || "app-demo-techmarket",
+      name: appName,
+      packageName,
+      primaryColor,
+      secondaryColor,
+      cardBorderRadius,
+      cardStyle,
+      appIconUrl,
+      searchPlaceholder,
+      searchBarStyle,
+      pageBlocks,
+      blocks: pageBlocks.home || [],
+      bottomNavTabs,
+      bottomNavEnabled,
+      updatedAt: new Date().toISOString(),
+    };
+    try {
+      const activeProjId = projectId || "app-demo-techmarket";
+      localStorage.setItem("appmaker_last_active_project_id", activeProjId);
+      localStorage.setItem(`appmaker_studio_sync_${activeProjId}`, JSON.stringify(syncData));
+      localStorage.setItem("appmaker_studio_sync", JSON.stringify(syncData));
+      const bc = new BroadcastChannel("appmaker_studio_sync");
+      bc.postMessage({ type: "STUDIO_SYNC", projectId: activeProjId, data: syncData });
+      bc.close();
+    } catch (_) {}
+  }, [
+    projectId,
+    appName,
+    packageName,
+    primaryColor,
+    secondaryColor,
+    cardBorderRadius,
+    cardStyle,
+    appIconUrl,
+    searchPlaceholder,
+    searchBarStyle,
+    pageBlocks,
+    bottomNavTabs,
+    bottomNavEnabled,
+  ]);
+
   // Media Library State
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [mediaList, setMediaList] = useState<any[]>([]);
@@ -360,12 +511,13 @@ export default function WebBuilderPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // WooCommerce Connector State
-  const [wooUrl, setWooUrl] = useState("https://xiaomismart.ir");
-  const [wooKey, setWooKey] = useState("ck_dbddac7f3b85c3203bfd79ef0d829cb523899110");
-  const [wooSecret, setWooSecret] = useState("cs_12300c6b1e73129145873e5579c628e7a59f92fe");
+  const [wooUrl, setWooUrl] = useState("");
+  const [wooKey, setWooKey] = useState("");
+  const [wooSecret, setWooSecret] = useState("");
   const [isTestingWoo, setIsTestingWoo] = useState(false);
-  const [wooConnected, setWooConnected] = useState(true);
+  const [wooConnected, setWooConnected] = useState(false);
   const [isRefreshingPosts, setIsRefreshingPosts] = useState(false);
+  const [showWooNotConfiguredModal, setShowWooNotConfiguredModal] = useState(false);
 
   // Cloud Build & Export State
   const [isBuildModalOpen, setIsBuildModalOpen] = useState(false);
@@ -383,6 +535,12 @@ export default function WebBuilderPage() {
   const [isImpersonating, setIsImpersonating] = useState(false);
   const [impersonatedName, setImpersonatedName] = useState("");
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
+  const [isStoreReleaseModalOpen, setIsStoreReleaseModalOpen] = useState(false);
+  const [isMonitoringModalOpen, setIsMonitoringModalOpen] = useState(false);
+  const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
+  const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
   const [targetPlatform, setTargetPlatform] = useState<"ALL" | "APK" | "AAB" | "PWA">("ALL");
   const [isBuilding, setIsBuilding] = useState(false);
   const [currentJob, setCurrentJob] = useState<any | null>(null);
@@ -398,6 +556,16 @@ export default function WebBuilderPage() {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
   };
+
+  // Check URL query parameters for successful payment
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("payment") === "success") {
+        showToast("پرداخت با موفقیت انجام شد و اشتراک ویژه شما فعال گردید! 🎉");
+      }
+    }
+  }, []);
 
   const fetchMedia = async () => {
     try {
@@ -499,6 +667,7 @@ export default function WebBuilderPage() {
             if (c.theme.secondaryColor) setSecondaryColor(c.theme.secondaryColor);
             if (c.theme.cardBorderRadius !== undefined) setCardBorderRadius(c.theme.cardBorderRadius);
             if (c.theme.cardStyle) setCardStyle(c.theme.cardStyle);
+            if (c.theme.isDarkMode !== undefined) setIsDarkModePreview(c.theme.isDarkMode);
           }
           if (c.metadata?.iconUrl) {
             setAppIconUrl(c.metadata.iconUrl);
@@ -511,19 +680,101 @@ export default function WebBuilderPage() {
             if (c.navigation.bottomNav.enabled !== undefined) setBottomNavEnabled(c.navigation.bottomNav.enabled);
             if (c.navigation.bottomNav.tabs) setBottomNavTabs(c.navigation.bottomNav.tabs);
           }
-          if (c.woocommerce) {
-            if (c.woocommerce.siteUrl) setWooUrl(c.woocommerce.siteUrl);
-            if (c.woocommerce.consumerKey) setWooKey(c.woocommerce.consumerKey);
-            if (c.woocommerce.consumerSecret) setWooSecret(c.woocommerce.consumerSecret);
-            if (c.woocommerce.enabled !== undefined) setWooConnected(c.woocommerce.enabled);
+          if (c.woocommerce && c.woocommerce.siteUrl) {
+            setWooUrl(c.woocommerce.siteUrl || "");
+            setWooKey(c.woocommerce.consumerKey || "");
+            setWooSecret(c.woocommerce.consumerSecret || "");
+            setWooConnected(c.woocommerce.enabled !== undefined ? c.woocommerce.enabled : !!c.woocommerce.siteUrl);
+          } else {
+            setWooUrl("");
+            setWooKey("");
+            setWooSecret("");
+            setWooConnected(false);
           }
-          if (c.blocks && Array.isArray(c.blocks) && c.blocks.length > 0) {
-            setBlocks(c.blocks);
+          if (c.pageBlocks && typeof c.pageBlocks === "object") {
+            setPageBlocks({
+              home: c.pageBlocks.home || c.blocks || INITIAL_BLOCKS,
+              categories: c.pageBlocks.categories || [],
+              search: c.pageBlocks.search || [],
+              product: c.pageBlocks.product || [],
+              cart: c.pageBlocks.cart || [],
+              profile: c.pageBlocks.profile || [],
+            });
+            if (c.pageBlocks.home && c.pageBlocks.home.length > 0) {
+              setSelectedBlockId(c.pageBlocks.home[0].id);
+            }
+          } else if (c.pages && Array.isArray(c.pages)) {
+            const loaded: Record<string, BlockItem[]> = {
+              home: c.blocks || INITIAL_BLOCKS,
+              categories: [],
+              search: [],
+              product: [],
+              cart: [],
+              profile: [],
+            };
+            c.pages.forEach((p: any) => {
+              const k = p.id.replace("page_", "");
+              if (loaded[k] !== undefined && Array.isArray(p.blocks)) {
+                loaded[k] = p.blocks;
+              }
+            });
+            setPageBlocks(loaded);
+            if (loaded.home.length > 0) {
+              setSelectedBlockId(loaded.home[0].id);
+            }
+          } else if (c.blocks && Array.isArray(c.blocks) && c.blocks.length > 0) {
+            setPageBlocks((prev) => ({ ...prev, home: c.blocks }));
             setSelectedBlockId(c.blocks[0].id);
           }
         }
       }
     } catch (_) {}
+  };
+
+  const applyAiProject = (p: any) => {
+    if (!p) return;
+    const targetId = p.id || projectId;
+    setProjectId(targetId);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("appmaker_last_active_project_id", targetId);
+      const url = new URL(window.location.href);
+      url.searchParams.set("projectId", targetId);
+      window.history.pushState({}, "", url.toString());
+    }
+
+    if (p.name) setAppName(p.name);
+    if (p.packageName) setPackageName(p.packageName);
+
+    const c = p.config || {};
+    if (c.theme) {
+      if (c.theme.primaryColor) setPrimaryColor(c.theme.primaryColor);
+      if (c.theme.secondaryColor) setSecondaryColor(c.theme.secondaryColor);
+      if (c.theme.cardBorderRadius !== undefined) setCardBorderRadius(c.theme.cardBorderRadius);
+      if (c.theme.cardStyle) setCardStyle(c.theme.cardStyle);
+      if (c.theme.isDarkMode !== undefined) setIsDarkModePreview(c.theme.isDarkMode);
+    }
+    if (c.metadata?.iconUrl) {
+      setAppIconUrl(c.metadata.iconUrl);
+    }
+    if (c.navigation?.appBar?.searchPlaceholder) {
+      setSearchPlaceholder(c.navigation.appBar.searchPlaceholder);
+    }
+
+    const homeBlocks = (c.pageBlocks && c.pageBlocks.home) || c.blocks || [];
+    if (homeBlocks.length > 0) {
+      setPageBlocks({
+        home: homeBlocks,
+        categories: (c.pageBlocks && c.pageBlocks.categories) || [],
+        search: (c.pageBlocks && c.pageBlocks.search) || [],
+        product: (c.pageBlocks && c.pageBlocks.product) || [],
+        cart: (c.pageBlocks && c.pageBlocks.cart) || [],
+        profile: (c.pageBlocks && c.pageBlocks.profile) || [],
+      });
+      setSelectedBlockId(homeBlocks[0].id);
+    }
+
+    fetchProject(targetId);
+    showToast(`طراحی هوش مصنوعی «${p.name}» با موفقیت روی اپلیکیشن اعمال شد! ✨`);
   };
 
   const saveProjectToServer = async (overrides?: {
@@ -534,6 +785,7 @@ export default function WebBuilderPage() {
     cardBorderRadius?: number;
     cardStyle?: "bordered" | "elevated" | "flat";
     blocks?: BlockItem[];
+    pageBlocks?: Record<string, BlockItem[]>;
   }) => {
     const targetId = projectId || "app-demo-techmarket";
     const targetName = overrides?.name ?? appName;
@@ -542,7 +794,8 @@ export default function WebBuilderPage() {
     const targetSecondary = overrides?.secondaryColor ?? secondaryColor;
     const targetRadius = overrides?.cardBorderRadius ?? cardBorderRadius;
     const targetStyle = overrides?.cardStyle ?? cardStyle;
-    const targetBlocks = overrides?.blocks ?? blocks;
+    const targetPageBlocks = overrides?.pageBlocks ?? pageBlocks;
+    const targetBlocks = overrides?.blocks ?? (targetPageBlocks["home"] || blocks);
 
     try {
       const token = typeof window !== "undefined" ? localStorage.getItem("appmaker_token") : null;
@@ -584,12 +837,48 @@ export default function WebBuilderPage() {
               },
             },
             blocks: targetBlocks,
+            pageBlocks: targetPageBlocks,
+            pages: [
+              { id: "page_home", title: "صفحه اصلی", slug: "/", isHome: true, blocks: targetPageBlocks["home"] || [] },
+              { id: "page_categories", title: "دسته‌بندی‌ها", slug: "/categories", blocks: targetPageBlocks["categories"] || [] },
+              { id: "page_search", title: "جستجو و فیلتر", slug: "/search", blocks: targetPageBlocks["search"] || [] },
+              { id: "page_product", title: "صفحه کالا", slug: "/product", blocks: targetPageBlocks["product"] || [] },
+              { id: "page_cart", title: "سبد خرید", slug: "/cart", blocks: targetPageBlocks["cart"] || [] },
+              { id: "page_profile", title: "پروفایل کاربر", slug: "/profile", blocks: targetPageBlocks["profile"] || [] },
+            ],
           },
         }),
       });
       const data = await res.json();
       if (data.success) {
         showToast("کانفیگ و تم با موفقیت در دیتابیس سرور ذخیره شد! 💾");
+        if (typeof window !== "undefined") {
+          const syncData = {
+            projectId: targetId,
+            name: targetName,
+            packageName: targetPackage,
+            primaryColor: targetPrimary,
+            secondaryColor: targetSecondary,
+            cardBorderRadius: targetRadius,
+            cardStyle: targetStyle,
+            appIconUrl,
+            searchPlaceholder,
+            searchBarStyle,
+            pageBlocks: targetPageBlocks,
+            blocks: targetBlocks,
+            bottomNavTabs,
+            bottomNavEnabled,
+            updatedAt: new Date().toISOString(),
+          };
+          localStorage.setItem("appmaker_last_active_project_id", targetId);
+          localStorage.setItem(`appmaker_studio_sync_${targetId}`, JSON.stringify(syncData));
+          localStorage.setItem("appmaker_studio_sync", JSON.stringify(syncData));
+          try {
+            const bc = new BroadcastChannel("appmaker_studio_sync");
+            bc.postMessage({ type: "STUDIO_SYNC", projectId: targetId, data: syncData });
+            bc.close();
+          } catch (_) {}
+        }
       }
     } catch (_) {
       showToast("خطا در ارتباط با سرور");
@@ -701,12 +990,13 @@ export default function WebBuilderPage() {
 
   const handleSyncWooCommerce = async () => {
     const targetId = projectId || "app-demo-techmarket";
-    const siteUrl = pluginConfigValues.siteUrl || wooUrl;
-    const consumerKey = pluginConfigValues.consumerKey || wooKey;
-    const consumerSecret = pluginConfigValues.consumerSecret || wooSecret;
+    const siteUrl = (pluginConfigValues.siteUrl || wooUrl || "").trim();
+    const consumerKey = (pluginConfigValues.consumerKey || wooKey || "").trim();
+    const consumerSecret = (pluginConfigValues.consumerSecret || wooSecret || "").trim();
 
     if (!siteUrl || !consumerKey || !consumerSecret) {
-      showToast("لطفاً آدرس سایت، Consumer Key و Consumer Secret را مشخص کنید.");
+      showToast("⚠️ اتصال به ووکامرس برای این فروشگاه تنظیم نشده است!");
+      setShowWooNotConfiguredModal(true);
       return;
     }
 
@@ -813,10 +1103,11 @@ export default function WebBuilderPage() {
         setImpersonatedName(localStorage.getItem("impersonated_user_name") || "مشتری");
       }
       const params = new URLSearchParams(window.location.search);
-      const qProject = params.get("project") || params.get("projectId");
+      const qProject = params.get("project") || params.get("projectId") || params.get("id");
       if (qProject && qProject.trim()) {
         activeId = qProject.trim();
       }
+      localStorage.setItem("appmaker_last_active_project_id", activeId);
     }
     setProjectId(activeId);
     fetchProject(activeId);
@@ -1038,11 +1329,12 @@ export default function WebBuilderPage() {
 
     setBlocks([...blocks, newBlock]);
     setSelectedBlockId(newId);
-    showToast(`بلوک "${template.title}" افزوده شد`);
+    setActiveTab("inspector");
+    showToast(`بلوک "${template.title}" به «${PAGE_LABELS[previewPage] || previewPage}» افزوده شد ✨`);
 
     // Live Hydration from WordPress / WooCommerce API if configured
     const hydratableTypes = ["blog_list", "categories", "product_carousel", "product_grid", "coupon_card"];
-    if (hydratableTypes.includes(template.type) && (wooConnected || !!wooUrl)) {
+    if (hydratableTypes.includes(template.type) && wooConnected && !!wooUrl && !!wooKey && !!wooSecret) {
       showToast(`در حال استعلام دیتای زنده «${template.title}» از وب‌سایت...`);
       fetch(`http://localhost:4000/api/projects/${projectId || "app-demo-techmarket"}/hydrate-block`, {
         method: "POST",
@@ -1077,8 +1369,14 @@ export default function WebBuilderPage() {
   };
 
   const refreshBlockFromWordPress = async (blockId: string, blockType: string) => {
+    const targetUrl = (wooUrl || "").trim();
+    if (!targetUrl || ((blockType === "product_carousel" || blockType === "product_grid" || blockType === "categories") && (!wooKey || !wooSecret))) {
+      showToast("⚠️ اتصال به وب‌سایت برای این فروشگاه تنظیم نشده است!");
+      setShowWooNotConfiguredModal(true);
+      return;
+    }
+
     setIsRefreshingPosts(true);
-    const targetUrl = (wooUrl || "https://xiaomismart.ir").trim();
     showToast(`در حال استعلام دیتای زنده از وب‌سایت وردپرس (${targetUrl})...`);
     try {
       const res = await fetch(`http://localhost:4000/api/projects/${projectId || "app-demo-techmarket"}/hydrate-block`, {
@@ -1104,22 +1402,22 @@ export default function WebBuilderPage() {
               : b
           )
         );
-        if (data.meta?.isLive) {
-          showToast(`✅ ${data.items.length} مقاله مستقیماً از وب‌سایت وردپرس (${data.meta.siteUrl}) دریافت و جایگزین شد!`);
-        } else {
-          showToast(`✅ مقالات وبلاگ با موفقیت به‌روزرسانی شدند!`);
-        }
+        showToast(`✅ اطلاعات زنده با موفقیت از وب‌سایت دریافت و به‌روزرسانی شد!`);
       } else {
-        showToast(data.error || "خطا در استعلام مقالات از سرور وردپرس");
+        showToast(data.error || "خطا در استعلام اطلاعات از وب‌سایت فروشگاه");
       }
     } catch (_) {
-      showToast("خطا در برقراری ارتباط با وب‌سایت وردپرس");
+      showToast("خطا در برقراری ارتباط با وب‌سایت فروشگاه");
     } finally {
       setIsRefreshingPosts(false);
     }
   };
 
   const testWooConnection = async () => {
+    if (!wooUrl || !wooKey || !wooSecret) {
+      showToast("⚠️ لطفاً ابتدا آدرس سایت، Consumer Key و Consumer Secret ووکامرس را وارد کنید.");
+      return;
+    }
     setIsTestingWoo(true);
     try {
       const res = await fetch("http://localhost:4000/api/woocommerce/test-connection", {
@@ -1134,262 +1432,23 @@ export default function WebBuilderPage() {
       const data = await res.json();
       if (data.success) {
         setWooConnected(true);
-        showToast(`اتصال به ووکامرس برقرار شد! (${data.productsCount || 124} محصول همگام‌سازی شد)`);
+        showToast(`اتصال به ووکامرس برقرار شد! (${data.productsCount || 0} محصول در فروشگاه شناسایی شد)`);
       } else {
+        setWooConnected(false);
         showToast(data.error || "خطا در برقراری اتصال با ووکامرس");
       }
     } catch (_) {
-      setWooConnected(true);
-      showToast("اتصال به ووکامرس برقرار شد! (۱۲۴ محصول همگام‌سازی شد)");
+      setWooConnected(false);
+      showToast("خطا در برقراری ارتباط با سرور ووکامرس");
     } finally {
       setIsTestingWoo(false);
     }
   };
 
-  return (
-    <div className="flex flex-col h-screen overflow-hidden bg-slate-950 font-kalameh text-slate-100" dir="rtl">
-      {/* Hidden file input for uploads */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-        accept="image/png,image/jpeg,image/jpg,image/webp"
-        className="hidden"
-      />
-
-      {/* Toast Notification */}
-      <ToastNotification message={toastMessage} />
-
-      {/* Impersonation Banner */}
-      {isImpersonating && (
-        <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white px-4 py-2 text-xs font-bold flex items-center justify-between shadow-lg shrink-0 border-b border-amber-400/30 z-40" dir="rtl">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
-            <span>حالت مشاهده پنل مشتری: شما به عنوان سوپرادمین در حال مشاهده و ویرایش پروژه مشتری «{impersonatedName || 'مشتری'}» هستید.</span>
-          </div>
-          <button
-            onClick={handleExitImpersonation}
-            className="bg-black/40 hover:bg-black/60 text-white px-3.5 py-1.5 rounded-xl border border-white/20 transition flex items-center gap-1.5 cursor-pointer text-xs font-bold shadow-sm"
-          >
-            <span>🔙 خروج و بازگشت به سوپرادمین</span>
-          </button>
-        </div>
-      )}
-
-      {/* Top Navigation Bar Component */}
-      <TopNavbar
-        appName={appName}
-        setAppName={setAppName}
-        packageName={packageName}
-        setPackageName={setPackageName}
-        appIconUrl={appIconUrl}
-        onOpenIconPicker={() => openMediaPickerFor((url) => setAppIconUrl(url))}
-        previewDevice={previewDevice}
-        setPreviewDevice={setPreviewDevice}
-        isDarkModePreview={isDarkModePreview}
-        setIsDarkModePreview={setIsDarkModePreview}
-        enabledPluginsCount={Object.values(projectPlugins).filter((p: any) => p?.enabled).length}
-        onOpenPluginMarket={() => {
-          setIsPluginMarketOpen(true);
-          fetchPlugins();
-        }}
-        onOpenMediaModal={() => {
-          setMediaSelectionCallback(null);
-          setIsMediaModalOpen(true);
-          fetchMedia();
-        }}
-        onOpenStoreManager={() => setIsStoreCatalogOpen(true)}
-        onOpenAbandonedCart={() => setIsAbandonedCartModalOpen(true)}
-        onOpenSourceExport={() => setIsSourceExportModalOpen(true)}
-        onOpenFormManager={() => setIsFormManagerModalOpen(true)}
-        onOpenLoyaltyClub={() => setIsLoyaltyModalOpen(true)}
-        onOpenDokanMarketplace={() => setIsDokanModalOpen(true)}
-        onOpenWhiteLabel={() => setIsWhiteLabelModalOpen(true)}
-        onOpenAiWizard={() => setIsAiModalOpen(true)}
-        onOpenAppUpdate={() => setIsAppUpdateModalOpen(true)}
-        onOpenAnalytics={() => setIsAnalyticsModalOpen(true)}
-        onOpenTemplateModal={() => setIsTemplateModalOpen(true)}
-        onOpenNotificationModal={() => setIsNotificationModalOpen(true)}
-        onOpenQrModal={() => setIsQrModalOpen(true)}
-        onSaveProject={saveProjectToServer}
-        onOpenBuildModal={() => {
-          setIsBuildModalOpen(true);
-          fetchBuildHistory();
-        }}
-      />
-
-      {/* Main Studio Body (3 Columns) */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar: Component Catalog & Branding (Width: 260px) */}
-        <aside className="w-64 border-l border-slate-800 bg-slate-900/60 flex flex-col shrink-0 overflow-y-auto p-3">
-          <div className="flex items-center gap-2 mb-2 text-xs font-bold text-slate-200">
-            <Layers className="w-4 h-4 text-rose-400" />
-            <span>افزودن بلوک جدید</span>
-          </div>
-          <p className="text-[11px] text-slate-400 mb-3 leading-relaxed">
-            برای اضافه شدن به چیدمان صفحه اصلی، روی بلوک کلیک کنید:
-          </p>
-
-          <div className="space-y-2">
-            {AVAILABLE_TEMPLATES.map((tmpl) => {
-              const IconComp = tmpl.icon;
-              return (
-                <button
-                  key={tmpl.type}
-                  onClick={() => addBlockFromTemplate(tmpl)}
-                  className="w-full text-right p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-rose-500/50 transition group flex items-start gap-2.5 cursor-pointer"
-                >
-                  <div className="w-7 h-7 rounded-lg bg-slate-700/80 group-hover:bg-rose-500/20 flex items-center justify-center shrink-0 transition">
-                    <IconComp className="w-4 h-4 text-slate-300 group-hover:text-rose-400" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-200 block group-hover:text-rose-300">
-                      {tmpl.title}
-                    </span>
-                    <span className="text-[10px] text-slate-400 leading-tight block mt-0.5">
-                      {tmpl.desc}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-auto pt-4 border-t border-slate-800/80 text-[10px] text-slate-400 text-center">
-            فونت بومی: <strong>کلمه (Kalameh FaNum)</strong>
-          </div>
-        </aside>
-
-        {/* Center: Interactive Phone Canvas with Multi-Page Tabs */}
-        <main className="flex-1 bg-slate-950 flex flex-col items-center justify-center p-3 overflow-hidden relative">
-          {/* Background Ambient Glow */}
-          <div className="absolute w-96 h-96 rounded-full bg-rose-600/10 blur-3xl pointer-events-none"></div>
-
-          {/* Page Preview Switcher Pills */}
-          <div className="mb-3 z-20 flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1 rounded-2xl shadow-lg">
-            {[
-              { id: "home", label: "صفحه اصلی" },
-              { id: "categories", label: "دسته‌بندی‌ها" },
-              { id: "search", label: "جستجو و فیلتر" },
-              { id: "product", label: "صفحه کالا (PDP)" },
-              { id: "cart", label: "سبد خرید" },
-              { id: "profile", label: "پروفایل کاربر" },
-            ].map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setPreviewPage(p.id as any)}
-                className={`px-3 py-1 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  previewPage === p.id
-                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/30"
-                    : "text-slate-400 hover:text-slate-200"
-                }`}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Phone Frame */}
-          <div
-            className={`h-[650px] bg-slate-900 rounded-[48px] p-3 shadow-2xl border-4 border-slate-800 relative flex flex-col shrink-0 ring-1 ring-slate-700/50 transition-all ${
-              previewDevice === "tablet" ? "w-[480px]" : "w-[340px]"
-            }`}
-          >
-            {/* Notch / Dynamic Island */}
-            {previewDevice === "iphone" && (
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-full z-40 flex items-center justify-end px-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700"></div>
-              </div>
-            )}
-            {previewDevice === "samsung" && (
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-black rounded-full z-40 border border-slate-700"></div>
-            )}
-
-            {/* Screen Viewport */}
-            <div
-              className={`w-full h-full rounded-[38px] overflow-hidden flex flex-col relative select-none transition-colors ${
-                isDarkModePreview ? "bg-slate-950 text-slate-100" : "bg-slate-50 text-slate-900"
-              }`}
-            >
-              {/* App Bar */}
-              <div
-                style={{ backgroundColor: primaryColor }}
-                className="pt-4 px-3 pb-2 flex flex-col text-white shrink-0 shadow-sm"
-              >
-                <div className="h-10 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Menu className="w-4 h-4 cursor-pointer" />
-                    <div className="flex items-center gap-1.5">
-                      <img src={appIconUrl} className="w-5 h-5 rounded-md object-cover border border-white/40" alt="Logo" />
-                      <span className="text-xs font-black tracking-wide">{appName}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    {/* Active Wallet Badge */}
-                    {projectPlugins.wallet?.enabled && (
-                      <div
-                        onClick={() => setIsWalletSheetOpen(true)}
-                        className="flex items-center gap-1 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[9px] font-bold cursor-pointer transition shadow-xs"
-                        title="مشاهده موجودی و شارژ کیف پول"
-                      >
-                        <Wallet className="w-3 h-3 text-emerald-300" />
-                        <span>{walletBalance.toLocaleString('fa-IR')} ت</span>
-                      </div>
-                    )}
-                    <Search className="w-4 h-4 cursor-pointer" onClick={() => setPreviewPage("search")} />
-                    <div
-                      className="relative cursor-pointer"
-                      onClick={() => setIsPreviewNotificationsOpen(true)}
-                      title="صندوق اعلان‌ها و پیام‌ها"
-                    >
-                      <Bell className="w-4 h-4" />
-                      {previewNotifications.some((n) => n.unread) && (
-                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full ring-1 ring-white animate-pulse" />
-                      )}
-                    </div>
-                    <ShoppingCart className="w-4 h-4 cursor-pointer" onClick={() => setPreviewPage("cart")} />
-                  </div>
-                </div>
-
-                {/* Search Bar in Header */}
-                <div
-                  onClick={() => setPreviewPage("search")}
-                  className={`mt-1 h-8 bg-white/95 text-slate-500 px-3 flex items-center justify-between cursor-pointer transition ${
-                    searchBarStyle === "capsule" ? "rounded-full" : "rounded-lg"
-                  }`}
-                >
-                  <div className="flex items-center gap-2 flex-1 truncate">
-                    <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span className="text-[10px] truncate">{searchPlaceholder}</span>
-                  </div>
-                  {/* Active Barcode Scanner icon */}
-                  {projectPlugins.barcode_scanner?.enabled && (
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        showToast("بارکد اسکن شد: ۶۲۶۰۱۲۳۴۵۶۷۸۹ -> هدفون سونی WH-1000XM5");
-                        setPreviewPage("product");
-                      }}
-                      className="p-1 hover:text-rose-600 transition"
-                      title="اسکن بارکد با دوربین"
-                    >
-                      <QrCode className="w-3.5 h-3.5 text-rose-500" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-
-
-              {/* Viewport Content Area depending on previewPage */}
-              <div className="flex-1 overflow-y-auto p-2 space-y-2.5 no-scrollbar pb-14">
-                {/* 1. HOME PAGE */}
-                {previewPage === "home" && (
-                  <>
-                    {blocks.map((block, index) => {
-                      const isSelected = selectedBlockId === block.id;
-                      return (
-                        <div
+  const renderBlockItem = (block: BlockItem, index: number) => {
+    const isSelected = selectedBlockId === block.id;
+    return (
+      <div
                           key={block.id}
                           onClick={() => {
                             setSelectedBlockId(block.id);
@@ -1456,33 +1515,128 @@ export default function WebBuilderPage() {
 
                           {/* Block Renderers */}
                           {block.type === "notice_box" && (
-                            <div className="bg-amber-50 border border-amber-200 text-amber-900 p-2 rounded-xl text-[10px] flex items-center gap-1.5 font-bold">
-                              <Bell className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                              <span className="line-clamp-1">{block.message}</span>
+                            <div className="bg-amber-50 border border-amber-200 text-amber-900 p-2 rounded-xl text-[10px] flex items-center justify-between gap-1.5 font-bold">
+                              <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                                <Bell className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                                <span className="line-clamp-1">{block.message}</span>
+                              </div>
+                              {block.link && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCanvasLinkClick(block.link, block.buttonText || "مشاهده");
+                                  }}
+                                  className="text-[9px] bg-amber-200/80 hover:bg-amber-200 text-amber-950 px-2 py-0.5 rounded cursor-pointer shrink-0 transition"
+                                >
+                                  {block.buttonText || "مشاهده"}
+                                </button>
+                              )}
                             </div>
                           )}
 
-                          {block.type === "banner_slider" && (
-                            <div className="rounded-xl overflow-hidden shadow-xs relative">
-                              <img
-                                src={block.items?.[0]?.imageUrl}
-                                className="w-full h-28 object-cover"
-                                alt="Banner"
-                              />
-                              <div className="absolute bottom-1.5 right-2 left-2 bg-black/50 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-lg line-clamp-1 font-bold">
-                                {block.items?.[0]?.title}
+                          {block.type === "banner_slider" && (() => {
+                            const items = block.items || [];
+                            const activeIdx = (canvasSliderIndices[block.id] || 0) % (items.length || 1);
+                            const slide = items[activeIdx] || items[0] || {};
+                            return (
+                              <div className="rounded-xl overflow-hidden shadow-xs relative group select-none">
+                                <div
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCanvasLinkClick(slide.link, slide.title, slide.openInNewTab);
+                                  }}
+                                  className="relative cursor-pointer"
+                                >
+                                  <img
+                                    src={slide.imageUrl}
+                                    className="w-full h-28 object-cover"
+                                    alt="Banner"
+                                  />
+                                  <div className="absolute bottom-1.5 right-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-lg line-clamp-1 font-bold flex items-center justify-between">
+                                    <span className="truncate">{slide.title}</span>
+                                    {slide.link && (
+                                      <span className="text-[8px] text-rose-300 font-mono shrink-0 flex items-center gap-0.5">
+                                        <Link2 className="w-2.5 h-2.5" />
+                                        <span>{slide.link}</span>
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {items.length > 1 && (
+                                  <>
+                                    <div className="absolute bottom-2.5 left-2 flex gap-1 z-10">
+                                      {items.map((_: any, i: number) => (
+                                        <button
+                                          key={i}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setCanvasSliderIndices((prev) => ({ ...prev, [block.id]: i }));
+                                          }}
+                                          className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                                            i === activeIdx ? "bg-white w-3.5" : "bg-white/50 w-1.5"
+                                          }`}
+                                        />
+                                      ))}
+                                    </div>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCanvasSliderIndices((prev) => ({
+                                          ...prev,
+                                          [block.id]: (activeIdx - 1 + items.length) % items.length,
+                                        }));
+                                      }}
+                                      className="absolute right-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10 cursor-pointer"
+                                    >
+                                      <ChevronRight className="w-3 h-3" />
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCanvasSliderIndices((prev) => ({
+                                          ...prev,
+                                          [block.id]: (activeIdx + 1) % items.length,
+                                        }));
+                                      }}
+                                      className="absolute left-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10 cursor-pointer"
+                                    >
+                                      <ChevronLeft className="w-3 h-3" />
+                                    </button>
+                                  </>
+                                )}
                               </div>
-                            </div>
-                          )}
+                            );
+                          })()}
 
                           {block.type === "categories" && (
-                            <div className="bg-white p-2 rounded-xl border border-slate-100">
-                              <span className="text-[10px] font-bold block mb-1 text-slate-800">{block.title}</span>
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                switchPreviewPage("categories");
+                              }}
+                              className="bg-white p-2 rounded-xl border border-slate-100 hover:border-rose-400 transition cursor-pointer"
+                            >
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-[10px] font-bold text-slate-800">{block.title}</span>
+                                <span className="text-[9px] text-rose-500 font-bold">مشاهده همه &larr;</span>
+                              </div>
                               <div className="grid grid-cols-4 gap-1.5 text-center">
                                 {(block.items || []).map((c: any) => (
-                                  <div key={c.id} className="flex flex-col items-center">
-                                    <img src={c.imageUrl} className="w-10 h-10 rounded-full object-cover shadow-xs" alt="" />
-                                    <span className="text-[9px] mt-1 font-medium">{c.title}</span>
+                                  <div
+                                    key={c.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (c.link) {
+                                        handleCanvasLinkClick(c.link, c.title);
+                                      } else {
+                                        switchPreviewPage("categories");
+                                      }
+                                    }}
+                                    className="flex flex-col items-center hover:opacity-80 transition cursor-pointer"
+                                  >
+                                    <img src={c.imageUrl} className="w-10 h-10 rounded-full object-cover shadow-xs border border-slate-100" alt="" />
+                                    <span className="text-[9px] mt-1 font-medium truncate max-w-[65px]">{c.title}</span>
                                   </div>
                                 ))}
                               </div>
@@ -1531,10 +1685,18 @@ export default function WebBuilderPage() {
                           {block.type === "promo_banners" && (
                             <div className="grid grid-cols-2 gap-2">
                               {(block.banners || []).map((b: any) => (
-                                <div key={b.id} className="relative rounded-xl overflow-hidden shadow-xs">
+                                <div
+                                  key={b.id}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCanvasLinkClick(b.link, b.title, b.openInNewTab);
+                                  }}
+                                  className="relative rounded-xl overflow-hidden shadow-xs cursor-pointer hover:opacity-90 transition group"
+                                >
                                   <img src={b.imageUrl} className="w-full h-20 object-cover" alt="" />
-                                  <span className="absolute bottom-1 right-1 left-1 bg-black/50 text-white text-[8px] p-1 rounded font-bold line-clamp-1">
-                                    {b.title}
+                                  <span className="absolute bottom-1 right-1 left-1 bg-black/60 text-white text-[8px] p-1 rounded font-bold line-clamp-1 flex items-center justify-between">
+                                    <span className="truncate">{b.title}</span>
+                                    {b.link && <Link2 className="w-2.5 h-2.5 text-rose-300 shrink-0" />}
                                   </span>
                                 </div>
                               ))}
@@ -1570,13 +1732,22 @@ export default function WebBuilderPage() {
                             <div className="bg-white p-2 rounded-xl border border-slate-100 overflow-x-auto no-scrollbar">
                               <div className="flex gap-2.5">
                                 {(block.items || []).map((st: any) => (
-                                  <div key={st.id} className="flex flex-col items-center shrink-0 w-12 text-center">
-                                    <div className="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-rose-500 via-amber-500 to-pink-500">
+                                  <div
+                                    key={st.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setActiveStoryForViewer(st);
+                                      setViewerStories(block.items || []);
+                                    }}
+                                    className="flex flex-col items-center shrink-0 w-12 text-center cursor-pointer group"
+                                    title={`مشاهده استوری: ${st.title}`}
+                                  >
+                                    <div className="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-rose-500 via-amber-500 to-pink-500 group-hover:scale-105 transition shadow-xs">
                                       <div className="w-full h-full rounded-full p-0.5 bg-white">
                                         <img src={st.imageUrl} className="w-full h-full rounded-full object-cover" alt="" />
                                       </div>
                                     </div>
-                                    <span className="text-[8.5px] font-bold mt-1 text-slate-800 truncate w-full">{st.title}</span>
+                                    <span className="text-[8.5px] font-bold mt-1 text-slate-800 truncate w-full group-hover:text-rose-600 transition">{st.title}</span>
                                   </div>
                                 ))}
                               </div>
@@ -1592,7 +1763,21 @@ export default function WebBuilderPage() {
                               <p className="text-[9px] text-white/90 mb-2">{block.subtitle}</p>
                               <div className="flex items-center justify-between">
                                 <span className="text-[10px] font-mono bg-black/30 px-2 py-0.5 rounded font-bold">07:54:12</span>
-                                <span className="text-[9px] bg-white text-rose-600 px-2 py-0.5 rounded-lg font-bold">کد: {block.promoCode || "OFF"}</span>
+                                <div className="flex items-center gap-1">
+                                  {block.ctaLink && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCanvasLinkClick(block.ctaLink, block.ctaText || "مشاهده پیشنهادها");
+                                      }}
+                                      className="text-[9px] bg-white/20 hover:bg-white/30 text-white px-2 py-0.5 rounded-lg font-bold transition flex items-center gap-0.5 cursor-pointer"
+                                    >
+                                      <span>{block.ctaText || "مشاهده تخفیف‌ها"}</span>
+                                      <ChevronLeft className="w-2.5 h-2.5" />
+                                    </button>
+                                  )}
+                                  <span className="text-[9px] bg-white text-rose-600 px-2 py-0.5 rounded-lg font-bold">کد: {block.promoCode || "OFF"}</span>
+                                </div>
                               </div>
                             </div>
                           )}
@@ -1616,7 +1801,14 @@ export default function WebBuilderPage() {
                               <span className="text-[10px] font-bold block mb-1.5 text-slate-800">{block.title}</span>
                               <div className="flex gap-2 overflow-x-auto no-scrollbar">
                                 {(block.items || []).map((b: any, i: number) => (
-                                  <div key={i} className="shrink-0 bg-slate-50 border border-slate-100 rounded-lg p-1.5 w-16 text-center">
+                                  <div
+                                    key={i}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleCanvasLinkClick(b.link || `/search?q=${b.name}`, b.name);
+                                    }}
+                                    className="shrink-0 bg-slate-50 border border-slate-100 rounded-lg p-1.5 w-16 text-center cursor-pointer hover:border-rose-400 transition"
+                                  >
                                     <img src={b.logo} className="w-6 h-6 object-cover mx-auto rounded" alt="" />
                                     <span className="text-[8px] font-bold block mt-1 text-slate-700 truncate">{b.name}</span>
                                   </div>
@@ -1634,7 +1826,21 @@ export default function WebBuilderPage() {
                               <p className="text-[8.5px] text-amber-800 mt-1 line-clamp-1">{block.desc}</p>
                               <div className="mt-1.5 flex items-center justify-between">
                                 <span className="text-[8px] text-amber-700">{block.expiry}</span>
-                                <span className="text-[9px] font-mono bg-white px-2 py-0.5 rounded border border-amber-300 font-bold text-amber-900">کپی: {block.code}</span>
+                                <div className="flex items-center gap-1">
+                                  {block.ctaLink && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCanvasLinkClick(block.ctaLink, block.ctaText || "خرید");
+                                      }}
+                                      className="text-[9px] bg-amber-200/80 hover:bg-amber-200 text-amber-900 px-2 py-0.5 rounded font-bold cursor-pointer transition flex items-center gap-0.5"
+                                    >
+                                      <span>{block.ctaText || "استفاده"}</span>
+                                      <ChevronLeft className="w-2.5 h-2.5" />
+                                    </button>
+                                  )}
+                                  <span className="text-[9px] font-mono bg-white px-2 py-0.5 rounded border border-amber-300 font-bold text-amber-900">کپی: {block.code}</span>
+                                </div>
                               </div>
                             </div>
                           )}
@@ -1695,21 +1901,33 @@ export default function WebBuilderPage() {
 
                           {block.type === "booking_reservation" && (
                             <div className="bg-white p-2.5 rounded-xl border border-blue-100 shadow-xs">
-                              <div className="flex items-center gap-1.5 mb-1.5">
-                                <Calendar className="w-3.5 h-3.5 text-blue-500" />
-                                <span className="text-[10px] font-bold text-slate-800">{block.title || "سامانه نوبت‌دهی آنلاین"}</span>
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="flex items-center gap-1.5">
+                                  <Calendar className="w-3.5 h-3.5 text-blue-500" />
+                                  <span className="text-[10px] font-bold text-slate-800">{block.title || "سامانه نوبت‌دهی آنلاین"}</span>
+                                </div>
+                                {block.hours && (
+                                  <span className="text-[7.5px] bg-blue-50 text-blue-700 font-bold px-1.5 py-0.5 rounded">
+                                    {block.hours}
+                                  </span>
+                                )}
                               </div>
-                              <div className="flex gap-1 mb-1.5">
-                                <span className="bg-blue-50 text-blue-600 text-[8px] font-bold px-2 py-0.5 rounded border border-blue-200">شنبه ۲ آبان</span>
-                                <span className="bg-slate-50 text-slate-500 text-[8px] px-2 py-0.5 rounded">یکشنبه ۳ آبان</span>
-                                <span className="bg-slate-50 text-slate-500 text-[8px] px-2 py-0.5 rounded">دوشنبه ۴ آبان</span>
+                              <p className="text-[8px] text-slate-400 mb-1.5">{block.subtitle || "تعیین وقت مشاوره و خدمات تخصصی"}</p>
+                              <div className="space-y-1 mb-2">
+                                {(block.services && block.services.length > 0 ? block.services.slice(0, 2) : [
+                                  { name: "مشاوره آنلاین", price: "۲۵۰,۰۰۰ ت", duration: "۳۰ دقیقه" },
+                                  { name: "بررسی حضوری", price: "۴۵۰,۰۰۰ ت", duration: "۴۵ دقیقه" }
+                                ]).map((srv: any, si: number) => (
+                                  <div key={si} className="bg-slate-50 p-1 rounded-lg flex items-center justify-between text-[8px]">
+                                    <span className="font-bold text-slate-700">{srv.name}</span>
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-emerald-600 font-bold">{srv.price}</span>
+                                      <span className="text-slate-400">{srv.duration}</span>
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
-                              <div className="grid grid-cols-3 gap-1 mb-1.5">
-                                <span className="bg-emerald-500 text-white text-[8px] text-center py-0.5 rounded font-bold">۱۰:۰۰ صبح</span>
-                                <span className="bg-slate-50 text-slate-600 text-[8px] text-center py-0.5 rounded">۱۱:۳۰ صبح</span>
-                                <span className="bg-slate-50 text-slate-600 text-[8px] text-center py-0.5 rounded">۱۶:۰۰ عصر</span>
-                              </div>
-                              <div className="w-full bg-blue-600 text-white text-[8px] font-bold py-1 text-center rounded-lg">رزرو وقت مشاوره</div>
+                              <div className="w-full bg-blue-600 text-white text-[8px] font-bold py-1 text-center rounded-lg">ثبت و رزرو نوبت</div>
                             </div>
                           )}
 
@@ -1719,32 +1937,46 @@ export default function WebBuilderPage() {
                                 <FileText className="w-3.5 h-3.5 text-orange-400" />
                                 <span className="text-[10px] font-bold">{block.title || "استعلام قیمت B2B و صنعتی"}</span>
                               </div>
-                              <p className="text-[8px] text-slate-400 mb-2">صدور پیش‌فاکتور رسمی با کد اقتصادی برای شرکت‌ها</p>
+                              <p className="text-[8px] text-slate-300 mb-2">{block.subtitle || "صدور پیش‌فاکتور رسمی با کد اقتصادی برای شرکت‌ها"}</p>
                               <div className="flex gap-1.5">
-                                <span className="flex-1 bg-orange-500 text-white text-[8px] font-bold py-1 text-center rounded-lg">درخواست پیش‌فاکتور</span>
-                                <span className="bg-slate-700 text-slate-200 text-[8px] py-1 px-2 text-center rounded-lg">کاتالوگ PDF</span>
+                                <span className="flex-1 bg-orange-500 text-white text-[8px] font-bold py-1 text-center rounded-lg">
+                                  {block.inquiryButtonText || "درخواست پیش‌فاکتور"}
+                                </span>
+                                <span className="bg-slate-700 text-slate-200 text-[8px] py-1 px-2 text-center rounded-lg">
+                                  {block.catalogButtonText || "کاتالوگ PDF"}
+                                </span>
                               </div>
                             </div>
                           )}
 
                           {block.type === "course_curriculum" && (
                             <div className="bg-white p-2.5 rounded-xl border border-purple-100 shadow-xs">
-                              <div className="flex items-center justify-between mb-1.5">
+                              <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <GraduationCap className="w-3.5 h-3.5 text-purple-600" />
                                   <span className="text-[10px] font-bold text-slate-800">{block.title || "سرفصل‌ها و دوره آموزشی"}</span>
                                 </div>
-                                <span className="text-[8px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded font-bold">۴ جلسه</span>
+                                <span className="text-[8px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded font-bold">
+                                  {(block.lessons || [1, 2, 3]).length} جلسه
+                                </span>
                               </div>
+                              {block.instructor && (
+                                <span className="text-[7.5px] text-slate-400 block mb-1">مدرس: {block.instructor}</span>
+                              )}
                               <div className="space-y-1">
-                                <div className="bg-slate-50 p-1.5 rounded-lg flex items-center justify-between text-[8px]">
-                                  <span className="font-bold text-slate-800">جلسه ۱: مبانی و شروع دوره</span>
-                                  <span className="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-bold">پخش رایگان ▶</span>
-                                </div>
-                                <div className="bg-slate-50 p-1.5 rounded-lg flex items-center justify-between text-[8px] text-slate-400">
-                                  <span>جلسه ۲: پروژه‌های عملی و کدنویسی</span>
-                                  <span>قفل 🔒</span>
-                                </div>
+                                {(block.lessons && block.lessons.length > 0 ? block.lessons.slice(0, 3) : [
+                                  { title: "جلسه ۱: مبانی و شروع دوره", isFreePreview: true },
+                                  { title: "جلسه ۲: کانفیگ پیشرفته", isFreePreview: false }
+                                ]).map((ls: any, li: number) => (
+                                  <div key={li} className="bg-slate-50 p-1.5 rounded-lg flex items-center justify-between text-[8px]">
+                                    <span className="font-bold text-slate-800 truncate">{ls.title}</span>
+                                    {ls.isFreePreview ? (
+                                      <span className="bg-emerald-100 text-emerald-700 px-1 py-0.5 rounded font-bold shrink-0">رایگان ▶</span>
+                                    ) : (
+                                      <span className="text-slate-400 shrink-0">🔒 قفل</span>
+                                    )}
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           )}
@@ -1828,14 +2060,283 @@ export default function WebBuilderPage() {
                             </div>
                           )}
                         </div>
-                      );
-                    })}
+    );
+  };
+
+  return (
+    <div className="flex flex-col h-screen overflow-hidden bg-slate-950 font-kalameh text-slate-100" dir="rtl">
+      {/* Hidden file input for uploads */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        accept="image/png,image/jpeg,image/jpg,image/webp"
+        className="hidden"
+      />
+
+      {/* Toast Notification */}
+      <ToastNotification message={toastMessage} />
+
+      {/* Impersonation Banner */}
+      {isImpersonating && (
+        <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white px-4 py-2 text-xs font-bold flex items-center justify-between shadow-lg shrink-0 border-b border-amber-400/30 z-40" dir="rtl">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
+            <span>حالت مشاهده پنل مشتری: شما به عنوان سوپرادمین در حال مشاهده و ویرایش پروژه مشتری «{impersonatedName || 'مشتری'}» هستید.</span>
+          </div>
+          <button
+            onClick={handleExitImpersonation}
+            className="bg-black/40 hover:bg-black/60 text-white px-3.5 py-1.5 rounded-xl border border-white/20 transition flex items-center gap-1.5 cursor-pointer text-xs font-bold shadow-sm"
+          >
+            <span>🔙 خروج و بازگشت به سوپرادمین</span>
+          </button>
+        </div>
+      )}
+
+      {/* Top Navigation Bar Component */}
+      <TopNavbar
+        appName={appName}
+        setAppName={setAppName}
+        packageName={packageName}
+        setPackageName={setPackageName}
+        appIconUrl={appIconUrl}
+        onOpenIconPicker={() => openMediaPickerFor((url) => setAppIconUrl(url))}
+        previewDevice={previewDevice}
+        setPreviewDevice={setPreviewDevice}
+        isDarkModePreview={isDarkModePreview}
+        setIsDarkModePreview={setIsDarkModePreview}
+        enabledPluginsCount={Object.values(projectPlugins).filter((p: any) => p?.enabled).length}
+        onOpenPluginMarket={() => {
+          setIsPluginMarketOpen(true);
+          fetchPlugins();
+        }}
+        onOpenMediaModal={() => {
+          setMediaSelectionCallback(null);
+          setIsMediaModalOpen(true);
+          fetchMedia();
+        }}
+        onOpenStoreManager={() => setIsStoreCatalogOpen(true)}
+        onOpenAbandonedCart={() => setIsAbandonedCartModalOpen(true)}
+        onOpenSourceExport={() => setIsSourceExportModalOpen(true)}
+        onOpenFormManager={() => setIsFormManagerModalOpen(true)}
+        onOpenLoyaltyClub={() => setIsLoyaltyModalOpen(true)}
+        onOpenDokanMarketplace={() => setIsDokanModalOpen(true)}
+        onOpenWhiteLabel={() => setIsWhiteLabelModalOpen(true)}
+        onOpenAiWizard={() => setIsAiModalOpen(true)}
+        onOpenAppUpdate={() => setIsAppUpdateModalOpen(true)}
+        onOpenAnalytics={() => setIsAnalyticsModalOpen(true)}
+        onOpenTemplateModal={() => setIsTemplateModalOpen(true)}
+        onOpenNotificationModal={() => setIsNotificationModalOpen(true)}
+        onOpenQrModal={() => setIsQrModalOpen(true)}
+        onOpenSubscriptionModal={() => setIsSubscriptionModalOpen(true)}
+        onOpenInvoiceModal={() => setIsInvoiceModalOpen(true)}
+        onOpenStoreRelease={() => setIsStoreReleaseModalOpen(true)}
+        onOpenMonitoring={() => setIsMonitoringModalOpen(true)}
+        onOpenSupport={() => setIsSupportModalOpen(true)}
+        onOpenMigrationWizard={() => setIsMigrationModalOpen(true)}
+        onSaveProject={saveProjectToServer}
+        onOpenBuildModal={() => {
+          setIsBuildModalOpen(true);
+          fetchBuildHistory();
+        }}
+        projectId={projectId}
+      />
+
+      {/* Main Studio Body (3 Columns) */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Sidebar: Component Catalog & Branding (Width: 260px) */}
+        <aside className="w-64 border-l border-slate-800 bg-slate-900/60 flex flex-col shrink-0 overflow-y-auto p-3">
+          <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Layers className="w-4 h-4 text-rose-400 shrink-0" />
+              <span className="text-xs font-bold text-slate-200">افزودن بلوک</span>
+            </div>
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-lg bg-rose-600 text-white shadow-xs">
+              {PAGE_LABELS[previewPage] || previewPage}
+            </span>
+          </div>
+          <p className="text-[10px] text-slate-400 mb-2.5 leading-relaxed">
+            برای افزودن به «<strong>{PAGE_LABELS[previewPage] || previewPage}</strong>»، روی بلوک دلخواه کلیک کنید:
+          </p>
+
+          <div className="space-y-2">
+            {AVAILABLE_TEMPLATES.map((tmpl) => {
+              const IconComp = tmpl.icon;
+              return (
+                <button
+                  key={tmpl.type}
+                  onClick={() => addBlockFromTemplate(tmpl)}
+                  className="w-full text-right p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-rose-500/50 transition group flex items-start gap-2.5 cursor-pointer"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-slate-700/80 group-hover:bg-rose-500/20 flex items-center justify-center shrink-0 transition">
+                    <IconComp className="w-4 h-4 text-slate-300 group-hover:text-rose-400" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-200 block group-hover:text-rose-300">
+                      {tmpl.title}
+                    </span>
+                    <span className="text-[10px] text-slate-400 leading-tight block mt-0.5">
+                      {tmpl.desc}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-auto pt-4 border-t border-slate-800/80 text-[10px] text-slate-400 text-center">
+            فونت بومی: <strong>کلمه (Kalameh FaNum)</strong>
+          </div>
+        </aside>
+
+        {/* Center: Interactive Phone Canvas with Multi-Page Tabs */}
+        <main className="flex-1 bg-slate-950 flex flex-col items-center justify-center p-3 overflow-hidden relative">
+          {/* Background Ambient Glow */}
+          <div className="absolute w-96 h-96 rounded-full bg-rose-600/10 blur-3xl pointer-events-none"></div>
+
+          {/* Page Preview Switcher Pills */}
+          <div className="mb-3 z-20 flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1 rounded-2xl shadow-lg">
+            {[
+              { id: "home", label: "صفحه اصلی" },
+              { id: "categories", label: "دسته‌بندی‌ها" },
+              { id: "search", label: "جستجو و فیلتر" },
+              { id: "product", label: "صفحه کالا (PDP)" },
+              { id: "cart", label: "سبد خرید" },
+              { id: "profile", label: "پروفایل کاربر" },
+            ].map((p) => {
+              const count = (pageBlocks[p.id] || []).length;
+              const isCurrent = previewPage === p.id;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => switchPreviewPage(p.id as any)}
+                  className={`px-3 py-1 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                    isCurrent
+                      ? "bg-rose-600 text-white shadow-md shadow-rose-600/30"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  <span>{p.label}</span>
+                  {count > 0 && (
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono ${
+                      isCurrent ? "bg-white/20 text-white" : "bg-slate-800 text-slate-400"
+                    }`}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Phone Frame */}
+          <div
+            className={`h-[650px] bg-slate-900 rounded-[48px] p-3 shadow-2xl border-4 border-slate-800 relative flex flex-col shrink-0 ring-1 ring-slate-700/50 transition-all ${
+              previewDevice === "tablet" ? "w-[480px]" : "w-[340px]"
+            }`}
+          >
+            {/* Notch / Dynamic Island */}
+            {previewDevice === "iphone" && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-full z-40 flex items-center justify-end px-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700"></div>
+              </div>
+            )}
+            {previewDevice === "samsung" && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-black rounded-full z-40 border border-slate-700"></div>
+            )}
+
+            {/* Screen Viewport */}
+            <div
+              className={`w-full h-full rounded-[38px] overflow-hidden flex flex-col relative select-none transition-colors ${
+                isDarkModePreview ? "bg-slate-950 text-slate-100" : "bg-slate-50 text-slate-900"
+              }`}
+            >
+              {/* App Bar */}
+              <div
+                style={{ backgroundColor: primaryColor }}
+                className="pt-4 px-3 pb-2 flex flex-col text-white shrink-0 shadow-sm"
+              >
+                <div className="h-10 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Menu className="w-4 h-4 cursor-pointer" />
+                    <div
+                      onClick={() => setActiveTab("theme")}
+                      className="flex items-center gap-1.5 cursor-pointer hover:opacity-85 transition p-0.5 rounded-lg group"
+                      title="کلیک جهت ویرایش لوگو و هویت بصری فروشگاه"
+                    >
+                      <img src={appIconUrl} className="w-5 h-5 rounded-md object-cover border border-white/40 group-hover:border-white shadow-xs" alt="Logo" />
+                      <span className="text-xs font-black tracking-wide group-hover:underline">{appName}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {/* Active Wallet Badge */}
+                    {projectPlugins.wallet?.enabled && (
+                      <div
+                        onClick={() => setIsWalletSheetOpen(true)}
+                        className="flex items-center gap-1 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[9px] font-bold cursor-pointer transition shadow-xs"
+                        title="مشاهده موجودی و شارژ کیف پول"
+                      >
+                        <Wallet className="w-3 h-3 text-emerald-300" />
+                        <span>{walletBalance.toLocaleString('fa-IR')} ت</span>
+                      </div>
+                    )}
+                    <Search className="w-4 h-4 cursor-pointer" onClick={() => switchPreviewPage("search")} />
+                    <div
+                      className="relative cursor-pointer"
+                      onClick={() => setIsPreviewNotificationsOpen(true)}
+                      title="صندوق اعلان‌ها و پیام‌ها"
+                    >
+                      <Bell className="w-4 h-4" />
+                      {previewNotifications.some((n) => n.unread) && (
+                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full ring-1 ring-white animate-pulse" />
+                      )}
+                    </div>
+                    <ShoppingCart className="w-4 h-4 cursor-pointer" onClick={() => switchPreviewPage("cart")} />
+                  </div>
+                </div>
+
+                {/* Search Bar in Header */}
+                <div
+                  onClick={() => switchPreviewPage("search")}
+                  className={`mt-1 h-8 bg-white/95 text-slate-500 px-3 flex items-center justify-between cursor-pointer transition ${
+                    searchBarStyle === "capsule" ? "rounded-full" : "rounded-lg"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 flex-1 truncate">
+                    <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span className="text-[10px] truncate">{searchPlaceholder}</span>
+                  </div>
+                  {/* Active Barcode Scanner icon */}
+                  {projectPlugins.barcode_scanner?.enabled && (
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        showToast("بارکد اسکن شد: ۶۲۶۰۱۲۳۴۵۶۷۸۹ -> هدفون سونی WH-1000XM5");
+                        switchPreviewPage("product");
+                      }}
+                      className="p-1 hover:text-rose-600 transition"
+                      title="اسکن بارکد با دوربین"
+                    >
+                      <QrCode className="w-3.5 h-3.5 text-rose-500" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+
+
+              {/* Viewport Content Area depending on previewPage */}
+              <div className="flex-1 overflow-y-auto p-2 space-y-2.5 no-scrollbar pb-14">
+                {/* 1. HOME PAGE */}
+                {previewPage === "home" && (
+                  <>
+                    {blocks.map((block, index) => renderBlockItem(block, index))}
                   </>
                 )}
 
                 {/* 2. CATEGORIES PAGE PREVIEW */}
                 {previewPage === "categories" && (() => {
-                  const catBlock = blocks.find((b) => b.type === "categories");
+                  const catBlock = blocks.find((b) => b.type === "categories") || pageBlocks.home?.find((b) => b.type === "categories");
                   const catList = catBlock?.items && catBlock.items.length > 0
                     ? catBlock.items.map((c: any) => ({
                         title: c.title,
@@ -1843,40 +2344,73 @@ export default function WebBuilderPage() {
                         img: c.imageUrl,
                       }))
                     : [
-                        { title: "خانه و آشپزخانه هوشمند", count: "۲۱ کالا", img: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=200&h=200&fit=crop" },
-                        { title: "سیستم سرمایش و گرمایش", count: "۲۹ کالا", img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop" },
-                        { title: "دوربین های نظارتی هوشمند", count: "۱۲ کالا", img: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop" },
-                        { title: "کلید و پریز هوشمند", count: "۳۳ کالا", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop" },
+                        { title: "خانه و آشپزخانه هوشمند", count: "۲۱ کالا", img: "https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg" },
+                        { title: "سیستم سرمایش و گرمایش", count: "۲۹ کالا", img: "https://xiaomismart.ir/wp-content/uploads/2025/11/8-11.jpg" },
+                        { title: "دوربین های نظارتی هوشمند", count: "۱۲ کالا", img: "https://xiaomismart.ir/wp-content/uploads/2025/09/18.jpg" },
+                        { title: "کلید و پریز هوشمند", count: "۳۳ کالا", img: "https://xiaomismart.ir/wp-content/uploads/2025/11/12-5.jpg" },
                       ];
 
                   return (
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold block">{catBlock?.title || "دسته‌بندی‌های کالا"}</span>
-                        <span className="text-[10px] text-slate-400 font-mono">({catList.length} شاخه اصلی)</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        {catList.map((c: any) => (
-                          <div key={c.title} className="bg-white p-2.5 rounded-xl border border-slate-200 text-center shadow-xs">
-                            <img src={c.img} className="w-12 h-12 rounded-full mx-auto object-cover mb-2 border border-slate-100 shadow-xs" alt="" />
-                            <span className="text-xs font-bold block text-slate-900 truncate">{c.title}</span>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">{c.count}</span>
+                      {/* Custom Blocks added specifically to Categories page */}
+                      {blocks.map((block, index) => renderBlockItem(block, index))}
+
+                      {/* Default Categories Grid if no categories block added on this page */}
+                      {!blocks.some((b) => b.type === "categories") && (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold block">{catBlock?.title || "دسته‌بندی‌های کالا"}</span>
+                            <span className="text-[10px] text-slate-400 font-mono">({catList.length} شاخه اصلی)</span>
                           </div>
-                        ))}
-                      </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            {catList.map((c: any) => (
+                              <div
+                                key={c.title}
+                                onClick={() => switchPreviewPage("search")}
+                                className="bg-white p-2.5 rounded-xl border border-slate-200 text-center shadow-xs cursor-pointer hover:border-rose-400 transition"
+                              >
+                                <img src={c.img} className="w-12 h-12 rounded-full mx-auto object-cover mb-2 border border-slate-100 shadow-xs" alt="" />
+                                <span className="text-xs font-bold block text-slate-900 truncate">{c.title}</span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5">{c.count}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {blocks.length === 0 && (
+                        <div
+                          onClick={() => setActiveTab("inspector")}
+                          className="p-3 border-2 border-dashed border-slate-200 rounded-2xl text-center bg-white/60 hover:border-rose-400 transition cursor-pointer"
+                        >
+                          <span className="text-[10px] font-bold text-slate-700 block">افزودن بلوک اختصاصی به دسته‌بندی‌ها</span>
+                          <span className="text-[9px] text-slate-400 block mt-0.5">از منوی سمت راست روی بلوک دلخواه (بنر تبلیغاتی، تخفیف، نماد اعتماد) کلیک کنید</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
 
                 {/* 3. SEARCH & FILTERS PREVIEW */}
                 {previewPage === "search" && (() => {
-                  const prodsBlock = blocks.find((b) => b.type === "product_grid" || b.type === "product_carousel");
-                  const prodsList = prodsBlock?.items && prodsBlock.items.length > 0
-                    ? prodsBlock.items.slice(0, 6)
-                    : [];
+                  const allProds: any[] = [];
+                  const blocksToScan = [...(pageBlocks.home || []), ...blocks];
+                  blocksToScan.forEach((b) => {
+                    if ((b.type === "product_grid" || b.type === "product_carousel") && Array.isArray(b.items)) {
+                      b.items.forEach((item: any) => {
+                        if (!allProds.some((x) => x.id === item.id || x.title === item.title)) {
+                          allProds.push(item);
+                        }
+                      });
+                    }
+                  });
+                  const prodsList = allProds.length > 0 ? allProds.slice(0, 10) : [];
 
                   return (
                     <div className="space-y-3">
+                      {/* Custom Blocks added specifically to Search page */}
+                      {blocks.map((block, index) => renderBlockItem(block, index))}
+
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold">نتایج جستجو ({prodsList.length} کالا)</span>
                         <span className="text-[10px] text-rose-500 font-bold">جدیدترین محصولات</span>
@@ -1887,7 +2421,7 @@ export default function WebBuilderPage() {
                             key={p.id}
                             onClick={() => {
                               setSelectedPreviewProduct(p);
-                              setPreviewPage("product");
+                              switchPreviewPage("product");
                             }}
                             className="bg-white p-2 rounded-xl border border-slate-200 cursor-pointer hover:border-rose-400 transition"
                           >
@@ -1899,13 +2433,23 @@ export default function WebBuilderPage() {
                           </div>
                         ))}
                       </div>
+
+                      {blocks.length === 0 && (
+                        <div
+                          onClick={() => setActiveTab("inspector")}
+                          className="p-3 border-2 border-dashed border-slate-200 rounded-2xl text-center bg-white/60 hover:border-rose-400 transition cursor-pointer"
+                        >
+                          <span className="text-[10px] font-bold text-slate-700 block">افزودن بلوک اختصاصی به صفحه جستجو</span>
+                          <span className="text-[9px] text-slate-400 block mt-0.5">از منوی سمت راست روی بلوک دلخواه (بنر، تخفیف، کالاهای اخیر) کلیک کنید</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
 
                 {/* 4. PRODUCT DETAIL (PDP) PREVIEW */}
                 {previewPage === "product" && (() => {
-                  const activeProd = selectedPreviewProduct || blocks.find((b) => b.type === "product_carousel" || b.type === "product_grid")?.items?.[0] || {
+                  const activeProd = selectedPreviewProduct || (blocks.find((b) => b.type === "product_carousel" || b.type === "product_grid") || pageBlocks.home?.find((b) => b.type === "product_carousel" || b.type === "product_grid"))?.items?.[0] || {
                     title: "تجهیزات هوشمند شیائومی",
                     price: 114995000,
                     imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg",
@@ -1922,7 +2466,7 @@ export default function WebBuilderPage() {
                       {/* Back button */}
                       <button
                         type="button"
-                        onClick={() => setPreviewPage("home")}
+                        onClick={() => switchPreviewPage("home")}
                         className="text-[11px] text-slate-500 hover:text-rose-600 font-bold flex items-center gap-1 cursor-pointer transition"
                       >
                         <span>← بازگشت به صفحه اصلی</span>
@@ -1933,7 +2477,7 @@ export default function WebBuilderPage() {
                         <img src={activeProd.imageUrl} className="w-full h-44 object-contain rounded-lg" alt="" />
                         {galleryList.length > 1 && (
                           <div className="flex gap-1.5 mt-2 justify-center overflow-x-auto no-scrollbar">
-                            {galleryList.slice(0, 4).map((g, idx) => (
+                            {galleryList.slice(0, 4).map((g: string, idx: number) => (
                               <img key={idx} src={g} className="w-9 h-9 object-cover rounded-md border border-slate-200" alt="" />
                             ))}
                           </div>
@@ -1982,7 +2526,7 @@ export default function WebBuilderPage() {
                           type="button"
                           onClick={() => {
                             setSelectedPreviewProduct(activeProd);
-                            setPreviewPage("cart");
+                            switchPreviewPage("cart");
                           }}
                           className="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[10px] font-bold shadow-md shadow-rose-600/30 flex items-center gap-1 cursor-pointer"
                         >
@@ -1990,20 +2534,38 @@ export default function WebBuilderPage() {
                           <span>افزودن به سبد</span>
                         </button>
                       </div>
+
+                      {/* Custom Blocks added specifically to Product Page */}
+                      {blocks.length > 0 && (
+                        <div className="space-y-2.5 pt-2 border-t border-slate-200/80">
+                          <div className="text-[10px] font-bold text-slate-500 px-1">بلوک‌های اختصاصی صفحه کالا:</div>
+                          {blocks.map((block, index) => renderBlockItem(block, index))}
+                        </div>
+                      )}
+
+                      {blocks.length === 0 && (
+                        <div
+                          onClick={() => setActiveTab("inspector")}
+                          className="p-3 border-2 border-dashed border-slate-200 rounded-2xl text-center bg-white/60 hover:border-rose-400 transition cursor-pointer"
+                        >
+                          <span className="text-[10px] font-bold text-slate-700 block">افزودن بلوک اختصاصی به صفحه کالا</span>
+                          <span className="text-[9px] text-slate-400 block mt-0.5">از منوی سمت راست روی بلوک دلخواه (نمادهای اعتماد، سوالات متداول، کالاهای مشابه، کد تخفیف) کلیک کنید</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
 
                 {/* 5. CART PREVIEW */}
                 {previewPage === "cart" && (() => {
-                  const cartProd = selectedPreviewProduct || blocks.find((b) => b.type === "product_carousel" || b.type === "product_grid")?.items?.[0] || {
+                  const cartProd = selectedPreviewProduct || (blocks.find((b) => b.type === "product_carousel" || b.type === "product_grid") || pageBlocks.home?.find((b) => b.type === "product_carousel" || b.type === "product_grid"))?.items?.[0] || {
                     title: "محصول فروشگاه",
                     price: 114995000,
                     imageUrl: "https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg",
                   };
 
                   return (
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       <div className="p-2.5 bg-emerald-50 text-emerald-800 rounded-xl text-[10px] font-bold flex items-center gap-1.5">
                         <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
                         <span>سبد خرید شما آماده ثبت سفارش است! 🎉</span>
@@ -2019,11 +2581,29 @@ export default function WebBuilderPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => setPreviewPage("home")}
+                        onClick={() => switchPreviewPage("home")}
                         className="w-full py-2 text-center text-[10px] text-slate-500 hover:text-slate-800 font-bold block cursor-pointer"
                       >
                         ادامه خرید و مشاهده بقیه کالاها ←
                       </button>
+
+                      {/* Custom Blocks added specifically to Cart Page */}
+                      {blocks.length > 0 && (
+                        <div className="space-y-2.5 pt-2 border-t border-slate-200/80">
+                          <div className="text-[10px] font-bold text-slate-500 px-1">بلوک‌های اختصاصی سبد خرید:</div>
+                          {blocks.map((block, index) => renderBlockItem(block, index))}
+                        </div>
+                      )}
+
+                      {blocks.length === 0 && (
+                        <div
+                          onClick={() => setActiveTab("inspector")}
+                          className="p-3 border-2 border-dashed border-slate-200 rounded-2xl text-center bg-white/60 hover:border-rose-400 transition cursor-pointer"
+                        >
+                          <span className="text-[10px] font-bold text-slate-700 block">افزودن بلوک اختصاصی به سبد خرید</span>
+                          <span className="text-[9px] text-slate-400 block mt-0.5">از منوی سمت راست روی بلوک دلخواه (کد تخفیف، نمادهای اعتماد، اعلان ارسال، کالاهای مکمل) کلیک کنید</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
@@ -2227,6 +2807,24 @@ export default function WebBuilderPage() {
                         </div>
                       </div>
                     )}
+
+                    {/* Custom Blocks added specifically to Profile Page */}
+                    {blocks.length > 0 && (
+                      <div className="space-y-2.5 pt-2 border-t border-slate-200/80">
+                        <div className="text-[10px] font-bold text-slate-500 px-1">بلوک‌های اختصاصی پروفایل:</div>
+                        {blocks.map((block, index) => renderBlockItem(block, index))}
+                      </div>
+                    )}
+
+                    {blocks.length === 0 && (
+                      <div
+                        onClick={() => setActiveTab("inspector")}
+                        className="p-3 border-2 border-dashed border-slate-200 rounded-2xl text-center bg-white/60 hover:border-rose-400 transition cursor-pointer"
+                      >
+                        <span className="text-[10px] font-bold text-slate-700 block">افزودن بلوک اختصاصی به پروفایل</span>
+                        <span className="text-[9px] text-slate-400 block mt-0.5">از منوی سمت راست روی بلوک دلخواه (باشگاه مشتریان، سوالات متداول، اعلان، استعلام B2B) کلیک کنید</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -2239,7 +2837,7 @@ export default function WebBuilderPage() {
                     return (
                       <button
                         key={tab.id}
-                        onClick={() => setPreviewPage(tab.targetPage)}
+                        onClick={() => switchPreviewPage(tab.targetPage)}
                         className={`flex flex-col items-center py-0.5 transition ${isSelected ? "font-black" : ""}`}
                         style={{ color: isSelected ? primaryColor : undefined }}
                       >
@@ -2578,6 +3176,43 @@ export default function WebBuilderPage() {
                   {/* Banner Slider Inspector */}
                   {selectedBlock.type === "banner_slider" && (
                     <div className="space-y-3">
+                      {/* Global Slider Settings */}
+                      <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
+                        <span className="text-[10px] font-bold text-slate-300 block">تنظیمات چرخش و اسلاید:</span>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-[9.5px] text-slate-400 block mb-1">زمان تعویض اسلاید:</label>
+                            <select
+                              value={selectedBlock.interval || 4}
+                              onChange={(e) => {
+                                const val = Number(e.target.value);
+                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, interval: val } : b)));
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white"
+                            >
+                              <option value={3}>۳ ثانیه (سریع)</option>
+                              <option value={4}>۴ ثانیه (پیش‌فرض)</option>
+                              <option value={6}>۶ ثانیه (آرام)</option>
+                              <option value={8}>۸ ثانیه</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="text-[9.5px] text-slate-400 block mb-1">حالت چرخش:</label>
+                            <select
+                              value={selectedBlock.autoPlay !== false ? "auto" : "manual"}
+                              onChange={(e) => {
+                                const val = e.target.value === "auto";
+                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, autoPlay: val } : b)));
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white"
+                            >
+                              <option value="auto">پخش خودکار (Auto)</option>
+                              <option value="manual">چرخش دستی / سوایپ</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="flex items-center justify-between">
                         <label className="text-[11px] font-bold text-slate-300">بنرهای اسلایدر:</label>
                         <button
@@ -2586,6 +3221,8 @@ export default function WebBuilderPage() {
                               id: `s_${Date.now()}`,
                               imageUrl: "http://localhost:4000/uploads/banner-special-offers.png",
                               title: "بنر تبلیغاتی جدید",
+                              link: "/categories",
+                              openInNewTab: false,
                             };
                             setBlocks(
                               blocks.map((b) =>
@@ -2594,14 +3231,14 @@ export default function WebBuilderPage() {
                             );
                             showToast("اسلاید جدید افزوده شد");
                           }}
-                          className="text-[10px] text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1"
+                          className="text-[10px] text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 cursor-pointer"
                         >
                           <Plus className="w-3 h-3" />
                           <span>افزودن اسلاید</span>
                         </button>
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-2.5">
                         {(selectedBlock.items || []).map((slide: any, sIdx: number) => (
                           <div key={slide.id || sIdx} className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
                             <div className="flex items-center gap-2">
@@ -2625,7 +3262,7 @@ export default function WebBuilderPage() {
                                   const updated = selectedBlock.items.filter((_: any, i: number) => i !== sIdx);
                                   setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
                                 }}
-                                className="text-slate-400 hover:text-rose-400 p-1"
+                                className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -2639,11 +3276,80 @@ export default function WebBuilderPage() {
                                   setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
                                 });
                               }}
-                              className="w-full py-1 bg-slate-700/80 hover:bg-slate-700 text-slate-300 rounded text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                              className="w-full py-1 bg-slate-700/80 hover:bg-slate-700 text-slate-300 rounded text-[10px] font-bold flex items-center justify-center gap-1 transition cursor-pointer"
                             >
                               <FolderOpen className="w-3 h-3 text-indigo-400" />
                               <span>انتخاب تصویر از رسانه</span>
                             </button>
+
+                            {/* Destination Link Configuration */}
+                            <div className="pt-2 border-t border-slate-700/60 space-y-1.5">
+                              <div className="flex items-center justify-between text-[10px]">
+                                <span className="text-slate-300 font-bold flex items-center gap-1">
+                                  <Link2 className="w-3 h-3 text-rose-400" />
+                                  <span>لینک مقصد (اکشن کلیک):</span>
+                                </span>
+                                {slide.link && (
+                                  <span className="text-emerald-400 text-[9px] font-mono">
+                                    {slide.link.startsWith("http") ? "🌐 خارجی" : "📱 داخلی"}
+                                  </span>
+                                )}
+                              </div>
+
+                              <input
+                                type="text"
+                                value={slide.link || ""}
+                                placeholder="مثلاً: /categories یا https://..."
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  const updated = [...selectedBlock.items];
+                                  updated[sIdx] = { ...updated[sIdx], link: val };
+                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                }}
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-white font-mono placeholder:text-slate-500 placeholder:font-sans focus:outline-hidden focus:border-rose-500"
+                              />
+
+                              {/* Quick Presets */}
+                              <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                                <span className="text-[9px] text-slate-400 font-medium">مسیرهای سریع:</span>
+                                {LINK_PRESETS.map((preset) => (
+                                  <button
+                                    key={preset.url}
+                                    type="button"
+                                    onClick={() => {
+                                      const updated = [...selectedBlock.items];
+                                      updated[sIdx] = { ...updated[sIdx], link: preset.url };
+                                      setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                    }}
+                                    className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition flex items-center gap-0.5 cursor-pointer ${
+                                      slide.link === preset.url
+                                        ? "bg-rose-500 text-white"
+                                        : "bg-slate-700/70 hover:bg-slate-700 text-slate-300"
+                                    }`}
+                                  >
+                                    <span>{preset.icon}</span>
+                                    <span>{preset.label}</span>
+                                  </button>
+                                ))}
+                              </div>
+
+                              {(slide.link?.startsWith("http://") || slide.link?.startsWith("https://")) && (
+                                <label className="flex items-center gap-1.5 text-[9.5px] text-slate-300 pt-0.5 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={slide.openInNewTab !== false}
+                                    onChange={(e) => {
+                                      const val = e.target.checked;
+                                      const updated = [...selectedBlock.items];
+                                      updated[sIdx] = { ...updated[sIdx], openInNewTab: val };
+                                      setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                    }}
+                                    className="rounded border-slate-700 bg-slate-900 text-rose-500 focus:ring-0"
+                                  />
+                                  <span>باز شدن در تب جدید (New Tab)</span>
+                                </label>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -2689,6 +3395,59 @@ export default function WebBuilderPage() {
                             }}
                             className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono"
                           />
+                        </div>
+                      </div>
+
+                      {/* CTA Action & Link */}
+                      <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
+                        <span className="text-[10px] font-bold text-slate-300 block flex items-center gap-1">
+                          <Link2 className="w-3 h-3 text-rose-400" />
+                          <span>دکمه هدایت و لینک جشنواره:</span>
+                        </span>
+                        <div>
+                          <label className="text-[9.5px] text-slate-400 block mb-1">متن دکمه هدایت:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.ctaText || ""}
+                            placeholder="مثلاً: مشاهده و خرید تخفیف‌ها"
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, ctaText: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[9.5px] text-slate-400 block mb-1">لینک مقصد دکمه:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.ctaLink || ""}
+                            placeholder="مثلاً: /categories یا /search?q=تخفیف"
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, ctaLink: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white font-mono"
+                          />
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1 pt-1">
+                          {LINK_PRESETS.map((preset) => (
+                            <button
+                              key={preset.url}
+                              type="button"
+                              onClick={() => {
+                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, ctaLink: preset.url } : b)));
+                              }}
+                              className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition flex items-center gap-0.5 cursor-pointer ${
+                                selectedBlock.ctaLink === preset.url
+                                  ? "bg-rose-500 text-white"
+                                  : "bg-slate-700/70 hover:bg-slate-700 text-slate-300"
+                              }`}
+                            >
+                              <span>{preset.icon}</span>
+                              <span>{preset.label}</span>
+                            </button>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -2747,6 +3506,59 @@ export default function WebBuilderPage() {
                           className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
                         />
                       </div>
+
+                      {/* Coupon Action Button & Link */}
+                      <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
+                        <span className="text-[10px] font-bold text-slate-300 block flex items-center gap-1">
+                          <Link2 className="w-3 h-3 text-rose-400" />
+                          <span>دکمه خرید و استفاده از کوپن:</span>
+                        </span>
+                        <div>
+                          <label className="text-[9.5px] text-slate-400 block mb-1">متن دکمه:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.ctaText || ""}
+                            placeholder="مثلاً: خرید با این کوپن"
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, ctaText: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[9.5px] text-slate-400 block mb-1">لینک مقصد دکمه:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.ctaLink || ""}
+                            placeholder="مثلاً: /cart یا /categories"
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, ctaLink: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white font-mono"
+                          />
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1 pt-1">
+                          {LINK_PRESETS.map((preset) => (
+                            <button
+                              key={preset.url}
+                              type="button"
+                              onClick={() => {
+                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, ctaLink: preset.url } : b)));
+                              }}
+                              className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition flex items-center gap-0.5 cursor-pointer ${
+                                selectedBlock.ctaLink === preset.url
+                                  ? "bg-rose-500 text-white"
+                                  : "bg-slate-700/70 hover:bg-slate-700 text-slate-300"
+                              }`}
+                            >
+                              <span>{preset.icon}</span>
+                              <span>{preset.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   )}
 
@@ -2764,6 +3576,59 @@ export default function WebBuilderPage() {
                           }}
                           className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"
                         />
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
+                        <span className="text-[10px] font-bold text-slate-300 block flex items-center gap-1">
+                          <Link2 className="w-3 h-3 text-rose-400" />
+                          <span>لینک دکمه اعلان (اختیاری):</span>
+                        </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-[9.5px] text-slate-400 block mb-1">عنوان دکمه:</label>
+                            <input
+                              type="text"
+                              value={selectedBlock.buttonText || ""}
+                              placeholder="پیش‌فرض: مشاهده"
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, buttonText: val } : b)));
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[9.5px] text-slate-400 block mb-1">لینک مقصد:</label>
+                            <input
+                              type="text"
+                              value={selectedBlock.link || ""}
+                              placeholder="مثلاً: /categories"
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, link: val } : b)));
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white font-mono"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1 pt-1">
+                          {LINK_PRESETS.map((preset) => (
+                            <button
+                              key={preset.url}
+                              type="button"
+                              onClick={() => {
+                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, link: preset.url } : b)));
+                              }}
+                              className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition flex items-center gap-0.5 cursor-pointer ${
+                                selectedBlock.link === preset.url
+                                  ? "bg-rose-500 text-white"
+                                  : "bg-slate-700/70 hover:bg-slate-700 text-slate-300"
+                              }`}
+                            >
+                              <span>{preset.icon}</span>
+                              <span>{preset.label}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -2916,11 +3781,14 @@ export default function WebBuilderPage() {
                     </div>
                   )}
 
-                  {/* Story Circles Inspector */}
+                  {/* Story Circles Inspector with Detailed Slides Management */}
                   {selectedBlock.type === "story_circles" && (
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold text-slate-300">لیست استوری‌ها:</label>
+                      <div className="flex items-center justify-between pb-1 border-b border-slate-800">
+                        <div>
+                          <label className="text-[11px] font-bold text-slate-200 block">مدیریت استوری‌ها و اسلایدها:</label>
+                          <span className="text-[9px] text-slate-400">امکان تعریف محتوای چند اسلایدی و دکمه خرید</span>
+                        </div>
                         <button
                           onClick={() => {
                             const newStory = {
@@ -2928,75 +3796,697 @@ export default function WebBuilderPage() {
                               title: "استوری جدید",
                               badge: "جدید",
                               imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop",
-                              desc: "توضیحات و بررسی استوری جدید",
+                              slides: [
+                                {
+                                  id: `sl_${Date.now()}_1`,
+                                  imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=900&fit=crop",
+                                  title: "عنوان اسلاید اول",
+                                  caption: "توضیحات جذاب درباره این محصول یا پیشنهاد ویژه",
+                                  duration: 5,
+                                  buttonText: "مشاهده و خرید",
+                                  buttonLink: "/product",
+                                },
+                              ],
                             };
                             const updated = [...(selectedBlock.items || []), newStory];
                             setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
-                            showToast("استوری جدید افزوده شد");
+                            showToast("استوری جدید با اسلاید نمونه افزوده شد");
                           }}
-                          className="text-[10px] text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 cursor-pointer"
+                          className="text-[10px] bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 px-2 py-1 rounded-lg font-bold flex items-center gap-1 cursor-pointer transition"
                         >
                           <Plus className="w-3 h-3" />
                           <span>افزودن استوری</span>
                         </button>
                       </div>
 
-                      <div className="space-y-2">
-                        {(selectedBlock.items || []).map((story: any, idx: number) => (
-                          <div key={story.id || idx} className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
-                            <div className="flex items-center gap-2">
-                              <img src={story.imageUrl} alt="" className="w-10 h-10 rounded-full object-cover border border-rose-500/50 shrink-0" />
-                              <div className="flex-1 space-y-1">
-                                <input
-                                  type="text"
-                                  value={story.title || ""}
-                                  placeholder="عنوان استوری"
-                                  onChange={(e) => {
-                                    const val = e.target.value;
-                                    const updated = [...selectedBlock.items];
-                                    updated[idx] = { ...updated[idx], title: val };
+                      <div className="space-y-2.5">
+                        {(selectedBlock.items || []).map((story: any, idx: number) => {
+                          const slides = story.slides || [];
+                          const isExpanded = expandedStorySlidesId === (story.id || String(idx));
+
+                          return (
+                            <div key={story.id || idx} className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700 space-y-2">
+                              <div className="flex items-center gap-2">
+                                <div className="relative group shrink-0">
+                                  <img src={story.imageUrl} alt="" className="w-10 h-10 rounded-full object-cover border-2 border-rose-500/70" />
+                                  <div
+                                    onClick={() => {
+                                      openMediaPickerFor((url) => {
+                                        const updated = [...selectedBlock.items];
+                                        updated[idx] = { ...updated[idx], imageUrl: url };
+                                        setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                      });
+                                    }}
+                                    className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition"
+                                    title="تغییر آیکون استوری"
+                                  >
+                                    <FolderOpen className="w-3.5 h-3.5 text-white" />
+                                  </div>
+                                </div>
+
+                                <div className="flex-1 space-y-1">
+                                  <input
+                                    type="text"
+                                    value={story.title || ""}
+                                    placeholder="عنوان دایره استوری"
+                                    onChange={(e) => {
+                                      const val = e.target.value;
+                                      const updated = [...selectedBlock.items];
+                                      updated[idx] = { ...updated[idx], title: val };
+                                      setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                    }}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[11px] text-white font-bold"
+                                  />
+                                  <div className="flex items-center gap-1.5">
+                                    <input
+                                      type="text"
+                                      value={story.badge || ""}
+                                      placeholder="برچسب (مثلاً: تخفیف)"
+                                      onChange={(e) => {
+                                        const val = e.target.value;
+                                        const updated = [...selectedBlock.items];
+                                        updated[idx] = { ...updated[idx], badge: val };
+                                        setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                      }}
+                                      className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-slate-300"
+                                    />
+                                    <span className="text-[9px] bg-slate-700/80 text-amber-300 px-1.5 py-0.5 rounded font-mono font-bold">
+                                      {slides.length} اسلاید
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <button
+                                  onClick={() => {
+                                    const updated = selectedBlock.items.filter((_: any, i: number) => i !== idx);
                                     setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
                                   }}
-                                  className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[11px] text-white"
+                                  className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer transition"
+                                  title="حذف استوری"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+
+                              {/* Story Controls Toolbar */}
+                              <div className="flex items-center gap-1.5 pt-1">
+                                <button
+                                  onClick={() => {
+                                    setActiveStoryForViewer(story);
+                                    setViewerStories(selectedBlock.items || []);
+                                  }}
+                                  className="flex-1 py-1 px-2 bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition cursor-pointer"
+                                  title="مشاهده تمام‌صفحه استوری"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  <span>پیش‌نمایش زنده 👁️</span>
+                                </button>
+
+                                <button
+                                  onClick={() => {
+                                    setExpandedStorySlidesId(isExpanded ? null : (story.id || String(idx)));
+                                  }}
+                                  className={`flex-1 py-1 px-2 border rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition cursor-pointer ${
+                                    isExpanded
+                                      ? "bg-indigo-600 text-white border-indigo-500"
+                                      : "bg-slate-700/60 hover:bg-slate-700 text-indigo-300 border-slate-600"
+                                  }`}
+                                >
+                                  <SlidersHorizontal className="w-3 h-3" />
+                                  <span>{isExpanded ? "بستن اسلایدها ▲" : `تنظیم محتوا و اسلایدها (${slides.length}) ▼`}</span>
+                                </button>
+                              </div>
+
+                              {/* Expanded Slides Editor */}
+                              {isExpanded && (
+                                <div className="p-2.5 rounded-xl bg-slate-900/90 border border-indigo-500/30 space-y-3 mt-2 animate-fadeIn">
+                                  <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
+                                    <span className="text-[10px] font-bold text-indigo-300">اسلایدهای این استوری:</span>
+                                    <button
+                                      onClick={() => {
+                                        const newSlide = {
+                                          id: `sl_${Date.now()}`,
+                                          imageUrl: story.imageUrl || "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=900&fit=crop",
+                                          title: `${story.title} - اسلاید ${(slides.length + 1).toLocaleString('fa-IR')}`,
+                                          caption: "توضیحات و مشخصات اسلاید را اینجا وارد کنید.",
+                                          duration: 5,
+                                          buttonText: "مشاهده و خرید",
+                                          buttonLink: "/product",
+                                        };
+                                        const currentSlides = story.slides || [];
+                                        const updated = [...selectedBlock.items];
+                                        updated[idx] = { ...updated[idx], slides: [...currentSlides, newSlide] };
+                                        setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                        showToast("اسلاید جدید افزوده شد");
+                                      }}
+                                      className="text-[9px] bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 px-2 py-0.5 rounded font-bold flex items-center gap-1 cursor-pointer"
+                                    >
+                                      <Plus className="w-2.5 h-2.5" />
+                                      <span>+ افزودن اسلاید</span>
+                                    </button>
+                                  </div>
+
+                                  {slides.length === 0 ? (
+                                    <div className="text-center py-3 text-slate-400 text-[10px]">
+                                      هنوز اسلایدی ثبت نشده است. از دکمه بالا اسلاید اضافه کنید.
+                                    </div>
+                                  ) : (
+                                    <div className="space-y-2.5">
+                                      {slides.map((slide: any, sIdx: number) => (
+                                        <div key={slide.id || sIdx} className="p-2 rounded-lg bg-slate-800 border border-slate-700/80 space-y-1.5">
+                                          <div className="flex items-center justify-between">
+                                            <span className="text-[9.5px] font-bold text-amber-300">
+                                              اسلاید شماره {(sIdx + 1).toLocaleString('fa-IR')}
+                                            </span>
+                                            <button
+                                              onClick={() => {
+                                                const updatedSlides = slides.filter((_: any, i: number) => i !== sIdx);
+                                                const updated = [...selectedBlock.items];
+                                                updated[idx] = { ...updated[idx], slides: updatedSlides };
+                                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                              }}
+                                              className="text-slate-400 hover:text-rose-400 p-0.5 cursor-pointer"
+                                              title="حذف این اسلاید"
+                                            >
+                                              <Trash2 className="w-3 h-3" />
+                                            </button>
+                                          </div>
+
+                                          <div className="flex gap-2">
+                                            <div className="w-14 h-20 rounded-md overflow-hidden bg-slate-900 border border-slate-700 shrink-0 relative group">
+                                              <img src={slide.imageUrl} alt="" className="w-full h-full object-cover" />
+                                              <div
+                                                onClick={() => {
+                                                  openMediaPickerFor((url) => {
+                                                    const updatedSlides = [...slides];
+                                                    updatedSlides[sIdx] = { ...updatedSlides[sIdx], imageUrl: url };
+                                                    const updated = [...selectedBlock.items];
+                                                    updated[idx] = { ...updated[idx], slides: updatedSlides };
+                                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                                  });
+                                                }}
+                                                className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition"
+                                                title="تغییر تصویر اسلاید"
+                                              >
+                                                <FolderOpen className="w-3 h-3 text-white" />
+                                              </div>
+                                            </div>
+
+                                            <div className="flex-1 space-y-1">
+                                              <input
+                                                type="text"
+                                                value={slide.title || ""}
+                                                placeholder="تیتر اسلاید"
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  const updatedSlides = [...slides];
+                                                  updatedSlides[sIdx] = { ...updatedSlides[sIdx], title: val };
+                                                  const updated = [...selectedBlock.items];
+                                                  updated[idx] = { ...updated[idx], slides: updatedSlides };
+                                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                                }}
+                                                className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-white font-bold"
+                                              />
+                                              <textarea
+                                                rows={2}
+                                                value={slide.caption || ""}
+                                                placeholder="کپشن و متن توضیحات اسلاید..."
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  const updatedSlides = [...slides];
+                                                  updatedSlides[sIdx] = { ...updatedSlides[sIdx], caption: val };
+                                                  const updated = [...selectedBlock.items];
+                                                  updated[idx] = { ...updated[idx], slides: updatedSlides };
+                                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                                }}
+                                                className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[9.5px] text-slate-300 resize-none"
+                                              />
+                                            </div>
+                                          </div>
+
+                                          {/* CTA Button & Duration */}
+                                          <div className="grid grid-cols-3 gap-1 pt-1 border-t border-slate-700/60">
+                                            <div className="col-span-1">
+                                              <input
+                                                type="text"
+                                                value={slide.buttonText || ""}
+                                                placeholder="متن دکمه (مثلا: خرید)"
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  const updatedSlides = [...slides];
+                                                  updatedSlides[sIdx] = { ...updatedSlides[sIdx], buttonText: val };
+                                                  const updated = [...selectedBlock.items];
+                                                  updated[idx] = { ...updated[idx], slides: updatedSlides };
+                                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                                }}
+                                                className="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-[9px] text-white"
+                                              />
+                                            </div>
+                                            <div className="col-span-1">
+                                              <input
+                                                type="text"
+                                                value={slide.buttonLink || ""}
+                                                placeholder="لینک (مثلا: /product)"
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  const updatedSlides = [...slides];
+                                                  updatedSlides[sIdx] = { ...updatedSlides[sIdx], buttonLink: val };
+                                                  const updated = [...selectedBlock.items];
+                                                  updated[idx] = { ...updated[idx], slides: updatedSlides };
+                                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                                }}
+                                                className="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-[9px] text-slate-300 font-mono"
+                                              />
+                                            </div>
+                                            <div className="col-span-1">
+                                              <input
+                                                type="number"
+                                                min={2}
+                                                max={30}
+                                                value={slide.duration || 5}
+                                                placeholder="مدت (ثانیه)"
+                                                onChange={(e) => {
+                                                  const val = Number(e.target.value) || 5;
+                                                  const updatedSlides = [...slides];
+                                                  updatedSlides[sIdx] = { ...updatedSlides[sIdx], duration: val };
+                                                  const updated = [...selectedBlock.items];
+                                                  updated[idx] = { ...updated[idx], slides: updatedSlides };
+                                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                                }}
+                                                className="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-[9px] text-amber-300 text-center font-mono"
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Booking & Reservation Inspector */}
+                  {selectedBlock.type === "booking_reservation" && (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-300 block mb-1">توضیحات نوبت‌دهی:</label>
+                        <input
+                          type="text"
+                          value={selectedBlock.subtitle || ""}
+                          placeholder="تعیین وقت مشاوره و خدمات تخصصی در چند ثانیه"
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, subtitle: val } : b)));
+                          }}
+                          className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">تلفن پشتیبانی رزرو:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.phone || "۰۲۱-۸۸۸۸۹۹۹۹"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, phone: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-[11px] text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">ساعات کاری رزرو:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.hours || "شنبه تا پنج‌شنبه ۹ تا ۲۱"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, hours: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-[11px] text-white"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Services List */}
+                      <div className="space-y-2 pt-2 border-t border-slate-700/60">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-bold text-slate-300">لیست خدمات قابل رزرو:</label>
+                          <button
+                            onClick={() => {
+                              const current = selectedBlock.services || [
+                                { id: "s1", name: "مشاوره آنلاین", price: "۲۵۰,۰۰۰ تومان", duration: "۳۰ دقیقه" },
+                                { id: "s2", name: "ویزیت و بررسی حضوری", price: "۴۵۰,۰۰۰ تومان", duration: "۴۵ دقیقه" }
+                              ];
+                              const newService = {
+                                id: `srv_${Date.now()}`,
+                                name: `خدمت جدید ${(current.length + 1).toLocaleString('fa-IR')}`,
+                                price: "رایگان",
+                                duration: "۳۰ دقیقه",
+                              };
+                              const updated = [...current, newService];
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, services: updated } : b)));
+                              showToast("خدمت جدید افزوده شد");
+                            }}
+                            className="text-[10px] text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 cursor-pointer"
+                          >
+                            <Plus className="w-3 h-3" />
+                            <span>افزودن خدمت</span>
+                          </button>
+                        </div>
+
+                        <div className="space-y-2">
+                          {(selectedBlock.services || [
+                            { id: "s1", name: "مشاوره آنلاین", price: "۲۵۰,۰۰۰ تومان", duration: "۳۰ دقیقه" },
+                            { id: "s2", name: "ویزیت و بررسی حضوری", price: "۴۵۰,۰۰۰ تومان", duration: "۴۵ دقیقه" }
+                          ]).map((srv: any, sIdx: number) => (
+                            <div key={srv.id || sIdx} className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1.5">
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={srv.name || ""}
+                                  placeholder="عنوان خدمت"
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    const current = selectedBlock.services || [
+                                      { id: "s1", name: "مشاوره آنلاین", price: "۲۵۰,۰۰۰ تومان", duration: "۳۰ دقیقه" },
+                                      { id: "s2", name: "ویزیت و بررسی حضوری", price: "۴۵۰,۰۰۰ تومان", duration: "۴۵ دقیقه" }
+                                    ];
+                                    const updated = [...current];
+                                    updated[sIdx] = { ...updated[sIdx], name: val };
+                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, services: updated } : b)));
+                                  }}
+                                  className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[11px] text-white"
+                                />
+                                <button
+                                  onClick={() => {
+                                    const current = selectedBlock.services || [
+                                      { id: "s1", name: "مشاوره آنلاین", price: "۲۵۰,۰۰۰ تومان", duration: "۳۰ دقیقه" },
+                                      { id: "s2", name: "ویزیت و بررسی حضوری", price: "۴۵۰,۰۰۰ تومان", duration: "۴۵ دقیقه" }
+                                    ];
+                                    const updated = current.filter((_: any, i: number) => i !== sIdx);
+                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, services: updated } : b)));
+                                  }}
+                                  className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                <input
+                                  type="text"
+                                  value={srv.price || ""}
+                                  placeholder="تعرفه / هزینه"
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    const current = selectedBlock.services || [
+                                      { id: "s1", name: "مشاوره آنلاین", price: "۲۵۰,۰۰۰ تومان", duration: "۳۰ دقیقه" },
+                                      { id: "s2", name: "ویزیت و بررسی حضوری", price: "۴۵۰,۰۰۰ تومان", duration: "۴۵ دقیقه" }
+                                    ];
+                                    const updated = [...current];
+                                    updated[sIdx] = { ...updated[sIdx], price: val };
+                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, services: updated } : b)));
+                                  }}
+                                  className="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-slate-300"
                                 />
                                 <input
                                   type="text"
-                                  value={story.badge || ""}
-                                  placeholder="برچسب (مثلاً: تخفیف)"
+                                  value={srv.duration || ""}
+                                  placeholder="مدت زمان"
                                   onChange={(e) => {
                                     const val = e.target.value;
-                                    const updated = [...selectedBlock.items];
-                                    updated[idx] = { ...updated[idx], badge: val };
-                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                    const current = selectedBlock.services || [
+                                      { id: "s1", name: "مشاوره آنلاین", price: "۲۵۰,۰۰۰ تومان", duration: "۳۰ دقیقه" },
+                                      { id: "s2", name: "ویزیت و بررسی حضوری", price: "۴۵۰,۰۰۰ تومان", duration: "۴۵ دقیقه" }
+                                    ];
+                                    const updated = [...current];
+                                    updated[sIdx] = { ...updated[sIdx], duration: val };
+                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, services: updated } : b)));
                                   }}
-                                  className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-slate-300"
+                                  className="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-slate-300"
                                 />
                               </div>
-                              <button
-                                onClick={() => {
-                                  const updated = selectedBlock.items.filter((_: any, i: number) => i !== idx);
-                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
-                                }}
-                                className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
                             </div>
-                            <button
-                              onClick={() => {
-                                openMediaPickerFor((url) => {
-                                  const updated = [...selectedBlock.items];
-                                  updated[idx] = { ...updated[idx], imageUrl: url };
-                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
-                                });
-                              }}
-                              className="w-full py-1 bg-slate-700/80 hover:bg-slate-700 text-slate-300 rounded text-[10px] font-bold flex items-center justify-center gap-1 transition cursor-pointer"
-                            >
-                              <FolderOpen className="w-3 h-3 text-indigo-400" />
-                              <span>تغییر تصویر استوری</span>
-                            </button>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* B2B Inquiry Inspector */}
+                  {selectedBlock.type === "b2b_inquiry" && (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-300 block mb-1">توضیحات استعلام عمده B2B:</label>
+                        <input
+                          type="text"
+                          value={selectedBlock.subtitle || ""}
+                          placeholder="صدور پیش‌فاکتور رسمی با کد اقتصادی ویژه سازمان‌ها"
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, subtitle: val } : b)));
+                          }}
+                          className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">تلفن مستقیم واحد B2B:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.phone || "۰۲۱-۸۸۷۷۶۶۵۵"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, phone: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-[11px] text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">ایمیل پیش‌فاکتور:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.email || "b2b@company.ir"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, email: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-[11px] text-white"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-slate-300 block mb-1">آدرس فایل کاتالوگ PDF:</label>
+                        <div className="flex items-center gap-1.5">
+                          <input
+                            type="text"
+                            value={selectedBlock.catalogUrl || ""}
+                            placeholder="https://.../catalog.pdf"
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, catalogUrl: val } : b)));
+                            }}
+                            className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] text-white font-mono"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              openMediaPickerFor((url) => {
+                                setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, catalogUrl: url } : b)));
+                              });
+                            }}
+                            className="px-2 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded text-[10px] font-bold flex items-center gap-1 cursor-pointer"
+                          >
+                            <FolderOpen className="w-3 h-3 text-indigo-400" />
+                            <span>رسانه</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">متن دکمه پیش‌فاکتور:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.inquiryButtonText || "درخواست پیش‌فاکتور"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, inquiryButtonText: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[11px] text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">متن دکمه کاتالوگ:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.catalogButtonText || "کاتالوگ PDF"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, catalogButtonText: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[11px] text-white"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Course Curriculum Inspector */}
+                  {selectedBlock.type === "course_curriculum" && (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-300 block mb-1">توضیحات دوره آموزشی:</label>
+                        <input
+                          type="text"
+                          value={selectedBlock.subtitle || ""}
+                          placeholder="سرفصل‌ها و جلسات عملی دوره تخصصی"
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, subtitle: val } : b)));
+                          }}
+                          className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">نام مدرس دوره:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.instructor || "مدرس رسمی"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, instructor: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-[11px] text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-bold text-slate-300 block mb-1">مدت کل دوره:</label>
+                          <input
+                            type="text"
+                            value={selectedBlock.totalDuration || "۱۲ جلسه تخصصی"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, totalDuration: val } : b)));
+                            }}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-[11px] text-white"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Lessons Manager */}
+                      <div className="space-y-2 pt-2 border-t border-slate-700/60">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-bold text-slate-300">جلسات و سرفصل‌ها:</label>
+                          <button
+                            onClick={() => {
+                              const current = selectedBlock.lessons || [
+                                { id: "l1", title: "جلسه ۱: مبانی و آشنایی مقدماتی", duration: "۲۰ دقیقه", isFreePreview: true },
+                                { id: "l2", title: "جلسه ۲: نصب و راه‌اندازی محیط کار", duration: "۳۵ دقیقه", isFreePreview: false }
+                              ];
+                              const newLesson = {
+                                id: `ls_${Date.now()}`,
+                                title: `جلسه ${(current.length + 1).toLocaleString('fa-IR')}: جلسه جدید`,
+                                duration: "۳۰ دقیقه",
+                                isFreePreview: false,
+                              };
+                              const updated = [...current, newLesson];
+                              setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, lessons: updated } : b)));
+                              showToast("جلسه جدید به دوره افزوده شد");
+                            }}
+                            className="text-[10px] text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1 cursor-pointer"
+                          >
+                            <Plus className="w-3 h-3" />
+                            <span>افزودن جلسه</span>
+                          </button>
+                        </div>
+
+                        <div className="space-y-2">
+                          {(selectedBlock.lessons || [
+                            { id: "l1", title: "جلسه ۱: مبانی و آشنایی مقدماتی", duration: "۲۰ دقیقه", isFreePreview: true },
+                            { id: "l2", title: "جلسه ۲: نصب و راه‌اندازی محیط کار", duration: "۳۵ دقیقه", isFreePreview: false }
+                          ]).map((lesson: any, lIdx: number) => (
+                            <div key={lesson.id || lIdx} className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1.5">
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={lesson.title || ""}
+                                  placeholder="عنوان جلسه"
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    const current = selectedBlock.lessons || [
+                                      { id: "l1", title: "جلسه ۱: مبانی و آشنایی مقدماتی", duration: "۲۰ دقیقه", isFreePreview: true },
+                                      { id: "l2", title: "جلسه ۲: نصب و راه‌اندازی محیط کار", duration: "۳۵ دقیقه", isFreePreview: false }
+                                    ];
+                                    const updated = [...current];
+                                    updated[lIdx] = { ...updated[lIdx], title: val };
+                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, lessons: updated } : b)));
+                                  }}
+                                  className="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[11px] text-white"
+                                />
+                                <button
+                                  onClick={() => {
+                                    const current = selectedBlock.lessons || [
+                                      { id: "l1", title: "جلسه ۱: مبانی و آشنایی مقدماتی", duration: "۲۰ دقیقه", isFreePreview: true },
+                                      { id: "l2", title: "جلسه ۲: نصب و راه‌اندازی محیط کار", duration: "۳۵ دقیقه", isFreePreview: false }
+                                    ];
+                                    const updated = current.filter((_: any, i: number) => i !== lIdx);
+                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, lessons: updated } : b)));
+                                  }}
+                                  className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={lesson.duration || ""}
+                                  placeholder="مدت زمان"
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    const current = selectedBlock.lessons || [
+                                      { id: "l1", title: "جلسه ۱: مبانی و آشنایی مقدماتی", duration: "۲۰ دقیقه", isFreePreview: true },
+                                      { id: "l2", title: "جلسه ۲: نصب و راه‌اندازی محیط کار", duration: "۳۵ دقیقه", isFreePreview: false }
+                                    ];
+                                    const updated = [...current];
+                                    updated[lIdx] = { ...updated[lIdx], duration: val };
+                                    setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, lessons: updated } : b)));
+                                  }}
+                                  className="w-28 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-slate-300"
+                                />
+                                <label className="flex items-center gap-1.5 cursor-pointer text-[10px] text-emerald-400 select-none">
+                                  <input
+                                    type="checkbox"
+                                    checked={!!lesson.isFreePreview}
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      const current = selectedBlock.lessons || [
+                                        { id: "l1", title: "جلسه ۱: مبانی و آشنایی مقدماتی", duration: "۲۰ دقیقه", isFreePreview: true },
+                                        { id: "l2", title: "جلسه ۲: نصب و راه‌اندازی محیط کار", duration: "۳۵ دقیقه", isFreePreview: false }
+                                      ];
+                                      const updated = [...current];
+                                      updated[lIdx] = { ...updated[lIdx], isFreePreview: checked };
+                                      setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, lessons: updated } : b)));
+                                    }}
+                                    className="rounded border-slate-700 text-emerald-500 focus:ring-0"
+                                  />
+                                  <span>پیش‌نمایش رایگان</span>
+                                </label>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -3098,6 +4588,7 @@ export default function WebBuilderPage() {
                               name: "برند جدید",
                               englishName: "Brand",
                               logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/200px-Xiaomi_logo_%282021-%29.svg.png",
+                              link: "/search",
                             };
                             const updated = [...(selectedBlock.items || []), newBrand];
                             setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
@@ -3112,7 +4603,7 @@ export default function WebBuilderPage() {
 
                       <div className="space-y-2">
                         {(selectedBlock.items || []).map((brand: any, bIdx: number) => (
-                          <div key={bIdx} className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1.5">
+                          <div key={bIdx} className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
                             <div className="flex items-center gap-2">
                               <img src={brand.logo} alt="" className="w-8 h-8 rounded-lg object-contain bg-white p-0.5 shrink-0" />
                               <div className="flex-1 space-y-1">
@@ -3164,6 +4655,50 @@ export default function WebBuilderPage() {
                               <FolderOpen className="w-3 h-3 text-indigo-400" />
                               <span>تغییر لوگو</span>
                             </button>
+
+                            {/* Brand Destination Link */}
+                            <div className="pt-1.5 border-t border-slate-700/60 space-y-1">
+                              <div className="flex items-center justify-between text-[9.5px] text-slate-400">
+                                <span className="flex items-center gap-1 font-bold text-slate-300">
+                                  <Link2 className="w-2.5 h-2.5 text-rose-400" />
+                                  <span>لینک مقصد برند:</span>
+                                </span>
+                                <span>پیش‌فرض: جستجو</span>
+                              </div>
+                              <input
+                                type="text"
+                                value={brand.link || ""}
+                                placeholder="مثلاً: /search?q=Xiaomi یا /categories"
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  const updated = [...selectedBlock.items];
+                                  updated[bIdx] = { ...updated[bIdx], link: val };
+                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                }}
+                                className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-white font-mono"
+                              />
+                              <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                                {LINK_PRESETS.slice(0, 3).map((preset) => (
+                                  <button
+                                    key={preset.url}
+                                    type="button"
+                                    onClick={() => {
+                                      const updated = [...selectedBlock.items];
+                                      updated[bIdx] = { ...updated[bIdx], link: preset.url };
+                                      setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                    }}
+                                    className={`px-1 py-0.5 rounded text-[8.5px] font-bold transition cursor-pointer ${
+                                      brand.link === preset.url
+                                        ? "bg-rose-500 text-white"
+                                        : "bg-slate-700/70 hover:bg-slate-700 text-slate-300"
+                                    }`}
+                                  >
+                                    <span>{preset.icon}</span>
+                                    <span>{preset.label}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -3203,7 +4738,7 @@ export default function WebBuilderPage() {
 
                       <div className="space-y-2">
                         {(selectedBlock.items || []).map((cat: any, cIdx: number) => (
-                          <div key={cat.id || cIdx} className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1.5">
+                          <div key={cat.id || cIdx} className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
                             <div className="flex items-center gap-2">
                               <img src={cat.imageUrl} alt="" className="w-9 h-9 rounded-full object-cover border border-slate-600 shrink-0" />
                               <div className="flex-1">
@@ -3243,6 +4778,50 @@ export default function WebBuilderPage() {
                               <FolderOpen className="w-3 h-3 text-indigo-400" />
                               <span>تغییر تصویر دسته</span>
                             </button>
+
+                            {/* Category Custom Link */}
+                            <div className="pt-1.5 border-t border-slate-700/60 space-y-1">
+                              <div className="flex items-center justify-between text-[9.5px] text-slate-400">
+                                <span className="flex items-center gap-1 font-bold text-slate-300">
+                                  <Link2 className="w-2.5 h-2.5 text-rose-400" />
+                                  <span>لینک سفارشی دسته (اختیاری):</span>
+                                </span>
+                                <span>پیش‌فرض: فیلتر کالاها</span>
+                              </div>
+                              <input
+                                type="text"
+                                value={cat.link || ""}
+                                placeholder="مثلاً: /categories یا /search"
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  const updated = [...selectedBlock.items];
+                                  updated[cIdx] = { ...updated[cIdx], link: val };
+                                  setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                }}
+                                className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-white font-mono"
+                              />
+                              <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                                {LINK_PRESETS.slice(0, 3).map((preset) => (
+                                  <button
+                                    key={preset.url}
+                                    type="button"
+                                    onClick={() => {
+                                      const updated = [...selectedBlock.items];
+                                      updated[cIdx] = { ...updated[cIdx], link: preset.url };
+                                      setBlocks(blocks.map((b) => (b.id === selectedBlock.id ? { ...b, items: updated } : b)));
+                                    }}
+                                    className={`px-1 py-0.5 rounded text-[8.5px] font-bold transition cursor-pointer ${
+                                      cat.link === preset.url
+                                        ? "bg-rose-500 text-white"
+                                        : "bg-slate-700/70 hover:bg-slate-700 text-slate-300"
+                                    }`}
+                                  >
+                                    <span>{preset.icon}</span>
+                                    <span>{preset.label}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -3253,9 +4832,9 @@ export default function WebBuilderPage() {
                   {selectedBlock.type === "promo_banners" && (
                     <div className="space-y-3">
                       <label className="text-[11px] font-bold text-slate-300 block">بنرهای تبلیغاتی:</label>
-                      <div className="space-y-2">
+                      <div className="space-y-2.5">
                         {(selectedBlock.banners || []).map((b: any, bIdx: number) => (
-                          <div key={b.id || bIdx} className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1.5">
+                          <div key={b.id || bIdx} className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 space-y-2">
                             <div className="flex items-center gap-2">
                               <img src={b.imageUrl} alt="" className="w-12 h-8 rounded object-cover border border-slate-600 shrink-0" />
                               <div className="flex-1">
@@ -3286,6 +4865,71 @@ export default function WebBuilderPage() {
                               <FolderOpen className="w-3 h-3 text-indigo-400" />
                               <span>تغییر تصویر بنر</span>
                             </button>
+
+                            {/* Promo Banner Destination Link */}
+                            <div className="pt-2 border-t border-slate-700/60 space-y-1.5">
+                              <div className="flex items-center justify-between text-[10px]">
+                                <span className="text-slate-300 font-bold flex items-center gap-1">
+                                  <Link2 className="w-3 h-3 text-rose-400" />
+                                  <span>لینک مقصد بنر:</span>
+                                </span>
+                                {b.link && (
+                                  <span className="text-emerald-400 text-[9px] font-mono">
+                                    {b.link.startsWith("http") ? "🌐 خارجی" : "📱 داخلی"}
+                                  </span>
+                                )}
+                              </div>
+                              <input
+                                type="text"
+                                value={b.link || ""}
+                                placeholder="مثلاً: /categories یا https://..."
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  const updated = [...selectedBlock.banners];
+                                  updated[bIdx] = { ...updated[bIdx], link: val };
+                                  setBlocks(blocks.map((blk) => (blk.id === selectedBlock.id ? { ...blk, banners: updated } : blk)));
+                                }}
+                                className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-[11px] text-white font-mono placeholder:text-slate-500 placeholder:font-sans focus:outline-hidden focus:border-rose-500"
+                              />
+                              <div className="flex flex-wrap items-center gap-1">
+                                <span className="text-[9px] text-slate-400 font-medium">سریع:</span>
+                                {LINK_PRESETS.map((preset) => (
+                                  <button
+                                    key={preset.url}
+                                    type="button"
+                                    onClick={() => {
+                                      const updated = [...selectedBlock.banners];
+                                      updated[bIdx] = { ...updated[bIdx], link: preset.url };
+                                      setBlocks(blocks.map((blk) => (blk.id === selectedBlock.id ? { ...blk, banners: updated } : blk)));
+                                    }}
+                                    className={`px-1.5 py-0.5 rounded text-[9px] font-bold transition flex items-center gap-0.5 cursor-pointer ${
+                                      b.link === preset.url
+                                        ? "bg-rose-500 text-white"
+                                        : "bg-slate-700/70 hover:bg-slate-700 text-slate-300"
+                                    }`}
+                                  >
+                                    <span>{preset.icon}</span>
+                                    <span>{preset.label}</span>
+                                  </button>
+                                ))}
+                              </div>
+                              {(b.link?.startsWith("http://") || b.link?.startsWith("https://")) && (
+                                <label className="flex items-center gap-1.5 text-[9.5px] text-slate-300 pt-0.5 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={b.openInNewTab !== false}
+                                    onChange={(e) => {
+                                      const val = e.target.checked;
+                                      const updated = [...selectedBlock.banners];
+                                      updated[bIdx] = { ...updated[bIdx], openInNewTab: val };
+                                      setBlocks(blocks.map((blk) => (blk.id === selectedBlock.id ? { ...blk, banners: updated } : blk)));
+                                    }}
+                                    className="rounded border-slate-700 bg-slate-900 text-rose-500 focus:ring-0"
+                                  />
+                                  <span>باز شدن در تب جدید (New Tab)</span>
+                                </label>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -3634,7 +5278,129 @@ export default function WebBuilderPage() {
             <div className="p-4 space-y-4">
               <div className="pb-2 border-b border-slate-800">
                 <span className="text-xs font-bold text-slate-200 block">تنظیمات هویت بصری و تم</span>
-                <span className="text-[10px] text-slate-400">رنگ‌بندی، گردی گوشه‌ها و استایل کارت‌ها</span>
+                <span className="text-[10px] text-slate-400">لوگو و آیکون رسمی فروشگاه، رنگ‌بندی و استایل کارت‌ها</span>
+              </div>
+
+              {/* Store Logo & Official App Icon Management */}
+              <div className="p-3.5 rounded-2xl bg-gradient-to-b from-slate-800/90 to-slate-850/60 border border-slate-700/80 shadow-md space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-700/60">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
+                      <Sparkles className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-white block">لوگو و آیکون رسمی فروشگاه</span>
+                      <span className="text-[10px] text-slate-400">نمایش در هدر اپ، صفحه اسپلش و آیکون موبایل</span>
+                    </div>
+                  </div>
+                  <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-bold">
+                    فعال
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="relative group shrink-0">
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-rose-500/50 shadow-lg shadow-rose-500/10 bg-slate-900 flex items-center justify-center">
+                      <img src={appIconUrl} alt="Store Logo" className="w-full h-full object-cover" />
+                    </div>
+                    <div
+                      onClick={() => openMediaPickerFor((url) => setAppIconUrl(url))}
+                      className="absolute inset-0 rounded-2xl bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition cursor-pointer"
+                      title="تغییر از کتابخانه"
+                    >
+                      <FolderOpen className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+
+                  <div className="flex-1 space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-300 block">آدرس مستقیم تصویر لوگو / آیکون:</label>
+                    <input
+                      type="text"
+                      value={appIconUrl}
+                      onChange={(e) => setAppIconUrl(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-white font-mono focus:border-rose-500 transition"
+                      placeholder="https://.../logo.png"
+                    />
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => openMediaPickerFor((url) => setAppIconUrl(url))}
+                        className="flex-1 py-1 px-2 bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-200 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition cursor-pointer"
+                      >
+                        <FolderOpen className="w-3 h-3" />
+                        <span>انتخاب از گالری</span>
+                      </button>
+
+                      <label className="flex-1 py-1 px-2 bg-rose-600/30 hover:bg-rose-600/50 border border-rose-500/40 text-rose-200 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition cursor-pointer">
+                        <Upload className="w-3 h-3" />
+                        <span>آپلود فایل</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            try {
+                              showToast("در حال آپلود لوگو...");
+                              const formData = new FormData();
+                              formData.append("file", file);
+                              const res = await fetch("http://localhost:4000/api/media/upload", {
+                                method: "POST",
+                                body: formData,
+                              });
+                              if (res.ok) {
+                                const data = await res.json();
+                                if (data.url) {
+                                  setAppIconUrl(data.url);
+                                  showToast("لوگوی فروشگاه با موفقیت بارگذاری شد!");
+                                  return;
+                                }
+                              }
+                            } catch (err) {
+                              console.error("Upload failed", err);
+                            }
+                            // Fallback to local FileReader data url
+                            const reader = new FileReader();
+                            reader.onload = (ev) => {
+                              if (ev.target?.result) {
+                                setAppIconUrl(ev.target.result as string);
+                                showToast("لوگو با موفقیت اعمال شد!");
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Logo Presets */}
+                <div className="pt-2 border-t border-slate-700/60">
+                  <span className="text-[10px] text-slate-400 block mb-1.5 font-bold">لوگوهای پیشنهادی آماده:</span>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {[
+                      { name: "کالای دیجیتال", url: "http://localhost:4000/uploads/app-icon-techmarket.png" },
+                      { name: "مد و پوشاک", url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=150&h=150&fit=crop" },
+                      { name: "هایپرمارکت", url: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=150&h=150&fit=crop" },
+                      { name: "کافه و رستوران", url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=150&h=150&fit=crop" },
+                    ].map((preset, pIdx) => (
+                      <button
+                        key={pIdx}
+                        type="button"
+                        onClick={() => {
+                          setAppIconUrl(preset.url);
+                          showToast(`لوگوی پیش‌فرض ${preset.name} اعمال شد`);
+                        }}
+                        className="flex flex-col items-center p-1.5 bg-slate-900/60 hover:bg-slate-900 border border-slate-700/60 rounded-xl transition cursor-pointer group"
+                      >
+                        <img src={preset.url} alt="" className="w-7 h-7 rounded-lg object-cover mb-1 border border-slate-700 group-hover:border-rose-500" />
+                        <span className="text-[8px] text-slate-300 truncate w-full text-center">{preset.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Primary Color */}
@@ -3859,37 +5625,50 @@ export default function WebBuilderPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <Globe className="w-4 h-4 text-blue-400" />
-                    <span className="text-[11px] font-bold text-white">نسخه وب PWA (مخصوص کاربران آیفون و سافاری)</span>
+                    <span className="text-[11px] font-bold text-white">نسخه وب PWA (مخصوص کاربران آیفون، سافاری و وب)</span>
                   </div>
                   <span className="text-[9px] bg-blue-500/20 text-blue-300 font-bold px-1.5 py-0.5 rounded border border-blue-500/30">
                     iOS Ready
                   </span>
                 </div>
                 <p className="text-[10px] text-slate-300 leading-relaxed">
-                  بدون نیاز به ثبت در اپ‌استور، کاربران آیفون می‌توانند با باز کردن آدرس وب در Safari و انتخاب Add to Home Screen، اپلیکیشن را با آیکون اختصاصی و بدون نوار مرورگر نصب کنند.
+                  بدون نیاز به ثبت در اپ‌استور، کاربران آیفون و اندروید می‌توانند با باز کردن آدرس نسخه وب در مرورگر خود از اپلیکیشن به صورت آنلاین استفاده کرده یا با انتخاب «Add to Home Screen» آن را با آیکون اختصاصی روی گوشی نصب کنند.
                 </p>
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2">
                   <a
-                    href="/manifest.webmanifest"
+                    href={`/pwa?id=${projectId}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 py-1.5 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-400/40 text-blue-200 text-center rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1"
+                    className="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-blue-400/40 text-white text-center rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md shadow-blue-900/30"
                   >
-                    <FileText className="w-3 h-3" />
-                    <span>مشاهده Web Manifest</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>مشاهده و اجرای نسخه وب (PWA)</span>
                   </a>
-                  <button
-                    onClick={() => {
-                      if (typeof window !== "undefined") {
-                        navigator.clipboard.writeText(window.location.origin);
-                        showToast("🔗 لینک نسخه PWA جهت نصب در آیفون کپی شد!");
-                      }
-                    }}
-                    className="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
-                  >
-                    <Copy className="w-3 h-3" />
-                    <span>کپی لینک نصب</span>
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        if (typeof window !== "undefined") {
+                          const pwaUrl = `${window.location.origin}/pwa?id=${projectId}`;
+                          navigator.clipboard.writeText(pwaUrl);
+                          showToast("🔗 لینک نسخه وب PWA جهت نصب در آیفون کپی شد!");
+                        }
+                      }}
+                      className="flex-1 py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1 cursor-pointer border border-slate-700"
+                    >
+                      <Copy className="w-3 h-3 text-slate-400" />
+                      <span>کپی لینک نسخه وب</span>
+                    </button>
+                    <a
+                      href="/manifest.webmanifest"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="py-1.5 px-2.5 bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-center rounded-lg text-[10px] font-medium transition flex items-center justify-center gap-1 border border-slate-800"
+                      title="فایل مانیفست فنی PWA مخصوص مرورگرها"
+                    >
+                      <FileText className="w-3 h-3" />
+                      <span>مانیفست (JSON)</span>
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -3993,6 +5772,15 @@ export default function WebBuilderPage() {
                       </a>
                     )}
                   </div>
+
+                  {/* Direct Mobile QR Code Scanner */}
+                  <div className="pt-1">
+                    <QrCodeCard
+                      apkUrl={currentJob.downloadUrl ? `http://localhost:4000${currentJob.downloadUrl}` : undefined}
+                      pwaUrl={typeof window !== "undefined" ? `${window.location.origin}/pwa?id=${projectId || ""}` : undefined}
+                      appName={appName}
+                    />
+                  </div>
                 </div>
               )}
             </div>
@@ -4027,6 +5815,59 @@ export default function WebBuilderPage() {
         onStartBuild={startBuild}
         targetPlatform={targetPlatform}
         setTargetPlatform={setTargetPlatform}
+        onOpenSubscriptionModal={() => {
+          setIsBuildModalOpen(false);
+          setIsSubscriptionModalOpen(true);
+        }}
+        onOpenStoreRelease={() => {
+          setIsBuildModalOpen(false);
+          setIsStoreReleaseModalOpen(true);
+        }}
+      />
+
+      <SubscriptionModal
+        isOpen={isSubscriptionModalOpen}
+        onClose={() => setIsSubscriptionModalOpen(false)}
+        onOpenInvoices={() => {
+          setIsSubscriptionModalOpen(false);
+          setIsInvoiceModalOpen(true);
+        }}
+      />
+
+      <InvoiceModal
+        isOpen={isInvoiceModalOpen}
+        onClose={() => setIsInvoiceModalOpen(false)}
+      />
+
+      <StoreReleaseModal
+        isOpen={isStoreReleaseModalOpen}
+        onClose={() => setIsStoreReleaseModalOpen(false)}
+        projectId={projectId}
+        appName={appName}
+        packageName={packageName}
+      />
+
+      <LiveHealthMonitoringModal
+        isOpen={isMonitoringModalOpen}
+        onClose={() => setIsMonitoringModalOpen(false)}
+      />
+
+      <SupportDeskModal
+        isOpen={isSupportModalOpen}
+        onClose={() => setIsSupportModalOpen(false)}
+      />
+
+      {/* 3-Step Migration Wizard Modal */}
+      <MigrationWizardModal
+        isOpen={isMigrationModalOpen}
+        onClose={() => setIsMigrationModalOpen(false)}
+        onMigrationComplete={(migrated) => {
+          const proj = migrated?.project || migrated;
+          if (proj) {
+            applyAiProject(proj);
+            showToast(`پروژه جدید «${proj.name}» با موفقیت در استودیو بارگذاری شد`);
+          }
+        }}
       />
 
       <BroadcastNotificationModal
@@ -4040,6 +5881,7 @@ export default function WebBuilderPage() {
         isOpen={isQrModalOpen}
         onClose={() => setIsQrModalOpen(false)}
         appName={appName}
+        projectId={projectId}
       />
 
       <AppetoMarketModal
@@ -4069,6 +5911,7 @@ export default function WebBuilderPage() {
         onSyncWooCommerce={handleSyncWooCommerce}
         isSyncingWoo={isSyncingWoo}
         onTestSimulateWebhook={handleTestSimulateWebhook}
+        projectId={projectId}
       />
 
       <TemplateSelectorModal
@@ -4095,7 +5938,7 @@ export default function WebBuilderPage() {
           }
           if (tmpl.config?.blocks) {
             updatedBlocks = tmpl.config.blocks;
-            setBlocks(updatedBlocks);
+            setPageBlocks((prev) => ({ ...prev, home: updatedBlocks }));
             if (updatedBlocks.length > 0) setSelectedBlockId(updatedBlocks[0].id);
           }
           if (tmpl.config?.metadata?.name) {
@@ -4125,6 +5968,7 @@ export default function WebBuilderPage() {
             cardBorderRadius: updatedRadius,
             cardStyle: updatedStyle,
             blocks: updatedBlocks,
+            pageBlocks: { ...pageBlocks, home: updatedBlocks },
           });
         }}
       />
@@ -4189,6 +6033,10 @@ export default function WebBuilderPage() {
       <AiAppGeneratorModal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
+        currentProjectId={projectId}
+        onProjectCreated={(project) => {
+          applyAiProject(project);
+        }}
       />
 
       {/* In-App OTA Update Modal */}
@@ -4204,6 +6052,136 @@ export default function WebBuilderPage() {
         onClose={() => setIsAnalyticsModalOpen(false)}
         projectId={projectId || "app-demo-techmarket"}
       />
+
+      {/* Story Viewer Modal (Instagram / Appeto Style) */}
+      <StoryViewerModal
+        isOpen={!!activeStoryForViewer}
+        onClose={() => setActiveStoryForViewer(null)}
+        story={activeStoryForViewer}
+        allStories={viewerStories}
+        onSelectStory={(st) => setActiveStoryForViewer(st)}
+      />
+
+      {/* WordPress & WooCommerce Not Configured Alert Modal */}
+      {showWooNotConfiguredModal && (
+        <div className="fixed inset-0 z-60 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn" dir="rtl">
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col animate-scaleUp">
+            {/* Header */}
+            <div className="p-4 px-5 border-b border-slate-800 flex items-center justify-between bg-slate-850">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center">
+                  <AlertCircle className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-sm font-bold text-white block">
+                    اتصال به وب‌سایت تنظیم نشده است
+                  </span>
+                  <span className="text-[10px] text-slate-400 block">
+                    همگام‌سازی زنده محصولات و مقالات وردپرس
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowWooNotConfiguredModal(false)}
+                className="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-5 space-y-4">
+              <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-2xl text-[11px] text-amber-200 leading-relaxed space-y-1">
+                <div className="font-bold flex items-center gap-1.5 text-amber-300">
+                  <span>⚠️ توجه: مشخصات سایت شما هنوز ثبت نشده است</span>
+                </div>
+                <p className="text-slate-300 text-[10.5px]">
+                  برای اینکه سیستم بتواند محصولات، دسته‌بندی‌ها و مقالات وبلاگ را مستقیماً از سایت وردپرس شما واکشی کند، لازم است اطلاعات اتصال را وارد فرمایید:
+                </p>
+              </div>
+
+              {/* Quick Config Inputs */}
+              <div className="space-y-2.5">
+                <div>
+                  <label className="text-[10.5px] font-bold text-slate-300 block mb-1">
+                    🌐 آدرس وب‌سایت وردپرس / فروشگاه شما:
+                  </label>
+                  <input
+                    type="text"
+                    dir="ltr"
+                    value={wooUrl}
+                    onChange={(e) => setWooUrl(e.target.value)}
+                    placeholder="https://myshop.ir"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white font-mono focus:border-amber-500 transition"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-300 block mb-1">
+                      کلید مصرف‌کننده (Consumer Key):
+                    </label>
+                    <input
+                      type="text"
+                      dir="ltr"
+                      value={wooKey}
+                      onChange={(e) => setWooKey(e.target.value)}
+                      placeholder="ck_..."
+                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-[11px] text-white font-mono focus:border-amber-500 transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-300 block mb-1">
+                      رمز مصرف‌کننده (Consumer Secret):
+                    </label>
+                    <input
+                      type="password"
+                      dir="ltr"
+                      value={wooSecret}
+                      onChange={(e) => setWooSecret(e.target.value)}
+                      placeholder="cs_..."
+                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-[11px] text-white font-mono focus:border-amber-500 transition"
+                    />
+                  </div>
+                </div>
+
+                <div className="text-[9.5px] text-slate-400 bg-slate-950/60 p-2 rounded-xl border border-slate-800">
+                  💡 کلیدهای ووکامرس در پیشخوان وردپرس از مسیر: <strong className="text-slate-300">ووکامرس ← پیکربندی ← پیشرفته ← REST API</strong> قابل ساخت هستند.
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Actions */}
+            <div className="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => setShowWooNotConfiguredModal(false)}
+                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition cursor-pointer"
+              >
+                انصراف و بستن
+              </button>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!wooUrl || !wooKey || !wooSecret) {
+                    showToast("لطفاً تمامی فیلدهای آدرس سایت و کلیدها را وارد کنید.");
+                    return;
+                  }
+                  setShowWooNotConfiguredModal(false);
+                  showToast("در حال ذخیره و تست اتصال به وب‌سایت...");
+                  await saveProjectToServer();
+                  testWooConnection();
+                }}
+                className="px-5 py-2 bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white rounded-xl text-xs font-bold shadow-md shadow-amber-600/20 transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>ذخیره و اتصال به وب‌سایت</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

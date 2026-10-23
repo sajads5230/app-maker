@@ -5,6 +5,7 @@ import '../core/models/app_config_model.dart';
 import '../core/services/config_sync_service.dart';
 import '../core/state/cart_state.dart';
 import 'product_detail_screen.dart';
+import 'categories_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   final String? initialQuery;
@@ -40,24 +41,167 @@ class _SearchScreenState extends State<SearchScreen> {
   static const List<Map<String, dynamic>> _fallbackProducts = [
     {
       'id': 'p_fb1',
-      'title': 'هدفون بی‌سیم سونی WH-1000XM5',
-      'categories': ['صوتی و تصویری'],
-      'price': 18450000,
-      'regularPrice': 21500000,
-      'discountPercent': 14,
+      'title': 'ماشین لباسشویی 14 کیلوگرمی، سه مخزن PRO شیائومی MIJIA مدل XHQG140MJ202',
+      'categories': ['خانه و آشپزخانه هوشمند'],
+      'price': 114995000,
+      'regularPrice': 125000000,
+      'discountPercent': 8,
       'inStock': true,
-      'imageUrl': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/12/1-2.jpg',
       'rating': 4.9,
     },
     {
       'id': 'p_fb2',
-      'title': 'ساعت هوشمند شیائومی Watch S3',
-      'categories': ['ساعت و مچ‌بند'],
-      'price': 6900000,
-      'regularPrice': 7800000,
+      'title': 'جارو رباتیک 5 شیائومی MI مدل PV31CN',
+      'categories': ['خانه و آشپزخانه هوشمند'],
+      'price': 129000000,
+      'regularPrice': 138000000,
+      'discountPercent': 7,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/12/1-1.jpg',
+      'rating': 4.8,
+    },
+    {
+      'id': 'p_fb3',
+      'title': 'کولر گازی ایستاده هوشمند شیائومی MIJIA مدل 72LW-NA11/M3A1',
+      'categories': ['سیستم سرمایش و گرمایش هوشمند'],
+      'price': 481750000,
+      'regularPrice': 510000000,
+      'discountPercent': 6,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/8-11.jpg',
+      'rating': 4.9,
+    },
+    {
+      'id': 'p_fb4',
+      'title': 'آبگرمکن برقی 60 لیتری هوشمند S1 شیائومی MIJIA مدل EWH60-MJ01',
+      'categories': ['سیستم سرمایش و گرمایش هوشمند'],
+      'price': 126900000,
+      'regularPrice': 135000000,
+      'discountPercent': 6,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/12-3.jpg',
+      'rating': 4.7,
+    },
+    {
+      'id': 'p_fb5',
+      'title': 'دوربین مداربسته هوشمند 4PRO شیائومی مدل MJSXJ11HL',
+      'categories': ['دوربین های نظارتی هوشمند'],
+      'price': 27025000,
+      'regularPrice': 29500000,
+      'discountPercent': 8,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/09/18.jpg',
+      'rating': 4.9,
+    },
+    {
+      'id': 'p_fb6',
+      'title': 'دوربین مداربسته هوشمند CW500 شیائومی مدل MJSXJ07HL',
+      'categories': ['دوربین های نظارتی هوشمند'],
+      'price': 14100000,
+      'regularPrice': 15800000,
       'discountPercent': 11,
       'inStock': true,
-      'imageUrl': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/09/18.jpg',
+      'rating': 4.8,
+    },
+    {
+      'id': 'p_fb7',
+      'title': 'کلید لمسی هوشمند شیائومی MI مدل XMZHP02LM',
+      'categories': ['کلید و پریز هوشمند'],
+      'price': 25850000,
+      'regularPrice': 28000000,
+      'discountPercent': 8,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/12-5.jpg',
+      'rating': 4.8,
+    },
+    {
+      'id': 'p_fb8',
+      'title': 'پریز هوشمند 2 شیائومی Mijia مدل KTBL03LM',
+      'categories': ['کلید و پریز هوشمند'],
+      'price': 5170000,
+      'regularPrice': 5900000,
+      'discountPercent': 12,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/12-5.jpg',
+      'rating': 4.9,
+    },
+    {
+      'id': 'p_fb9',
+      'title': 'قفل درب هوشمند E30 شیائومی Mi مدل XMZNMST11LK',
+      'categories': ['قفل، دستگیره و زنگ هوشمند'],
+      'price': 58750000,
+      'regularPrice': 64000000,
+      'discountPercent': 8,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/10/20.jpg',
+      'rating': 4.9,
+    },
+    {
+      'id': 'p_fb10',
+      'title': 'چشمی، زنگ درب و مانیتور 2 هوشمند شیائومی MI مدل MJMY01BY',
+      'categories': ['قفل، دستگیره و زنگ هوشمند'],
+      'price': 35250000,
+      'regularPrice': 38500000,
+      'discountPercent': 8,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/10/20.jpg',
+      'rating': 4.7,
+    },
+    {
+      'id': 'p_fb11',
+      'title': 'لامپ سقفی هوشمند شیائومی Philips مدل 9290029660',
+      'categories': ['نور و روشنایی هوشمند'],
+      'price': 199750000,
+      'regularPrice': 218000000,
+      'discountPercent': 8,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/Untitled-1.jpg',
+      'rating': 4.8,
+    },
+    {
+      'id': 'p_fb12',
+      'title': 'لامپ هالوژن هوشمند شیائومی مدل MJSD01YL',
+      'categories': ['نور و روشنایی هوشمند'],
+      'price': 3525000,
+      'regularPrice': 4100000,
+      'discountPercent': 14,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/Untitled-1.jpg',
+      'rating': 4.6,
+    },
+    {
+      'id': 'p_fb13',
+      'title': 'اسپیکر و مانیتور لمسی هوشمند Pro 8 شیائومی Mi مدل X08A',
+      'categories': ['سیستم صوتی و تصویری هوشمند'],
+      'price': 27025000,
+      'regularPrice': 29900000,
+      'discountPercent': 10,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/11/12-3.jpg',
+      'rating': 4.9,
+    },
+    {
+      'id': 'p_fb14',
+      'title': 'هاب هوشمند شیائومی مدل ZSWG01CM',
+      'categories': ['هاب و سنسور های هوشمند'],
+      'price': 17625000,
+      'regularPrice': 19500000,
+      'discountPercent': 10,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/10/12-7.jpg',
+      'rating': 4.8,
+    },
+    {
+      'id': 'p_fb15',
+      'title': 'سنسور تشخیص حرکت شیائومی مدل XM0SB01XS',
+      'categories': ['هاب و سنسور های هوشمند'],
+      'price': 8225000,
+      'regularPrice': 9200000,
+      'discountPercent': 11,
+      'inStock': true,
+      'imageUrl': 'https://xiaomismart.ir/wp-content/uploads/2025/10/12-7.jpg',
       'rating': 4.8,
     },
   ];
@@ -545,24 +689,49 @@ class _SearchScreenState extends State<SearchScreen> {
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 14),
-                          ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFEF394E),
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            ),
-                            icon: const Icon(Icons.refresh_rounded, size: 16),
-                            label: const Text('نمایش همه کالاها', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {
-                                _searchQuery = '';
-                                _selectedCategory = 'همه';
-                                _onlyInStock = false;
-                                _priceRange = RangeValues(_minPossiblePrice, _maxPossiblePrice);
-                              });
-                            },
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFEF394E),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                ),
+                                icon: const Icon(Icons.refresh_rounded, size: 16),
+                                label: const Text('نمایش همه کالاها', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  setState(() {
+                                    _searchQuery = '';
+                                    _selectedCategory = 'همه';
+                                    _onlyInStock = false;
+                                    _priceRange = RangeValues(_minPossiblePrice, _maxPossiblePrice);
+                                  });
+                                },
+                              ),
+                              OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: const Color(0xFF1F2937),
+                                  side: const BorderSide(color: Color(0xFFD1D5DB)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                ),
+                                icon: const Icon(Icons.grid_view_rounded, size: 16),
+                                label: const Text('مشاهده دسته‌بندی‌ها', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => CategoriesScreen(config: widget.config),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),

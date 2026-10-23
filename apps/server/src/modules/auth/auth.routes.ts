@@ -151,4 +151,38 @@ export const authRoutes: FastifyPluginAsync = async (server: FastifyInstance) =>
 
     return reply.send({ success: true, user });
   });
+
+  // 4. Get SMS Gateway Settings
+  server.get('/api/auth/sms/config', async (_, reply) => {
+    const config = SmsService.getConfig();
+    return reply.send({ success: true, config });
+  });
+
+  // 5. Update SMS Gateway Settings
+  server.post('/api/auth/sms/config', async (request, reply) => {
+    const body = request.body as any;
+    const updated = SmsService.updateConfig(body || {});
+    return reply.send({
+      success: true,
+      message: 'تنظیمات درگاه پیامک با موفقیت ذخیره گردید.',
+      config: updated,
+    });
+  });
+
+  // 6. Send Test SMS
+  server.post('/api/auth/sms/send-test', async (request, reply) => {
+    const { phone, message } = request.body as { phone?: string; message?: string };
+    if (!phone) {
+      return reply.status(400).send({ success: false, error: 'شماره تلفن همراه گیرنده الزامی است.' });
+    }
+
+    const testText = message || 'این یک پیامک تست از سامانه اپ‌ساز تجاری جهت راستی‌آزمایی درگاه پیامک است.';
+    const result = await SmsService.sendTestMessage(phone, testText);
+
+    return reply.send({
+      success: result.success,
+      message: result.success ? ('پیامک تست با موفقیت برای شماره ' + phone + ' ارسال شد.') : result.error,
+      details: result,
+    });
+  });
 };

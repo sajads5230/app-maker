@@ -33,6 +33,7 @@ interface PluginConfigModalProps {
   onSyncWooCommerce?: () => void;
   isSyncingWoo?: boolean;
   onTestSimulateWebhook?: (productId: number, price: number, inStock: boolean) => Promise<any>;
+  projectId?: string;
 }
 
 export function PluginConfigModal({
@@ -46,11 +47,12 @@ export function PluginConfigModal({
   onSyncWooCommerce,
   isSyncingWoo,
   onTestSimulateWebhook,
+  projectId,
 }: PluginConfigModalProps) {
   const [isSimulating, setIsSimulating] = useState(false);
   const [simResult, setSimResult] = useState<string | null>(null);
 
-  if (!plugin) return null;
+  if (!plugin || typeof plugin !== "object" || !Array.isArray(plugin.fields)) return null;
 
   const handleSimulate = async () => {
     if (!onTestSimulateWebhook || isSimulating) return;
@@ -110,7 +112,7 @@ export function PluginConfigModal({
             {plugin.description}
           </p>
 
-          {plugin.fields.map((field) => {
+          {(plugin.fields || []).map((field) => {
             const val = configValues[field.key] ?? field.defaultValue ?? "";
 
             return (
@@ -238,8 +240,12 @@ export function PluginConfigModal({
                       همگام‌سازی خودکار و لحظه‌ای وب‌هوک (Two-Way Live Sync)
                     </span>
                   </div>
-                  <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono font-bold border border-emerald-500/30">
-                    فعال روی xiaomismart.ir (#3)
+                  <span className={`text-[9px] px-2 py-0.5 rounded font-mono font-bold border ${
+                    configValues.siteUrl
+                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                      : "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                  }`}>
+                    {configValues.siteUrl ? `متصل به ${configValues.siteUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}` : "⚠️ آدرس سایت تنظیم نشده"}
                   </span>
                 </div>
 
@@ -253,7 +259,7 @@ export function PluginConfigModal({
                     <span className="text-emerald-400 font-bold">POST</span>
                   </div>
                   <div className="font-mono text-[9px] text-indigo-300 break-all select-all dir-ltr text-left">
-                    http://localhost:4000/api/woocommerce/webhook?projectId=app-demo-techmarket
+                    {`http://localhost:4000/api/woocommerce/webhook?projectId=${projectId || "app-demo-techmarket"}`}
                   </div>
                 </div>
 
